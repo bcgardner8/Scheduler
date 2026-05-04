@@ -326,9 +326,9 @@ select.ms option{background:var(--s2);}
         <button id="tog-parts" onclick="togglePartsFilter()" style="padding:4px 12px;border-radius:5px;border:1px solid rgba(240,160,32,0.35);background:transparent;color:rgba(240,160,32,0.7);font-size:9px;font-weight:700;cursor:pointer;transition:all .15s;">⚑ Parts</button>
       </div>
       <button id="clear-filters-btn" style="margin-left:8px;padding:4px 10px;border-radius:5px;border:1px solid rgba(255,255,255,0.25);background:transparent;color:rgba(255,255,255,0.55);font-size:9px;font-weight:600;cursor:pointer;transition:all .15s;" title="Clear all filters &amp; search">✕ Clear</button>
+      <button onclick="forceSyncNow()" style="background:rgba(91,142,245,0.12);border:1px solid rgba(91,142,245,0.35);border-radius:4px;color:var(--blue);cursor:pointer;padding:4px 9px;font-size:9px;font-weight:600;white-space:nowrap;" title="Force sync with Azure now">⟳ Sync</button>
       <div class="spacer"></div>
       <input type="file" id="xls-in" accept=".xlsx,.xls" style="display:none">
-      <button onclick="forceSyncNow()" style="background:rgba(91,142,245,0.12);border:1px solid rgba(91,142,245,0.35);border-radius:4px;color:var(--blue);cursor:pointer;padding:4px 9px;font-size:9px;font-weight:600;white-space:nowrap;" title="Force sync with Azure now">⟳ Sync</button>
       <button onclick="document.getElementById('xls-in').click()" style="background:rgba(255,255,255,0.06);border:1px solid var(--b3);border-radius:4px;color:var(--t2);cursor:pointer;padding:4px 9px;font-size:9px;font-weight:600;white-space:nowrap;">⬆ Upload</button>
       <button id="parts-jump-btn" onclick="jumpToPendingParts()" style="background:rgba(240,160,32,0.15);border:1px solid rgba(240,160,32,0.4);border-radius:4px;color:#f0a020;cursor:pointer;padding:4px 9px;font-size:9px;font-weight:700;white-space:nowrap;display:none;">⚑ Parts</button>
       <button onclick="window.print()" style="background:rgba(255,255,255,0.06);border:1px solid var(--b3);border-radius:4px;color:var(--t2);cursor:pointer;padding:4px 9px;font-size:9px;font-weight:600;white-space:nowrap;">🖨 Print</button>
@@ -2419,9 +2419,10 @@ async function _pollAzure(){
       const lj=localMap[rj.id];
       if(!lj){jobs.push(rj);changed=true;}
       else{
-        const rHist=(rj.history||[]).length;
-        const lHist=(lj.history||[]).length;
-        if(rHist>lHist||(rHist===lHist&&JSON.stringify(rj)!==JSON.stringify(lj))){
+        // Use _savedAt timestamp if available, otherwise fall back to history length
+        const rTime=rj._savedAt||(rj.history||[]).length;
+        const lTime=lj._savedAt||(lj.history||[]).length;
+        if(rTime>lTime){
           const i=jobs.findIndex(j=>j.id===rj.id);
           if(i>=0){jobs[i]=rj;changed=true;}
         }
@@ -2480,6 +2481,8 @@ async function _putBlob(url, data){
 // Save all jobs to Azure (debounced so rapid changes don't spam Azure)
 let _saveTimer=null;
 function saveToStorage(){
+  // Stamp all jobs with current time on bulk save
+  const _now=Date.now();jobs=jobs.map(j=>({...j,_savedAt:j._savedAt||_now}));
   // Always save to localStorage as fallback
   try{localStorage.setItem('ts_jobs',JSON.stringify(jobs));localStorage.setItem('ts_meta',JSON.stringify({weekPtoAdj}));}catch(e){}
   if(!USE_AZURE) return;
@@ -2499,6 +2502,8 @@ function saveToStorage(){
 
 // saveJob: update one job and trigger save
 function saveJob(job){
+  // Stamp every save with current time so polling can detect which version is newer
+  job={...job,_savedAt:Date.now()};
   const i=jobs.findIndex(j=>j.id===job.id);
   if(i>=0) jobs[i]=job; else jobs.push(job);
   try{const a=JSON.parse(localStorage.getItem('ts_jobs')||'[]');const li=a.findIndex(j=>j.id===job.id);if(li>=0)a[li]=job;else a.push(job);localStorage.setItem('ts_jobs',JSON.stringify(a));}catch(e){}
