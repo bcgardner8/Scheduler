@@ -2384,37 +2384,115 @@ function initScrollSync(){
   sa.addEventListener("scroll",()=>{dh.scrollLeft=sa.scrollLeft;});
 }
 
-// ─── localStorage ─────────────────────────────────────────────────
-function saveJob(job){try{const a=JSON.parse(localStorage.getItem('ts_jobs')||'[]');const i=a.findIndex(j=>j.id===job.id);if(i>=0)a[i]=job;else a.push(job);localStorage.setItem('ts_jobs',JSON.stringify(a));}catch(e){}}
-function saveMeta(){try{localStorage.setItem('ts_meta',JSON.stringify({weekPtoAdj}));}catch(e){}}
-function saveToStorage(){try{localStorage.setItem('ts_jobs',JSON.stringify(jobs));saveMeta();}catch(e){}}
-function loadFromStorage(){
+// ─── Azure Blob Storage ────────────────────────────────────────────
+// FILL IN YOUR SAS URL BELOW (from Azure Portal → Storage Account → Containers → jobs → Generate SAS)
+const AZURE_SAS_URL = "https://YOUR_ACCOUNT.blob.core.windows.net/scheduler/jobs.json?YOUR_SAS_TOKEN";
+const AZURE_META_URL = "https://YOUR_ACCOUNT.blob.core.windows.net/scheduler/meta.json?YOUR_SAS_TOKEN";
+const USE_AZURE = AZURE_SAS_URL.includes("YOUR_ACCOUNT") === false;
+
+// Status indicator
+function _setStatus(msg, color){
+  let el=document.getElementById("sync-status");
+  if(!el){el=document.createElement("div");el.id="sync-status";el.style.cssText="position:fixed;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(10,15,35,0.9);color:#fff;font-size:10px;font-family:'IBM Plex Mono',monospace;padding:4px 12px;border-radius:20px;z-index:9999;pointer-events:none;transition:opacity .5s;";document.body.appendChild(el);}
+  el.textContent=msg;el.style.color=color||"#22c98a";el.style.opacity="1";
+  clearTimeout(el._t);el._t=setTimeout(()=>el.style.opacity="0",2500);
+}
+
+// Upload blob to Azure
+async function _putBlob(url, data){
+  const res=await fetch(url,{method:"PUT",headers:{"x-ms-blob-type":"BlockBlob","Content-Type":"application/json"},body:JSON.stringify(data)});
+  if(!res.ok) throw new Error(`Azure PUT failed: ${res.status}`);
+}
+
+// Save all jobs to Azure (debounced so rapid changes don't spam Azure)
+let _saveTimer=null;
+function saveToStorage(){
+  // Always save to localStorage as fallback
+  try{localStorage.setItem('ts_jobs',JSON.stringify(jobs));localStorage.setItem('ts_meta',JSON.stringify({weekPtoAdj}));}catch(e){}
+  if(!USE_AZURE) return;
+  clearTimeout(_saveTimer);
+  _saveTimer=setTimeout(async()=>{
+    try{
+      _setStatus("Saving…","#f0a020");
+      await _putBlob(AZURE_SAS_URL, jobs);
+      await _putBlob(AZURE_META_URL, {weekPtoAdj});
+      _setStatus("✓ Saved","#22c98a");
+    }catch(e){
+      _setStatus("⚠ Save failed — check SAS URL","#e84545");
+      console.error("Azure save error:",e);
+    }
+  }, 800);
+}
+
+// saveJob: update one job and trigger save
+function saveJob(job){
+  const i=jobs.findIndex(j=>j.id===job.id);
+  if(i>=0) jobs[i]=job; else jobs.push(job);
+  try{const a=JSON.parse(localStorage.getItem('ts_jobs')||'[]');const li=a.findIndex(j=>j.id===job.id);if(li>=0)a[li]=job;else a.push(job);localStorage.setItem('ts_jobs',JSON.stringify(a));}catch(e){}
+  if(!USE_AZURE) return;
+  clearTimeout(_saveTimer);
+  _saveTimer=setTimeout(async()=>{
+    try{
+      _setStatus("Saving…","#f0a020");
+      await _putBlob(AZURE_SAS_URL, jobs);
+      _setStatus("✓ Saved","#22c98a");
+    }catch(e){_setStatus("⚠ Save failed","#e84545");}
+  }, 800);
+}
+
+function saveMeta(){saveToStorage();}
+
+// Load from Azure on startup, fall back to localStorage
+async function loadFromStorage(){
+  if(USE_AZURE){
+    try{
+      _setStatus("Loading…","#5b8ef5");
+      const res=await fetch(AZURE_SAS_URL+"&v="+Date.now());
+      if(res.ok){
+        const p=await res.json();
+        if(p&&p.length>0){
+          if(p.length>=jobs.length){jobs=p;}
+          else{const m={};p.forEach(j=>{m[j.id]=j;});jobs=jobs.map(j=>m[j.id]?{...j,...m[j.id],runExpStart:j.runExpStart,runExpEnd:j.runExpEnd,config:j.config,desc:j.desc,customer:j.customer,fieldTech:j.fieldTech,diameter:j.diameter,buildLoc:j.buildLoc,runLoc:j.runLoc}:j);}
+        }
+      }
+      const mres=await fetch(AZURE_META_URL+"&v="+Date.now());
+      if(mres.ok){const mm=await mres.json();if(mm.weekPtoAdj)weekPtoAdj=mm.weekPtoAdj;}
+      _setStatus("✓ Loaded","#22c98a");
+    }catch(e){
+      _setStatus("⚠ Azure unavailable — using local data","#f0a020");
+      console.warn("Azure load failed, using localStorage:",e);
+      _loadFromLocalStorage();
+    }
+  } else {
+    _loadFromLocalStorage();
+  }
+}
+
+function _loadFromLocalStorage(){
   try{
     const s=localStorage.getItem('ts_jobs');
-    if(s){
-      const p=JSON.parse(s);
-      if(p&&p.length>=jobs.length){jobs=p;}
-      else if(p&&p.length>0){
-        const m={};p.forEach(j=>{m[j.id]=j;});
-        jobs=jobs.map(j=>m[j.id]?{...j,...m[j.id],runExpStart:j.runExpStart,runExpEnd:j.runExpEnd,config:j.config,desc:j.desc,customer:j.customer,fieldTech:j.fieldTech,diameter:j.diameter,buildLoc:j.buildLoc,runLoc:j.runLoc}:j);
-      }
-    }
-    const m=localStorage.getItem('ts_meta');
-    if(m){const mm=JSON.parse(m);if(mm.weekPtoAdj)weekPtoAdj=mm.weekPtoAdj;}
-  }catch(e){console.warn('load:',e);}
+    if(s){const p=JSON.parse(s);if(p&&p.length>=jobs.length){jobs=p;}else if(p&&p.length>0){const m={};p.forEach(j=>{m[j.id]=j;});jobs=jobs.map(j=>m[j.id]?{...j,...m[j.id],runExpStart:j.runExpStart,runExpEnd:j.runExpEnd,config:j.config,desc:j.desc,customer:j.customer,fieldTech:j.fieldTech,diameter:j.diameter,buildLoc:j.buildLoc,runLoc:j.runLoc}:j);}}
+    const m=localStorage.getItem('ts_meta');if(m){const mm=JSON.parse(m);if(mm.weekPtoAdj)weekPtoAdj=mm.weekPtoAdj;}
+  }catch(e){console.warn('localStorage load failed:',e);}
 }
 // Version gate: clear stale localStorage
 (function(){try{
-  if(localStorage.getItem('ts_version')!=='v35'){
+  if(localStorage.getItem('ts_version')!=='v36'){
     ['ts_jobs','ts_meta','ts_view','toolsched_v1','toolsched_view'].forEach(k=>localStorage.removeItem(k));
-    localStorage.setItem('ts_version','v35');
+    localStorage.setItem('ts_version','v36');
   }
 }catch(e){}})();
-loadFromStorage();
-loadBrowserPrefs();
-_startOffset=isNaN(_startOffset)?0:_startOffset;
-recomputeDays();
-populateFilters();initScrollSync();renderAll();
+// Startup: load from Azure (async) then render
+(async()=>{
+  await loadFromStorage();
+  loadBrowserPrefs();
+  _startOffset=isNaN(_startOffset)?0:_startOffset;
+  recomputeDays();
+  populateFilters();initScrollSync();renderAll();
+  const _renderCaps=()=>{renderWeeklyCaps();renderCapacity30();};
+  requestAnimationFrame(()=>requestAnimationFrame(_renderCaps));
+  window.addEventListener("resize",_renderCaps);
+})();
 
 
 window.addEventListener("resize",()=>{renderWeeklyCaps();renderCapacity30();});
@@ -2707,7 +2785,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
     localStorage.setItem('ts_cancelled',JSON.stringify(cancelledJobs));
     if(!nj.length){alert('No matching SLC jobs found in the 60-day window.');e.target.value='';return;}
-    jobs=nj;saveToStorage();localStorage.setItem('ts_version','v35');renderAll();
+    jobs=nj;saveToStorage();localStorage.setItem('ts_version','v36');renderAll();
     alert(`Imported ${nj.length} jobs.`);e.target.value='';
   });
 });
