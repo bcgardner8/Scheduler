@@ -326,7 +326,6 @@ select.ms option{background:var(--s2);}
         <button id="tog-parts" onclick="togglePartsFilter()" style="padding:4px 12px;border-radius:5px;border:1px solid rgba(240,160,32,0.35);background:transparent;color:rgba(240,160,32,0.7);font-size:9px;font-weight:700;cursor:pointer;transition:all .15s;">⚑ Parts</button>
       </div>
       <button id="clear-filters-btn" style="margin-left:8px;padding:4px 10px;border-radius:5px;border:1px solid rgba(255,255,255,0.25);background:transparent;color:rgba(255,255,255,0.55);font-size:9px;font-weight:600;cursor:pointer;transition:all .15s;" title="Clear all filters &amp; search">✕ Clear</button>
-      <button onclick="forceSyncNow()" style="background:rgba(91,142,245,0.12);border:1px solid rgba(91,142,245,0.35);border-radius:4px;color:var(--blue);cursor:pointer;padding:4px 9px;font-size:9px;font-weight:600;white-space:nowrap;" title="Force sync with Azure now">⟳ Sync</button>
       <div class="spacer"></div>
       <input type="file" id="xls-in" accept=".xlsx,.xls" style="display:none">
       <button onclick="document.getElementById('xls-in').click()" style="background:rgba(255,255,255,0.06);border:1px solid var(--b3);border-radius:4px;color:var(--t2);cursor:pointer;padding:4px 9px;font-size:9px;font-weight:600;white-space:nowrap;">⬆ Upload</button>
@@ -2046,7 +2045,7 @@ function renderModal(){
           <div><span style="font-size:8px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;">OSR</span><div style="font-size:11px;color:var(--t1);">${j.osr||"—"}</div></div>
           <div><span style="font-size:8px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;">Location</span><div style="font-size:11px;color:var(--t1);">${[j.city,j.state].filter(Boolean).join(", ")||"—"}</div></div>
         </div>
-        ${j.runDateChanged?`<div style="margin-top:4px;font-size:9px;color:var(--red);font-weight:700;">⚠ Run date changed — acknowledge on run bar</div>`:""}
+        ${j.runDateChanged?`<div style="margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span style="font-size:9px;color:var(--red);font-weight:700;">⚠ Run start changed${j.prevRunStart?' from '+j.prevRunStart+' to':':'} ${j.runExpStart}</span><button onclick="(()=>{const _id='${j.id}';jobs=jobs.map(x=>x.id===_id?{...x,runDateChanged:false,runDateAcknowledged:true}:x);const _j=jobs.find(x=>x.id===_id);if(_j)saveJob(_j);logHistory(_id,'Run date change acknowledged');renderAll();closeModal();})()" style="background:rgba(232,69,69,0.15);border:1px solid var(--red);border-radius:4px;color:var(--red);cursor:pointer;padding:2px 10px;font-size:9px;font-weight:700;white-space:nowrap;">✓ Acknowledge</button></div>`:""}
       </div>
       <div style="border-top:3px solid rgba(91,142,245,0.35);margin:4px 0;"></div>
       <!-- ── Kitting ── -->
@@ -2833,7 +2832,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       const cur=ex[jid];
       if(cur){
         // EXISTING JOB — merge, preserving manual edits
-        const rChg=cur.runExpStart!==rsISO||cur.runExpEnd!==reISO;
+        const rChg=cur.runExpStart!==rsISO; // only track start date change
         const _now=Date.now();
         const _chg=[];
         if(cur.runExpStart!==rsISO)   _chg.push(`Run start: ${cur.runExpStart} → ${rsISO}`);
@@ -2858,7 +2857,8 @@ document.addEventListener('DOMContentLoaded',()=>{
           runLoc:rLoc, buildLoc:bLoc,
           runExpStart:rsISO, runExpEnd:reISO,
           trapDate:trapISO,
-          runDateChanged:rChg&&!cur.runDateAcknowledged,
+          runDateChanged:(cur.runExpStart!==rsISO)&&!cur.runDateAcknowledged,
+          prevRunStart:(cur.runExpStart!==rsISO)?cur.runExpStart:cur.prevRunStart,
           _savedAt:_now,
           history:newHistory
         });
