@@ -2832,28 +2832,61 @@ document.addEventListener('DOMContentLoaded',()=>{
       const estInv=String(row['Estimated Invoice']||'').trim();
       const cur=ex[jid];
       if(cur){
+        // EXISTING JOB — merge, preserving manual edits
         const rChg=cur.runExpStart!==rsISO||cur.runExpEnd!==reISO;
-        nj.push({...cur,config:cfg,estimatedInvoice:estInv,desc:desc.slice(0,80),segName:String(row['Description']||'').trim(),suffix:String(row['Suffix']||'').trim(),pm:String(row['PM']||'').trim(),osr:String(row['OSR']||'').trim(),customer:String(row['Company_Name']||'').trim().slice(0,40),refNum:String(row['ReferenceNumber']||'').trim(),billCode:String(row['Run type']||'').trim(),diameter:diam,fieldTech:tech,runLoc:rLoc,buildLoc:bLoc,runExpStart:rsISO,runExpEnd:reISO,trapDate:trapISO,runDateChanged:rChg&&!cur.runDateAcknowledged});
-      // Log field changes to history
-      // Detect changes and log to history
-      const _chg=[];
-      if(cur.runExpStart!==rsISO)   _chg.push(`Run start: ${cur.runExpStart} → ${rsISO}`);
-      if(cur.runExpEnd!==reISO)     _chg.push(`Run end: ${cur.runExpEnd} → ${reISO}`);
-      if(cur.config!==cfg)          _chg.push(`Config: ${cur.config} → ${cfg}`);
-      if(cur.fieldTech!==tech)      _chg.push(`Field Tech: ${cur.fieldTech} → ${tech}`);
-      if((cur.product||'').trim()!==(String(row['Product']||'').trim())) _chg.push(`Product changed`);
-      console.log('Upload merge',jid,'changes:',_chg,'oldFT:',cur.fieldTech,'newFT:',tech,'oldRun:',cur.runExpStart,'newRun:',rsISO);
-      if(_chg.length){nj[nj.length-1]={...nj[nj.length-1],_savedAt:Date.now(),history:[...(cur.history||[]),{ts:Date.now(),event:`Excel upload: ${_chg.join(', ')}`,user:''}]};}
-      // Log field changes to history
-      const _changes=[];
-      if(cur.runExpStart!==rsISO)_changes.push(`Run start: ${cur.runExpStart}→${rsISO}`);
-      if(cur.runExpEnd!==reISO)_changes.push(`Run end: ${cur.runExpEnd}→${reISO}`);
-      if(cur.config!==cfg)_changes.push(`Config: ${cur.config}→${cfg}`);
-      if(cur.fieldTech!==(String(row['Tech']||'').trim().toUpperCase()))_changes.push(`FT: ${cur.fieldTech}→${String(row['Tech']||'').trim().toUpperCase()}`);
-      if(_changes.length){const h=[...(cur.history||[]),{ts:Date.now(),event:`Excel update: ${_changes.join(', ')}`,user:''}];nj[nj.length-1]={...nj[nj.length-1],history:h};}
+        const _now=Date.now();
+        const _chg=[];
+        if(cur.runExpStart!==rsISO)   _chg.push(`Run start: ${cur.runExpStart} → ${rsISO}`);
+        if(cur.runExpEnd!==reISO)     _chg.push(`Run end: ${cur.runExpEnd} → ${reISO}`);
+        if(cur.config!==cfg)          _chg.push(`Config: ${cur.config} → ${cfg}`);
+        if(cur.fieldTech!==tech)      _chg.push(`Field Tech: ${cur.fieldTech} → ${tech}`);
+        console.log('Upload merge',jid,'changes:',_chg);
+        const newHistory=_chg.length
+          ? [...(cur.history||[]),{ts:_now,event:`Excel upload: ${_chg.join(', ')}`,user:''}]
+          : (cur.history||[]);
+        nj.push({
+          ...cur,
+          config:cfg, estimatedInvoice:estInv, desc:desc.slice(0,80),
+          segName:String(row['Description']||'').trim(),
+          suffix:String(row['Suffix']||'').trim(),
+          pm:String(row['PM']||'').trim(),
+          osr:String(row['OSR']||'').trim(),
+          customer:String(row['Company_Name']||'').trim().slice(0,40),
+          refNum:String(row['ReferenceNumber']||'').trim(),
+          billCode:String(row['Run type']||'').trim(),
+          diameter:diam, fieldTech:tech,
+          runLoc:rLoc, buildLoc:bLoc,
+          runExpStart:rsISO, runExpEnd:reISO,
+          trapDate:trapISO,
+          runDateChanged:rChg&&!cur.runDateAcknowledged,
+          _savedAt:_now,
+          history:newHistory
+        });
       } else {
+        // NEW JOB
         const emt=bLoc==='SLC'?_ER[_EI++%_ER.length]:bLoc;
-        nj.push({id:jid,config:cfg,estimatedInvoice:estInv,desc:desc.slice(0,80),segName:String(row['Description']||'').trim(),suffix:String(row['Suffix']||'').trim(),pm:String(row['PM']||'').trim(),osr:String(row['OSR']||'').trim(),customer:String(row['Company_Name']||'').trim().slice(0,40),refNum:String(row['ReferenceNumber']||'').trim(),billCode:String(row['Run type']||'').trim(),city:String(row['City']||'').trim(),state:String(row['State']||'').trim(),product:String(row['Product']||'').trim(),fieldTech:tech,builder:emt,builder2:null,runExpStart:rsISO,runExpEnd:reISO,buildExpStart:bsISO,buildExpEnd:beISO,buildActStart:'',buildActEnd:'',buildLoc:bLoc,runLoc:rLoc,kitted:false,parts:[],notes:{},history:[{ts:Date.now(),event:'Imported',user:''}],trapDate:trapISO,diameter:diam,runDateChanged:false,runDateAcknowledged:false,tentativeDates:false});
+        nj.push({
+          id:jid, config:cfg, estimatedInvoice:estInv, desc:desc.slice(0,80),
+          segName:String(row['Description']||'').trim(),
+          suffix:String(row['Suffix']||'').trim(),
+          pm:String(row['PM']||'').trim(),
+          osr:String(row['OSR']||'').trim(),
+          customer:String(row['Company_Name']||'').trim().slice(0,40),
+          refNum:String(row['ReferenceNumber']||'').trim(),
+          billCode:String(row['Run type']||'').trim(),
+          city:String(row['City']||'').trim(), state:String(row['State']||'').trim(),
+          product:String(row['Product']||'').trim(),
+          fieldTech:tech, builder:emt, builder2:null,
+          runExpStart:rsISO, runExpEnd:reISO,
+          buildExpStart:bsISO, buildExpEnd:beISO,
+          buildActStart:'', buildActEnd:'',
+          buildLoc:bLoc, runLoc:rLoc,
+          kitted:false, parts:[], notes:{},
+          history:[{ts:Date.now(),event:'Imported from Excel upload',user:''}],
+          trapDate:trapISO, diameter:diam,
+          runDateChanged:false, runDateAcknowledged:false, tentativeDates:false,
+          _savedAt:Date.now()
+        });
       }
     }
     // Detect cancelled jobs (were in current jobs but not in new import)
