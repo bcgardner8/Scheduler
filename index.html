@@ -328,6 +328,7 @@ select.ms option{background:var(--s2);}
       <button id="clear-filters-btn" style="margin-left:8px;padding:4px 10px;border-radius:5px;border:1px solid rgba(255,255,255,0.25);background:transparent;color:rgba(255,255,255,0.55);font-size:9px;font-weight:600;cursor:pointer;transition:all .15s;" title="Clear all filters &amp; search">✕ Clear</button>
       <div class="spacer"></div>
       <input type="file" id="xls-in" accept=".xlsx,.xls" style="display:none">
+      <button onclick="forceSyncNow()" style="background:rgba(91,142,245,0.12);border:1px solid rgba(91,142,245,0.35);border-radius:4px;color:var(--blue);cursor:pointer;padding:4px 9px;font-size:9px;font-weight:600;white-space:nowrap;" title="Force sync with Azure now">⟳ Sync</button>
       <button onclick="document.getElementById('xls-in').click()" style="background:rgba(255,255,255,0.06);border:1px solid var(--b3);border-radius:4px;color:var(--t2);cursor:pointer;padding:4px 9px;font-size:9px;font-weight:600;white-space:nowrap;">⬆ Upload</button>
       <button id="parts-jump-btn" onclick="jumpToPendingParts()" style="background:rgba(240,160,32,0.15);border:1px solid rgba(240,160,32,0.4);border-radius:4px;color:#f0a020;cursor:pointer;padding:4px 9px;font-size:9px;font-weight:700;white-space:nowrap;display:none;">⚑ Parts</button>
       <button onclick="window.print()" style="background:rgba(255,255,255,0.06);border:1px solid var(--b3);border-radius:4px;color:var(--t2);cursor:pointer;padding:4px 9px;font-size:9px;font-weight:600;white-space:nowrap;">🖨 Print</button>
@@ -2431,22 +2432,49 @@ async function _pollAzure(){
       renderAll();
       refreshCapIfOpen();
     }
-  }catch(e){/* silent — don't interrupt user */}
+  }catch(e){_setStatus('⚠ Sync error: '+e.message,'#e84545');console.error('Poll error:',e);}
 }
 // Start polling after initial load
 function startPolling(){
   if(!USE_AZURE)return;
   setInterval(_pollAzure, 30000); // every 30 seconds
 }
+async function forceSyncNow(){
+  if(!USE_AZURE){_setStatus('Azure not configured','#e84545');return;}
+  _setStatus('Syncing…','#5b8ef5');
+  try{
+    // Test READ
+    const res=await fetch(AZURE_SAS_URL+'&v='+Date.now());
+    if(!res.ok){_setStatus('⚠ Read failed: HTTP '+res.status,'#e84545');console.error('Azure read status:',res.status,res.statusText);return;}
+    const data=await res.json();
+    _setStatus('✓ Read OK ('+data.length+' jobs). Testing write…','#f0a020');
+    // Test WRITE (save current jobs)
+    await _putBlob(AZURE_SAS_URL, jobs);
+    _setStatus('✓ Read + Write OK — Azure connected!','#22c98a');
+    console.log('Azure sync OK. Jobs in cloud:',data.length);
+    // Force merge remote data
+    _lastPollData=''; // reset so next poll sees the data as new
+    await _pollAzure();
+  }catch(e){
+    _setStatus('⚠ '+e.message,'#e84545');
+    console.error('Sync error:',e);
+    if(e.message.includes('Failed to fetch')){
+      console.error('LIKELY CAUSE: CORS not configured on Azure, or network issue.');
+      _setStatus('⚠ CORS error — check Azure CORS settings','#e84545');
+    }
+  }
+}
 
 // Upload blob to Azure
 async function _putBlob(url, data){
   const res=await fetch(url,{method:"PUT",headers:{
     "x-ms-blob-type":"BlockBlob",
-    "Content-Type":"application/json",
-    "x-ms-meta-updated":String(Date.now())
+    "Content-Type":"application/json"
   },body:JSON.stringify(data)});
-  if(!res.ok) throw new Error(`Azure PUT failed: ${res.status}`);
+  if(!res.ok){
+    const txt=await res.text().catch(()=>'');
+    throw new Error(`Azure PUT failed: ${res.status} ${res.statusText} ${txt}`);
+  }
 }
 
 // Save all jobs to Azure (debounced so rapid changes don't spam Azure)
@@ -2504,8 +2532,8 @@ async function loadFromStorage(){
       if(mres.ok){const mm=await mres.json();if(mm.weekPtoAdj)weekPtoAdj=mm.weekPtoAdj;}
       _setStatus("✓ Loaded","#22c98a");
     }catch(e){
-      _setStatus("⚠ Azure unavailable — using local data","#f0a020");
-      console.warn("Azure load failed, using localStorage:",e);
+      _setStatus('⚠ Azure load failed: '+e.message,'#e84545');
+      console.error('Azure load error:',e);
       _loadFromLocalStorage();
     }
   } else {
