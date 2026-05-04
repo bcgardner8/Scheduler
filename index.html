@@ -2864,7 +2864,14 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
     localStorage.setItem('ts_cancelled',JSON.stringify(cancelledJobs));
     if(!nj.length){alert('No matching SLC jobs found in the 60-day window.');e.target.value='';return;}
-    jobs=nj;saveToStorage();localStorage.setItem('ts_version','v36');renderAll();
+    jobs=nj;
+    saveToStorage();
+    if(USE_AZURE){
+      _putBlob(AZURE_SAS_URL,jobs)
+        .then(()=>_setStatus(`✓ Upload synced (${nj.length} jobs)`,'#22c98a'))
+        .catch(err=>_setStatus('⚠ Upload sync failed: '+err.message,'#e84545'));
+    }
+    localStorage.setItem('ts_version','v36');renderAll();
     alert(`Imported ${nj.length} jobs.`);e.target.value='';
   });
 });
