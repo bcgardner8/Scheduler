@@ -2808,19 +2808,18 @@ document.addEventListener('DOMContentLoaded',()=>{
     const ab=await f.arrayBuffer();
     const wb=XLSX.read(ab,{type:'arraybuffer',cellDates:true});
     const raw=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{raw:false,dateNF:'yyyy-mm-dd'});
-    const today=new Date(TODAY);const winEnd=new Date(today);winEnd.setDate(winEnd.getDate()+60);
-    const ex={};jobs.forEach(j=>{ex[j.id]=j;});
+    const ex={};jobs.forEach(j=>{ex[j.id]=j;ex[String(j.id).trim()]=j;});
     const nj=[];
     for(const row of raw){
       const bSC=String(row['Build SC']||'').trim().toUpperCase();
       const co=String(row['CompanyStructure_OrganizationalUnitID (groups)']||'').trim().toUpperCase();
       if(bSC!=='SLC'&&co!=='SLC')continue;
       const sd=row['Start Date'];if(!sd)continue;
-      const rs=new Date(sd);if(isNaN(rs)||rs<today||rs>winEnd)continue;
+      const rs=new Date(sd);if(isNaN(rs))continue; // accept all dates
       const ed=row['EndOn'];const re=ed?new Date(ed):rs;
       const jnum=String(row['Job Number']||'').trim();
       const sfx=String(row['Suffix']||'').trim();
-      const jid=(sfx&&sfx!=='R0')?`${jnum}-${sfx}`:jnum;
+      const jid=((sfx&&sfx!=='R0')?`${jnum}-${sfx}`:jnum).trim();
       const pm=String(row['Primary_Method__c']||'').trim();
       const ci=pm.indexOf(',');const cfg=ci>0?pm.slice(0,ci).trim():pm;const desc=ci>0?pm.slice(ci+1).trim():pm;
       const diam=parseInt(String(row['Diameter']||'8'))||8;
@@ -2835,14 +2834,15 @@ document.addEventListener('DOMContentLoaded',()=>{
         const rChg=cur.runExpStart!==rsISO||cur.runExpEnd!==reISO;
         nj.push({...cur,config:cfg,estimatedInvoice:estInv,desc:desc.slice(0,80),segName:String(row['Description']||'').trim(),suffix:String(row['Suffix']||'').trim(),pm:String(row['PM']||'').trim(),osr:String(row['OSR']||'').trim(),customer:String(row['Company_Name']||'').trim().slice(0,40),refNum:String(row['ReferenceNumber']||'').trim(),billCode:String(row['Run type']||'').trim(),diameter:diam,fieldTech:tech,runLoc:rLoc,buildLoc:bLoc,runExpStart:rsISO,runExpEnd:reISO,trapDate:trapISO,runDateChanged:rChg&&!cur.runDateAcknowledged});
       // Log field changes to history
+      // Detect changes and log to history
       const _chg=[];
-      const _pr=nj[nj.length-1];
-      if(cur.runExpStart!==_pr.runExpStart)_chg.push(`Run start: ${cur.runExpStart}→${_pr.runExpStart}`);
-      if(cur.runExpEnd!==_pr.runExpEnd)_chg.push(`Run end: ${cur.runExpEnd}→${_pr.runExpEnd}`);
-      if(cur.config!==_pr.config)_chg.push(`Config: ${cur.config}→${_pr.config}`);
-      if(cur.product!==_pr.product)_chg.push(`Product: ${cur.product||'—'}→${_pr.product||'—'}`);
-      if(cur.fieldTech!==_pr.fieldTech)_chg.push(`FT: ${cur.fieldTech}→${_pr.fieldTech}`);
-      if(_chg.length){nj[nj.length-1]={...nj[nj.length-1],history:[...(cur.history||[]),{ts:Date.now(),event:`Excel update: ${_chg.join(', ')}`,user:''}]};}
+      if(cur.runExpStart!==rsISO)   _chg.push(`Run start: ${cur.runExpStart} → ${rsISO}`);
+      if(cur.runExpEnd!==reISO)     _chg.push(`Run end: ${cur.runExpEnd} → ${reISO}`);
+      if(cur.config!==cfg)          _chg.push(`Config: ${cur.config} → ${cfg}`);
+      if(cur.fieldTech!==tech)      _chg.push(`Field Tech: ${cur.fieldTech} → ${tech}`);
+      if((cur.product||'').trim()!==(String(row['Product']||'').trim())) _chg.push(`Product changed`);
+      console.log('Upload merge',jid,'changes:',_chg,'oldFT:',cur.fieldTech,'newFT:',tech,'oldRun:',cur.runExpStart,'newRun:',rsISO);
+      if(_chg.length){nj[nj.length-1]={...nj[nj.length-1],_savedAt:Date.now(),history:[...(cur.history||[]),{ts:Date.now(),event:`Excel upload: ${_chg.join(', ')}`,user:''}]};}
       // Log field changes to history
       const _changes=[];
       if(cur.runExpStart!==rsISO)_changes.push(`Run start: ${cur.runExpStart}→${rsISO}`);
