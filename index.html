@@ -2398,9 +2398,54 @@ function _setStatus(msg, color){
   clearTimeout(el._t);el._t=setTimeout(()=>el.style.opacity="0",2500);
 }
 
+// ─── Live sync: poll Azure every 30s for changes from other users ──
+let _lastPollData="";
+async function _pollAzure(){
+  if(!USE_AZURE)return;
+  try{
+    const res=await fetch(AZURE_SAS_URL+"&v="+Date.now());
+    if(!res.ok)return;
+    const raw=await res.text();
+    if(raw===_lastPollData)return; // nothing changed
+    _lastPollData=raw;
+    const remote=JSON.parse(raw);
+    if(!remote||!remote.length)return;
+    // Merge: for each remote job, update local if remote is newer
+    // (compare history length — more history = more recent)
+    let changed=false;
+    const localMap={};jobs.forEach(j=>{localMap[j.id]=j;});
+    remote.forEach(rj=>{
+      const lj=localMap[rj.id];
+      if(!lj){jobs.push(rj);changed=true;}
+      else{
+        const rHist=(rj.history||[]).length;
+        const lHist=(lj.history||[]).length;
+        if(rHist>lHist||(rHist===lHist&&JSON.stringify(rj)!==JSON.stringify(lj))){
+          const i=jobs.findIndex(j=>j.id===rj.id);
+          if(i>=0){jobs[i]=rj;changed=true;}
+        }
+      }
+    });
+    if(changed){
+      _setStatus("↓ Updated from cloud","#5b8ef5");
+      renderAll();
+      refreshCapIfOpen();
+    }
+  }catch(e){/* silent — don't interrupt user */}
+}
+// Start polling after initial load
+function startPolling(){
+  if(!USE_AZURE)return;
+  setInterval(_pollAzure, 30000); // every 30 seconds
+}
+
 // Upload blob to Azure
 async function _putBlob(url, data){
-  const res=await fetch(url,{method:"PUT",headers:{"x-ms-blob-type":"BlockBlob","Content-Type":"application/json"},body:JSON.stringify(data)});
+  const res=await fetch(url,{method:"PUT",headers:{
+    "x-ms-blob-type":"BlockBlob",
+    "Content-Type":"application/json",
+    "x-ms-meta-updated":String(Date.now())
+  },body:JSON.stringify(data)});
   if(!res.ok) throw new Error(`Azure PUT failed: ${res.status}`);
 }
 
@@ -2492,6 +2537,7 @@ function _loadFromLocalStorage(){
   const _renderCaps=()=>{renderWeeklyCaps();renderCapacity30();};
   requestAnimationFrame(()=>requestAnimationFrame(_renderCaps));
   window.addEventListener("resize",_renderCaps);
+  startPolling();
 })();
 
 
