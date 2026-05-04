@@ -2829,6 +2829,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       const beD=_pf(rs);const bsISO=_swd(beD.toISOString().slice(0,10),_ebd(pm,diam)-1);
       const beISO=beD.toISOString().slice(0,10);
       const trapISO=(row['Trap Date']?new Date(row['Trap Date']).toISOString().slice(0,10):'');
+      const estInv=String(row['Estimated Invoice']||'').trim();
       const cur=ex[jid];
       if(cur){
         const rChg=cur.runExpStart!==rsISO||cur.runExpEnd!==reISO;
