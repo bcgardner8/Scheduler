@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html lang="en"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ToolScheduler</title>
-<link href="./ToolScheduler_files/css2" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -84,8 +83,7 @@ select.fsel option{background:var(--s2);}
 /* All non-HOU/TUL cards are now gray → use dark text universally */
 .job-card .c-id,.job-card .c-cfg,.job-card .c-cust,.job-card .c-emt,.job-card .c-ft,.job-card .kit-lbl,.job-card .c-status{color:#1a1f30 !important;}
 .job-card .loc-badge{color:rgba(0,0,0,0.5)!important;}
-.job-card[data-state="trapped"] .c-id,.job-card[data-state="trapped"] .c-cfg,.job-card[data-state="trapped"] .c-cust,.job-card[data-state="trapped"] .c-emt,.job-card[data-state="trapped"] .c-ft,.job-card[data-state="trapped"] .kit-lbl,.job-card[data-state="trapped"] .c-status,
-
+.job-card[data-state="trapped"] .c-id,.job-card[data-state="trapped"] .c-cfg,.job-card[data-state="trapped"] .c-cust,.job-card[data-state="trapped"] .c-emt,.job-card[data-state="trapped"] .c-ft,.job-card[data-state="trapped"] .kit-lbl,.job-card[data-state="trapped"] .c-status{color:#ffffff !important;}
 .job-card[data-state="unassigned"] .c-status{color:#ffffff !important;background:rgba(60,70,110,0.8)!important;}
 .job-card.secondary-emt{opacity:0.65;border-right:2px dashed rgba(91,142,245,0.45)!important;}
 .job-card[data-state="trapped"] *{color:#ffffff !important;}
