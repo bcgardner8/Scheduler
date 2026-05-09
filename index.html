@@ -11,7 +11,7 @@
   --blue:#5b8ef5;--green:#22c98a;--amber:#f0a020;--red:#e84545;
   --CARD:292px;--ROW:110px;--GRP:28px;--COL:36px;
 }
-html,body{height:100%;overflow:hidden;}
+html,body{height:100%;overflow:hidden;}body{display:flex;flex-direction:column;}
 body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--t1);display:flex;flex-direction:column;}
 
 /* TABS */
@@ -36,13 +36,13 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--t1)
 .f-lbl{font-size:8px;color:var(--t3);text-transform:uppercase;letter-spacing:.09em;white-space:nowrap;}
 select.fsel{background:var(--s3);border:1px solid var(--b3);border-radius:4px;color:var(--t1);padding:3px 6px;font-size:10px;font-family:'IBM Plex Mono',monospace;outline:none;cursor:pointer;}
 select.fsel option{background:var(--s2);}
-#sort-wrap{display:flex;align-items:center;border:1px solid var(--b3);border-radius:5px;overflow:hidden;flex-shrink:0;}
-.sort-btn{padding:3px 8px;font-size:9px;font-weight:600;color:var(--t3);cursor:pointer;white-space:nowrap;transition:all .15s;}
+#sort-wrap{display:flex;align-items:center;border:1px solid var(--b3);border-radius:5px;overflow:hidden;flex-shrink:1;max-width:100%;}
+.sort-btn{padding:3px 0;font-size:9px;font-weight:600;color:var(--t3);cursor:pointer;white-space:nowrap;transition:all .15s;text-align:center;flex:1;}
 .sort-btn.active{background:var(--blue);color:#fff;}
 
 /* DATE HEADER */
 #ghdr-wrap{display:flex;align-items:stretch;border-bottom:2px solid rgba(91,142,245,0.25);background:var(--s1);flex-shrink:0;height:42px;overflow:hidden;align-items:stretch;}
-#card-spacer{position:sticky;left:0;z-index:5;width:var(--CARD);min-width:var(--CARD);border-right:1px solid rgba(91,142,245,0.2);background:var(--s1);display:flex;align-items:center;justify-content:space-between;padding:0 10px;flex-shrink:0;background:var(--s2);}
+#card-spacer{position:sticky;left:0;z-index:5;width:var(--CARD);min-width:var(--CARD);border-right:1px solid rgba(91,142,245,0.2);background:var(--s2);display:flex;align-items:stretch;padding:0;flex-shrink:0;}
 #card-spacer-label{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--t4);}
 #dh-scroll{overflow:hidden;flex:1;display:flex;flex-direction:column;}
 .dh-inner{display:flex;height:24px;margin:0;padding:0;overflow:hidden;}
@@ -228,6 +228,8 @@ select.ms option{background:var(--s2);}
 #ht-container{display:flex;flex-direction:column;overflow:hidden;flex:1;}
 #ht-header{padding:12px 16px;border-bottom:1px solid var(--b2);background:var(--s1);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;}
 #ht-body{overflow:auto;flex:1;padding:8px 0;}
+#imu-container{display:flex;flex-direction:column;overflow:hidden;flex:1;}
+#imu-header{padding:12px 16px;border-bottom:1px solid var(--b2);background:var(--s1);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;}
 .ht-size-group{margin-bottom:2px;}
 .ht-size-hdr{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--s2);border-top:2px solid rgba(91,142,245,0.3);cursor:pointer;user-select:none;}
 .ht-size-hdr:hover{background:var(--s3);}
@@ -284,9 +286,8 @@ select.ms option{background:var(--s2);}
 <div id="tabs">
   <div class="tab active" data-tab="scheduler">📅 Scheduler</div>
   <div class="tab" data-tab="build-exp">📋 Reference Tables</div>
-  <div class="tab" data-tab="home-tools">🏠 Home Tools</div>
-  <div class="tab" data-tab="cancelled">🚫 Cancelled Jobs</div>
   <div class="tab" data-tab="documents">📁 Documents</div>
+  <div class="tab" data-tab="imu"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px;flex-shrink:0;"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> IMU</div>
 </div>
 
 <div id="tab-content">
@@ -311,7 +312,7 @@ select.ms option{background:var(--s2);}
       <div class="f-wrap"><span class="f-lbl">EMT</span><select class="fsel" id="bf"><option value="">All</option></select></div>
       <div class="f-wrap"><span class="f-lbl">FT</span><select class="fsel" id="tf"><option value="">All</option></select></div>
       <div class="f-wrap"><span class="f-lbl">Size</span><select class="fsel" id="szf"><option value="">All</option></select></div>
-      <div class="f-wrap"><span class="f-lbl">Technology</span><select class="fsel" id="techf">
+      <div class="f-wrap" style="max-width:140px;"><span class="f-lbl">Technology</span><select class="fsel" id="techf" style="max-width:110px;">
         <option value="">All</option>
         <option value="MDS PRO">MDS PRO</option>
         <option value="MDS FLEX">MDS FLEX</option>
@@ -323,7 +324,7 @@ select.ms option{background:var(--s2);}
       </select></div>
       <div class="divider"></div>
       <!-- Build/Run toggles -->
-      <div style="display:flex;align-items:center;gap:5px;flex-shrink:0;">
+      <div style="display:flex;align-items:center;gap:5px;flex-shrink:0;margin-left:40px;">
         <button id="tog-active" onclick="toggleActiveFilter()" style="padding:4px 12px;border-radius:5px;border:1px solid rgba(91,142,245,0.4);background:transparent;color:rgba(91,142,245,0.7);font-size:9px;font-weight:700;cursor:pointer;transition:all .15s;" title="Show jobs with build started but not completed">Active</button>
         <button id="tog-builds" style="padding: 4px 12px; border-radius: 5px; border: 1px solid rgba(255, 255, 255, 0.6); background: rgba(255, 255, 255, 0.12); color: rgb(255, 255, 255); font-size: 9px; font-weight: 700; cursor: pointer; transition: 0.15s;">Builds</button>
         <button id="tog-runs" style="padding: 4px 12px; border-radius: 5px; border: 1px solid rgba(255, 255, 255, 0.6); background: rgba(255, 255, 255, 0.12); color: rgb(255, 255, 255); font-size: 9px; font-weight: 700; cursor: pointer; transition: 0.15s;">Runs</button>
@@ -332,21 +333,24 @@ select.ms option{background:var(--s2);}
       <button id="clear-filters-btn" style="margin-left:8px;padding:4px 10px;border-radius:5px;border:1px solid rgba(255,255,255,0.25);background:transparent;color:rgba(255,255,255,0.55);font-size:9px;font-weight:600;cursor:pointer;transition:all .15s;" title="Clear all filters &amp; search">✕ Clear</button>
       <div class="spacer"></div>
       <input type="file" id="xls-in" accept=".xlsx,.xls" style="display:none">
-      <button onclick="document.getElementById('xls-in').click()" style="background:rgba(255,255,255,0.06);border:1px solid var(--b3);border-radius:4px;color:var(--t2);cursor:pointer;padding:4px 9px;font-size:9px;font-weight:600;white-space:nowrap;">⬆ Upload</button>
       <button id="parts-jump-btn" onclick="jumpToPendingParts()" style="background:rgba(240,160,32,0.15);border:1px solid rgba(240,160,32,0.4);border-radius:4px;color:#f0a020;cursor:pointer;padding:4px 9px;font-size:9px;font-weight:700;white-space:nowrap;display:none;">⚑ Parts</button>
-      <button onclick="window.print()" style="background:rgba(255,255,255,0.06);border:1px solid var(--b3);border-radius:4px;color:var(--t2);cursor:pointer;padding:4px 9px;font-size:9px;font-weight:600;white-space:nowrap;">🖨 Print</button>
+      <div id="daily-ts-display" style="font-size:11px;color:var(--t2);white-space:nowrap;font-family:'IBM Plex Mono',monospace;font-weight:500;">—</div>
+      <button onclick="document.getElementById('xls-in').click()" style="background:rgba(91,142,245,0.15);border:1px solid rgba(91,142,245,0.4);border-radius:4px;color:var(--blue);cursor:pointer;padding:4px 9px;font-size:9px;font-weight:700;white-space:nowrap;">⬆ Upload</button><button id="new-job-btn" onclick="openNewJobModal()" style="background:rgba(34,201,138,0.15);border:1px solid rgba(34,201,138,0.4);border-radius:4px;color:#22c98a;cursor:pointer;padding:4px 9px;font-size:9px;font-weight:700;white-space:nowrap;margin-left:4px;">＋ New Job</button>
     </div>
         <div id="ghdr-wrap" style="display:flex;align-items:stretch;background:var(--s1);border-bottom:2px solid rgba(91,142,245,0.25);flex-shrink:0;height:42px;min-height:42px;overflow:hidden;">
       <div id="card-spacer">
-        <div id="sort-wrap">
-          <div class="sort-btn active" id="sort-diam" onclick="sortMode='diam';document.getElementById('sort-diam').classList.add('active');document.getElementById('sort-tech-btn').classList.remove('active');document.getElementById('sort-emt-btn').classList.remove('active');renderAll();">Diameter</div>
-          <div class="sort-btn" id="sort-tech-btn" onclick="sortMode='tech';document.getElementById('sort-tech-btn').classList.add('active');document.getElementById('sort-diam').classList.remove('active');document.getElementById('sort-emt-btn').classList.remove('active');renderAll();">Field Tech</div>
-          <div class="sort-btn" id="sort-emt-btn" onclick="sortMode='emt';document.getElementById('sort-emt-btn').classList.add('active');document.getElementById('sort-diam').classList.remove('active');document.getElementById('sort-tech-btn').classList.remove('active');renderAll();">EMT</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:0;margin-top:4px;padding:0 4px;">
-          <button onclick="navWeek(-1)" style="background:none;border:none;color:var(--t2);cursor:pointer;padding:2px 8px;font-size:18px;line-height:1;">&#8249;</button>
-          <button onclick="navWeek(1)"  style="background:none;border:none;color:var(--t2);cursor:pointer;padding:2px 8px;font-size:18px;line-height:1;">&#8250;</button>
-          <button onclick="_startOffset=0;recomputeDays();renderAll();saveBrowserPrefs();" style="background:rgba(91,142,245,0.12);border:1px solid rgba(91,142,245,0.3);border-radius:4px;color:var(--blue);cursor:pointer;padding:2px 7px;font-size:9px;font-weight:700;">This Week</button>
+        <div style="display:flex;align-items:center;width:100%;height:100%;">
+          <div id="sort-wrap" style="width:194px;min-width:194px;display:flex;align-items:center;height:100%;padding:0 4px;box-sizing:border-box;flex-shrink:0;">
+            <div class="sort-btn active" id="sort-diam" onclick="sortMode='diam';['sort-tech-btn','sort-emt-btn','sort-run-btn'].forEach(x=>document.getElementById(x).classList.remove('active'));this.classList.add('active');renderAll();">Diam</div>
+            <div class="sort-btn" id="sort-tech-btn" onclick="sortMode='tech';['sort-diam','sort-emt-btn','sort-run-btn'].forEach(x=>document.getElementById(x).classList.remove('active'));this.classList.add('active');renderAll();">FT</div>
+            <div class="sort-btn" id="sort-emt-btn" onclick="sortMode='emt';['sort-diam','sort-tech-btn','sort-run-btn'].forEach(x=>document.getElementById(x).classList.remove('active'));this.classList.add('active');renderAll();">EMT</div>
+            <div class="sort-btn" id="sort-run-btn" onclick="sortMode='run';['sort-diam','sort-tech-btn','sort-emt-btn'].forEach(x=>document.getElementById(x).classList.remove('active'));this.classList.add('active');renderAll();">Date</div>
+          </div>
+          <div style="width:98px;min-width:98px;display:flex;align-items:center;justify-content:flex-end;height:100%;padding-right:4px;box-sizing:border-box;flex-shrink:0;">
+            <button onclick="navWeek(-1)" style="background:none;border:none;color:var(--t2);cursor:pointer;width:25px;font-size:26px;line-height:1;display:flex;align-items:center;justify-content:center;">&#8249;</button>
+            <button onclick="navWeek(1)" style="background:none;border:none;color:var(--t2);cursor:pointer;width:25px;font-size:26px;line-height:1;display:flex;align-items:center;justify-content:center;">&#8250;</button>
+            <button onclick="_startOffset=0;recomputeDays();renderAll();saveBrowserPrefs();" style="background:rgba(91,142,245,0.12);border:1px solid rgba(91,142,245,0.3);border-radius:4px;color:var(--blue);cursor:pointer;padding:3px 2px;font-size:9px;font-weight:700;white-space:normal;line-height:1.2;text-align:center;width:48px;">This Week</button>
+          </div>
         </div>
       
       <div style="flex:1;display:flex;flex-direction:column;">
@@ -665,20 +669,59 @@ select.ms option{background:var(--s2);}
     </div>
   </div>
 
-  <!-- HOME TOOLS PANE -->
-  <div class="tab-pane" id="home-tools-pane">
-    <div id="ht-container">
-      <div id="ht-header">
-        <div style="display:flex;align-items:center;gap:10px;width:100%;">
-          <div style="font-size:14px;font-weight:700;white-space:nowrap;">SLC Home Tools</div>
-          <div style="display:flex;align-items:center;gap:4px;flex:1;">
-            <span style="font-size:9px;color:var(--t3);">🔍</span>
-            <input type="text" id="ht-search" placeholder="Serial # or part #…" style="background:rgba(255,255,255,0.06);border:1px solid var(--b3);border-radius:5px;color:var(--t1);padding:3px 8px;font-size:10px;outline:none;width:180px;" oninput="filterHomeTools(this.value)">
-            <button id="ht-search-clear" onclick="document.getElementById(&#39;ht-search&#39;).value=&#39;&#39;;filterHomeTools(&#39;&#39;);" style="display:none;background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;padding:0 2px;">✕</button>
-          </div>
+  <!-- HOME TOOLS PANE (hidden, kept as stub so tab switcher doesn't error) -->
+  <div class="tab-pane" id="home-tools-pane"></div>
+  <!-- CANCELLED PANE (stub) -->
+  <div class="tab-pane" id="cancelled-pane"></div>
+  <!-- DOCUMENTS PANE -->
+  <div class="tab-pane" id="documents-pane">
+    <div style="padding:20px;display:flex;flex-direction:column;gap:16px;overflow-y:auto;max-height:100%;">
+      <div class="pane-title">Documents</div>
+      <div style="background:var(--s2);border-radius:8px;border:1px solid var(--b2);padding:14px 18px;">
+        <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:10px;">📋 Quality Build Workflows</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;border-bottom:1px solid var(--b1);">→ Build Workflow — MFL</a>
+          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;border-bottom:1px solid var(--b1);">→ Build Workflow — DEF</a>
+          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;border-bottom:1px solid var(--b1);">→ Build Workflow — EMAT</a>
+          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;">→ Build Workflow — MDS</a>
         </div>
       </div>
-      <div id="ht-body"></div>
+      <div style="background:var(--s2);border-radius:8px;border:1px solid var(--b2);padding:14px 18px;">
+        <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:10px;">📄 Build Reference Docs</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;border-bottom:1px solid var(--b1);">→ D1011</a>
+          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;border-bottom:1px solid var(--b1);">→ TITE Calculator</a>
+          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;border-bottom:1px solid var(--b1);">→ Wear Button Policy</a>
+          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;">→ Add link…</a>
+        </div>
+      </div>
+      <div style="background:var(--s2);border-radius:8px;border:1px solid var(--b2);padding:14px 18px;">
+        <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:10px;">🔧 Maintenance</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;border-bottom:1px solid var(--b1);">→ D3768</a>
+          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;border-bottom:1px solid var(--b1);">→ D3769</a>
+          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;">→ D3770</a>
+        </div>
+      </div>
+      <div style="background:var(--s2);border-radius:8px;border:1px solid var(--b2);padding:14px 18px;">
+        <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:10px;">⚡ EMAT</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;border-bottom:1px solid var(--b1);">→ EMAT Build Procedure</a>
+          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;">→ Add link…</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- IMU PANE -->
+  <div class="tab-pane" id="imu-pane">
+    <div id="imu-container" style="display:flex;flex-direction:column;overflow:hidden;flex:1;">
+      <div id="imu-header" style="padding:10px 14px;border-bottom:1px solid rgba(91,142,245,0.2);background:var(--s1);flex-shrink:0;display:flex;align-items:center;">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--t1);">IMU Schedule</div>
+          <div style="font-size:10px;color:var(--t3);margin-top:2px;">Grouped by IMU serial · 60-day view from today</div>
+        </div>
+      </div>
+      <div id="imu-gantt-wrap" style="overflow:auto;flex:1;"></div>
     </div>
   </div>
 </div>
@@ -718,6 +761,7 @@ select.ms option{background:var(--s2);}
         <div class="chk-row" id="kit-row"><div class="chk-box" id="kbox"></div><span style="font-size:11px;color:var(--t2)">Tool has been kitted</span></div>
 
       </div>
+      
       <div class="m-sec" style="border-bottom:none;"><div class="m-sec-t" style="display:flex;align-items:center;justify-content:space-between;">Parts / Equipment<button id="copy-all-parts" style="background:rgba(91,142,245,0.15);border:1px solid rgba(91,142,245,0.35);border-radius:4px;color:var(--blue);cursor:pointer;padding:2px 8px;font-size:9px;font-weight:600;text-transform:none;letter-spacing:0;">Copy Undelivered</button></div>
         <div class="m-sec-t" style="border-top:none;padding-top:0;margin-top:-4px;"><span style="font-size:8px;color:var(--t4)">No parts</span></div>
         <div id="parts-list"></div><button class="add-btn" id="add-p">+ Add Part</button>
@@ -729,7 +773,7 @@ select.ms option{background:var(--s2);}
         <div id="nhist"></div>
       </div>
     </div>
-    <div class="m-ftr"><button class="btn-cancel" id="mcanc">Cancel</button><button class="btn-save" id="msave">Save Changes</button></div></div></div>
+    <div class="m-ftr"><button class="btn-delete" id="mdel" onclick="initDeleteJob()" style="margin-right:auto;background:rgba(232,69,69,0.12);border:1px solid rgba(232,69,69,0.3);border-radius:4px;color:rgba(232,69,69,0.7);cursor:pointer;padding:4px 10px;font-size:9px;font-weight:600;">🗑 Delete Job</button><button class="btn-cancel" id="mcanc">Cancel</button><button class="btn-save" id="msave">Save Changes</button></div></div></div>
 <div id="assets-overlay"><div class="assets-modal" id="assets-modal-box"></div></div>
 <div id="history-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;z-index:1001;">
   <div style="background:var(--s1);border:1px solid var(--b3);border-radius:12px;width:480px;max-width:96vw;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(0,0,0,.65);">
@@ -773,53 +817,6 @@ select.ms option{background:var(--s2);}
       <button onclick="editEmtPto(&#39;2026-04-12&#39;,&#39;Zach&#39;,5)" style="background:rgba(91,142,245,0.12);border:1px solid rgba(91,142,245,0.3);border-radius:4px;color:var(--blue);cursor:pointer;padding:2px 6px;font-size:8px;">PTO</button></div></div><div style="margin-top: 14px; border-top: 1px solid var(--b2); padding-top: 10px;"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--t4);margin-bottom:8px;">Builds This Week</div><div style="font-size: 10px; padding: 4px 0px; border-bottom: 1px solid var(--b1); display: flex; gap: 8px;"><span style="color:var(--t1);font-family:&#39;IBM Plex Mono&#39;,monospace;">123-456789</span><span style="color:var(--t2);">10" MFL3+DEF+SMFL+RES</span><span style="color:var(--t3);margin-left:auto;">Mark</span></div><div style="font-size: 10px; padding: 4px 0px; border-bottom: 1px solid var(--b1); display: flex; gap: 8px;"><span style="color:var(--t1);font-family:&#39;IBM Plex Mono&#39;,monospace;">234-111111</span><span style="color:var(--t2);">6" MFL3</span><span style="color:var(--t3);margin-left:auto;">Cliff</span></div><div style="font-size: 10px; padding: 4px 0px; border-bottom: 1px solid var(--b1); display: flex; gap: 8px;"><span style="color:var(--t1);font-family:&#39;IBM Plex Mono&#39;,monospace;">345-222222</span><span style="color:var(--t2);">12" MFL+XYZ (ATEX)</span><span style="color:var(--t3);margin-left:auto;">Dylan</span></div><div style="font-size: 10px; padding: 4px 0px; border-bottom: 1px solid var(--b1); display: flex; gap: 8px;"><span style="color:var(--t1);font-family:&#39;IBM Plex Mono&#39;,monospace;">CONF-01</span><span style="color:var(--t2);">8" DEF (xHD)</span><span style="color:var(--t3);margin-left:auto;">Dylan</span></div><div style="font-size: 10px; padding: 4px 0px; border-bottom: 1px solid var(--b1); display: flex; gap: 8px;"><span style="color:var(--t1);font-family:&#39;IBM Plex Mono&#39;,monospace;">CONF-03</span><span style="color:var(--t2);">8" DEF (xHD)</span><span style="color:var(--t3);margin-left:auto;">Mark</span></div><div style="font-size: 10px; padding: 4px 0px; border-bottom: 1px solid var(--b1); display: flex; gap: 8px;"><span style="color:var(--t1);font-family:&#39;IBM Plex Mono&#39;,monospace;">CONF-04</span><span style="color:var(--t2);">8" DEF (xHD)</span><span style="color:var(--t3);margin-left:auto;">Matt</span></div><div style="font-size: 10px; padding: 4px 0px; border-bottom: 1px solid var(--b1); display: flex; gap: 8px;"><span style="color:var(--t1);font-family:&#39;IBM Plex Mono&#39;,monospace;">CONF-05</span><span style="color:var(--t2);">8" DEF (xHD)</span><span style="color:var(--t3);margin-left:auto;">Cliff</span></div><div style="font-size: 10px; padding: 4px 0px; border-bottom: 1px solid var(--b1); display: flex; gap: 8px;"><span style="color:var(--t1);font-family:&#39;IBM Plex Mono&#39;,monospace;">CONF-06</span><span style="color:var(--t2);">8" DEF (xHD)</span><span style="color:var(--t3);margin-left:auto;">Dylan</span></div><div style="font-size: 10px; padding: 4px 0px; border-bottom: 1px solid var(--b1); display: flex; gap: 8px;"><span style="color:var(--t1);font-family:&#39;IBM Plex Mono&#39;,monospace;">456-333333</span><span style="color:var(--t2);">6" MFL+DEF (xHD)</span><span style="color:var(--t3);margin-left:auto;">Mark</span></div></div></div>
     <div class="m-ftr"><button class="btn-cancel" onclick="document.getElementById(&#39;cap-modal&#39;).style.display=&#39;none&#39;">Close</button></div>
   </div>
-  <div class="tab-pane" id="documents-pane">
-    <div style="padding:20px;display:flex;flex-direction:column;gap:16px;overflow-y:auto;max-height:100%;">
-      <div class="pane-title">Documents</div>
-      <div style="background:var(--s2);border-radius:8px;border:1px solid var(--b2);padding:14px 18px;">
-        <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:10px;">📋 Quality Build Workflows</div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;border-bottom:1px solid var(--b1);">→ Build Workflow — MFL</a>
-          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;border-bottom:1px solid var(--b1);">→ Build Workflow — DEF</a>
-          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;border-bottom:1px solid var(--b1);">→ Build Workflow — EMAT</a>
-          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;">→ Build Workflow — MDS</a>
-        </div>
-      </div>
-      <div style="background:var(--s2);border-radius:8px;border:1px solid var(--b2);padding:14px 18px;">
-        <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:10px;">📄 Build Reference Docs</div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;border-bottom:1px solid var(--b1);">→ D1011</a>
-          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;border-bottom:1px solid var(--b1);">→ TITE Calculator</a>
-          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;border-bottom:1px solid var(--b1);">→ Wear Button Policy</a>
-          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;">→ Add link…</a>
-        </div>
-      </div>
-      <div style="background:var(--s2);border-radius:8px;border:1px solid var(--b2);padding:14px 18px;">
-        <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:10px;">🔧 Maintenance</div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;border-bottom:1px solid var(--b1);">→ D3768</a>
-          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;border-bottom:1px solid var(--b1);">→ D3769</a>
-          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;">→ D3770</a>
-        </div>
-      </div>
-      <div style="background:var(--s2);border-radius:8px;border:1px solid var(--b2);padding:14px 18px;">
-        <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:10px;">⚡ EMAT</div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;border-bottom:1px solid var(--b1);">→ EMAT Build Procedure</a>
-          <a href="#" style="font-size:11px;color:var(--t1);text-decoration:none;padding:4px 0;">→ Add link…</a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- CANCELLED JOBS PANE -->
-  <div class="tab-pane" id="cancelled-pane">
-    <div style="padding:20px;">
-      <h2 style="color:var(--t1);font-size:14px;margin-bottom:12px;">🚫 Cancelled Jobs</h2>
-      <div id="cancelled-list" style="display:flex;flex-direction:column;gap:8px;"></div>
-    </div>
-  </div>
-</div>
-
 <script>
 // ─── Tool Info (from spreadsheet) ────────────────────────────────
 const TOOL_INFO = {"115675":{"s":4.0,"d":"4\" DEF NH3","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":68.0,"wt":52.0,"minBore":3.5,"minBend":"3D","runTime":10.0,"current":0.26,"specDoc":"D2428","maxVel":null,"maxSampleRate":500.0,"water":true},"04_600":{"s":4.0,"d":"4\" DEF - Liquid Products Only","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":61.0,"wt":38.0,"minBore":3.5,"minBend":"3D","runTime":22.0,"current":0.26,"specDoc":"D1018","maxVel":null,"maxSampleRate":500.0,"water":true},"121771":{"s":4.0,"d":"4\" DEF2 + IDOD","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":43.9,"wt":33.5,"minBore":3.5,"minBend":"1.5D","runTime":35.0,"current":0.097,"specDoc":"D2654","maxVel":null,"maxSampleRate":750.0,"water":false},"121770":{"s":4.0,"d":"4\" MDS FLEX MFL2 + DEF2","t":"MDS FLEX","tc":"MDS FLEX","len":54.2,"wt":48.0,"minBore":3.6,"minBend":"1.5D","runTime":38.0,"current":0.097,"specDoc":"D2481","maxVel":10.0,"maxSampleRate":750.0,"water":false},"115190":{"s":4.0,"d":"4\" MFL NH3","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":69.0,"wt":52.0,"minBore":3.6,"minBend":"3D","runTime":22.0,"current":0.3,"specDoc":"D1385","maxVel":10.0,"maxSampleRate":500.0,"water":true},"04_001":{"s":4.0,"d":"4\" MFL Liquid Products Only","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":63.0,"wt":52.0,"minBore":3.6,"minBend":"3D","runTime":22.0,"current":0.252,"specDoc":"D1020","maxVel":10.0,"maxSampleRate":500.0,"water":true},"130095":{"s":6.0,"d":"6\" MDS PRO DEF2+MFL4+SMFL+XYZ","t":"MDS PRO","tc":"MDS PRO","len":101.0,"wt":190.0,"minBore":5.5,"minBend":"1.5D","runTime":23.0,"current":null,"specDoc":"D3712","maxVel":10.0,"maxSampleRate":750.0,"water":false},"105191":{"s":6.0,"d":"6\" MFL3 (Hybrid)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":79.0,"wt":93.0,"minBore":5.46,"minBend":"1.5D","runTime":45.0,"current":0.75,"specDoc":"D1412","maxVel":10.0,"maxSampleRate":750.0,"water":true},"123232":{"s":6.0,"d":"6\" MFL3","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":78.0,"wt":87.0,"minBore":5.46,"minBend":"1.5D","runTime":null,"current":null,"specDoc":"D2874","maxVel":10.0,"maxSampleRate":750.0,"water":true},"129713":{"s":6.0,"d":"6\" MDS FLEX DEF2+MFL4+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":74.0,"wt":115.0,"minBore":5.5,"minBend":"1.5D","runTime":23.0,"current":null,"specDoc":"D3713","maxVel":10.0,"maxSampleRate":750.0,"water":false},"124750":{"s":6.0,"d":"6\" MFL+DEF (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":107.0,"wt":130.0,"minBore":5.46,"minBend":"3D","runTime":132.0,"current":0.88,"specDoc":"D3094","maxVel":10.0,"maxSampleRate":750.0,"water":false},"06_002":{"s":6.0,"d":"6\" MFL NH3","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":97.0,"wt":155.0,"minBore":5.46,"minBend":"3D","runTime":38.0,"current":0.75,"specDoc":"D1028","maxVel":10.0,"maxSampleRate":500.0,"water":true},"102783":{"s":6.0,"d":"6\" DEF NH3","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":77.0,"wt":85.0,"minBore":5.46,"minBend":"3D","runTime":107.0,"current":0.27,"specDoc":"D1026","maxVel":null,"maxSampleRate":500.0,"water":true},"112200-01-00-01-01":{"s":6.0,"d":"6\" MDS FLEX MFL4+DEF2","t":"MDS FLEX","tc":"MDS FLEX","len":46.0,"wt":76.0,"minBore":5.5,"minBend":"1.5D","runTime":97.0,"current":null,"specDoc":"D2215","maxVel":10.0,"maxSampleRate":750.0,"water":false},"103829":{"s":6.0,"d":"6\" LGT NH3","t":"LGT","tc":"LGT","len":87.0,"wt":53.0,"minBore":4.75,"minBend":"1.5D","runTime":25.0,"current":0.26,"specDoc":"D1675","maxVel":null,"maxSampleRate":750.0,"water":true},"112200-01-01-01-01":{"s":6.0,"d":"6\" MFL4+DEF+SpirALL MFL","t":"MDS PRO","tc":"MDS PRO","len":73.0,"wt":146.0,"minBore":5.5,"minBend":"1.5D","runTime":50.0,"current":0.33,"specDoc":"D2084","maxVel":10.0,"maxSampleRate":750.0,"water":false},"122975":{"s":6.0,"d":"6\" DEF+XYZ","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":114.0,"wt":108.0,"minBore":5.1,"minBend":"1.5D","runTime":23.0,"current":0.872,"specDoc":"D2848","maxVel":null,"maxSampleRate":750.0,"water":true},"122434":{"s":6.0,"d":"6\" MFL5","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":78.0,"wt":100.0,"minBore":5.5,"minBend":"1.5D","runTime":46.0,"current":null,"specDoc":"D2809","maxVel":10.0,"maxSampleRate":750.0,"water":true},"106496":{"s":6.0,"d":"6\" MFL3 (Hybrid)+XYZ","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":96.0,"wt":120.0,"minBore":5.46,"minBend":"1.5D","runTime":17.0,"current":1.58,"specDoc":"D1581","maxVel":10.0,"maxSampleRate":750.0,"water":true},"119785":{"s":6.0,"d":"6\" MFL+DEF","t":"Legacy Combo","tc":"Legacy Combo","len":128.0,"wt":165.0,"minBore":5.46,"minBend":"3D","runTime":47.0,"current":0.88,"specDoc":"D1023","maxVel":10.0,"maxSampleRate":750.0,"water":false},"129655":{"s":6.0,"d":"6\" DEF+XYZ (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":111.0,"wt":114.0,"minBore":5.1,"minBend":"1.5D","runTime":30.0,"current":0.872,"specDoc":"D3696","maxVel":null,"maxSampleRate":750.0,"water":true},"116837":{"s":6.0,"d":"6\" MFL (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":92.0,"wt":140.0,"minBore":5.46,"minBend":"3D","runTime":69.0,"current":null,"specDoc":"D2847","maxVel":10.0,"maxSampleRate":750.0,"water":true},"127231":{"s":6.0,"d":"6\" MFL+DEF+XYZ (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":127.0,"wt":140.0,"minBore":5.46,"minBend":"3D","runTime":20.0,"current":null,"specDoc":"D3240","maxVel":10.0,"maxSampleRate":750.0,"water":false},"119403":{"s":6.0,"d":"6\" MFL5+XYZ","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":96.0,"wt":120.0,"minBore":5.5,"minBend":"1.5D","runTime":16.0,"current":1.58,"specDoc":"D2532","maxVel":10.0,"maxSampleRate":750.0,"water":true},"112200-02-01-01-01":{"s":6.0,"d":"6\" MFL4+DEF2+SpirALL MFL Dual Drive","t":"MDS PRO","tc":"MDS PRO","len":73.0,"wt":146.0,"minBore":5.5,"minBend":"1.5D","runTime":70.0,"current":0.33,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":false},"06_6000":{"s":6.0,"d":"6\" DEF ","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":95.0,"wt":99.0,"minBore":5.1,"minBend":"1.5D","runTime":74.0,"current":0.27,"specDoc":"D1021","maxVel":null,"maxSampleRate":500.0,"water":true},"113403":{"s":6.0,"d":"6\" MFL+DEF NH3","t":"Legacy Combo","tc":"Legacy Combo","len":108.0,"wt":165.0,"minBore":5.46,"minBend":"3D","runTime":31.0,"current":0.94,"specDoc":"D2443","maxVel":10.0,"maxSampleRate":750.0,"water":true},"105681":{"s":6.0,"d":"6\" LGT","t":"LGT","tc":"LGT","len":88.0,"wt":53.0,"minBore":4.75,"minBend":"1.5D","runTime":23.0,"current":0.26,"specDoc":"D1402","maxVel":null,"maxSampleRate":500.0,"water":true},"112200-01-01-02-01":{"s":6.0,"d":"6\" MFL4+Brush DEF+SpirALL MFL","t":"MDS PRO","tc":"MDS PRO","len":73.0,"wt":146.0,"minBore":5.5,"minBend":"1.5D","runTime":70.0,"current":0.33,"specDoc":null,"maxVel":10.0,"maxSampleRate":750.0,"water":false},"126981":{"s":6.0,"d":"6\" DEF (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":89.0,"wt":90.0,"minBore":5.1,"minBend":"1.5D","runTime":null,"current":null,"specDoc":"D3242","maxVel":null,"maxSampleRate":750.0,"water":true},"123925":{"s":8.0,"d":"8\" MFL4+DEF+RES","t":"MDS FLEX","tc":"MDS FLEX","len":70.0,"wt":189.0,"minBore":7.15,"minBend":"1.5D","runTime":67.0,"current":null,"specDoc":"D2906","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130593":{"s":8.0,"d":"8\" MDS PRO DEF6+MFL6+RES+SMFL+XYZ","t":"MDS PRO","tc":"MDS PRO","len":128.0,"wt":366.0,"minBore":7.15,"minBend":"3D","runTime":32.0,"current":null,"specDoc":"D3761","maxVel":10.0,"maxSampleRate":750.0,"water":true},"123924":{"s":8.0,"d":"8\" MFL4+DEF+SMFL+RES","t":"MDS PRO","tc":"MDS PRO","len":90.0,"wt":255.0,"minBore":7.15,"minBend":"3D","runTime":50.0,"current":null,"specDoc":"D2930","maxVel":10.0,"maxSampleRate":750.0,"water":true},"112056":{"s":8.0,"d":"8\" GMFL (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":89.0,"wt":190.0,"minBore":7.0,"minBend":"1.5D","runTime":46.0,"current":null,"specDoc":"D1200","maxVel":10.0,"maxSampleRate":750.0,"water":true},"108563":{"s":8.0,"d":"8\" DEF (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":100.0,"wt":200.0,"minBore":6.5,"minBend":"1.5D","runTime":77.0,"current":null,"specDoc":"D1031","maxVel":null,"maxSampleRate":750.0,"water":true},"130595":{"s":8.0,"d":"8\" MDS FLEX DEF6+MFL6+RES+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":106.0,"wt":260.0,"minBore":7.15,"minBend":"3D","runTime":35.0,"current":null,"specDoc":"D3763","maxVel":10.0,"maxSampleRate":750.0,"water":true},"114418":{"s":8.0,"d":"8\" MFL (1.5D ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":101.0,"wt":246.0,"minBore":7.15,"minBend":"1.5D","runTime":0.0,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"122503":{"s":8.0,"d":"8'' MFL5+DEF5+LFM","t":"MDS FLEX","tc":"MDS FLEX","len":69.5,"wt":201.0,"minBore":7.045,"minBend":"1.5D","runTime":67.0,"current":null,"specDoc":"D2748","maxVel":10.0,"maxSampleRate":750.0,"water":false},"114353":{"s":8.0,"d":"8\" DEF+XYZ (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":119.0,"wt":235.0,"minBore":6.5,"minBend":"1.5D","runTime":18.0,"current":null,"specDoc":"D2947","maxVel":null,"maxSampleRate":750.0,"water":true},"106998":{"s":8.0,"d":"8\" LGT+XYZ","t":"LGT","tc":"LGT","len":81.0,"wt":63.0,"minBore":6.0,"minBend":"1.5D","runTime":116.0,"current":0.28,"specDoc":"D2253","maxVel":null,"maxSampleRate":750.0,"water":true},"130602":{"s":8.0,"d":"8\" MDS FLEX DEF7+LFM+MFL6+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":104.0,"wt":301.0,"minBore":7.045,"minBend":"1.5D","runTime":35.0,"current":null,"specDoc":"D3720","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130597":{"s":8.0,"d":"8\" MDS FLEX DEF6+MFL6+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":109.0,"wt":291.0,"minBore":7.15,"minBend":"3D","runTime":36.0,"current":null,"specDoc":"D3765","maxVel":10.0,"maxSampleRate":750.0,"water":true},"113622":{"s":8.0,"d":"8\" GMFL+XYZ (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":105.0,"wt":215.0,"minBore":6.9,"minBend":"1.5D","runTime":27.0,"current":null,"specDoc":"D1263","maxVel":10.0,"maxSampleRate":750.0,"water":true},"08_900":{"s":8.0,"d":"8\" MFL+DEF (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":120.3,"wt":284.0,"minBore":7.15,"minBend":"1.5D","runTime":27.0,"current":1.03,"specDoc":"D1032","maxVel":10.0,"maxSampleRate":750.0,"water":true},"108206":{"s":8.0,"d":"8\" MFL+DEF NH3 (3D)","t":"Legacy Combo","tc":"Legacy Combo","len":138.0,"wt":314.0,"minBore":7.15,"minBend":"3D","runTime":24.0,"current":1.1,"specDoc":"D2243","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130596":{"s":8.0,"d":"8\" MDS FLEX DEF6+MFL6+RES ","t":"MDS FLEX","tc":"MDS FLEX","len":72.0,"wt":201.0,"minBore":7.15,"minBend":"3D","runTime":54.0,"current":null,"specDoc":"D3764","maxVel":10.0,"maxSampleRate":750.0,"water":true},"106625":{"s":8.0,"d":"8\" MFL (3D) NH3","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":103.0,"wt":270.0,"minBore":7.15,"minBend":"3D","runTime":35.0,"current":0.67,"specDoc":"D1035","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130601":{"s":8.0,"d":"8\" MDS PRO DEF7+LFM+MFL6+SMFL2","t":"MDS PRO","tc":"MDS PRO","len":103.0,"wt":375.0,"minBore":7.15,"minBend":"1.5D","runTime":41.0,"current":null,"specDoc":"D3719","maxVel":10.0,"maxSampleRate":750.0,"water":true},"108561":{"s":8.0,"d":"8\" MFL (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":102.0,"wt":235.0,"minBore":7.15,"minBend":"1.5D","runTime":46.0,"current":0.33,"specDoc":"D1033","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130594":{"s":8.0,"d":"8\" MDS PRO DEF6+MFL6+RES+SMFL","t":"MDS PRO","tc":"MDS PRO","len":90.0,"wt":255.0,"minBore":7.15,"minBend":"3D","runTime":41.0,"current":null,"specDoc":"D3762","maxVel":10.0,"maxSampleRate":750.0,"water":true},"106626":{"s":8.0,"d":"8\" DEF NH3","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":96.0,"wt":210.0,"minBore":6.5,"minBend":"1.5D","runTime":59.0,"current":0.43,"specDoc":"D1030","maxVel":null,"maxSampleRate":750.0,"water":true},"130600":{"s":8.0,"d":"8\" MDS PRO DEF7+LFM+MFL6+SMFL2+XYZ","t":"MDS PRO","tc":"MDS PRO","len":143.0,"wt":475.0,"minBore":7.15,"minBend":"1.5D","runTime":32.0,"current":null,"specDoc":"D3718","maxVel":10.0,"maxSampleRate":750.0,"water":true},"110250":{"s":8.0,"d":"8\" MFL2 (Hybrid xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":90.0,"wt":195.0,"minBore":7.0,"minBend":"1.5D","runTime":46.0,"current":0.33,"specDoc":"D1332","maxVel":10.0,"maxSampleRate":750.0,"water":true},"122501":{"s":8.0,"d":"8'' MFL5+DEF5+SMFL2+LFM","t":"MDS PRO","tc":"MDS PRO","len":103.0,"wt":375.0,"minBore":7.15,"minBend":"1.5D","runTime":64.0,"current":null,"specDoc":"D2749","maxVel":10.0,"maxSampleRate":750.0,"water":false},"123291":{"s":8.0,"d":"8\" GMFL + DEF (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":113.1,"wt":285.0,"minBore":7.0,"minBend":"1.5D","runTime":27.0,"current":0.45,"specDoc":"D2864","maxVel":10.0,"maxSampleRate":750.0,"water":true},"113594":{"s":8.0,"d":"8\" MFL2 (Hybrid)+XYZ (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":106.0,"wt":225.0,"minBore":7.0,"minBend":"1.5D","runTime":18.0,"current":1.3,"specDoc":"D1491","maxVel":10.0,"maxSampleRate":750.0,"water":true},"113610":{"s":8.0,"d":"8\" MFL+XYZ (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":118.0,"wt":280.0,"minBore":7.15,"minBend":"1.5D","runTime":21.0,"current":1.31,"specDoc":"D1181","maxVel":10.0,"maxSampleRate":750.0,"water":true},"122500":{"s":8.0,"d":"8'' MFL5+DEF5+SMFL2+XYZ+LFM","t":"MDS PRO","tc":"MDS PRO","len":143.0,"wt":475.0,"minBore":7.15,"minBend":"1.5D","runTime":19.0,"current":null,"specDoc":"D2750","maxVel":10.0,"maxSampleRate":750.0,"water":false},"129313":{"s":8.0,"d":"8\" MDS FLEX DEF5+MFL5+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":104.0,"wt":269.0,"minBore":7.045,"minBend":"1.5D","runTime":52.0,"current":null,"specDoc":"D3623","maxVel":10.0,"maxSampleRate":750.0,"water":false},"130605":{"s":8.0,"d":"8\" MDS FLEX DEF7+MFL6","t":"MDS FLEX","tc":"MDS FLEX","len":69.0,"wt":203.0,"minBore":7.045,"minBend":"1.5D","runTime":61.0,"current":null,"specDoc":"D3723","maxVel":10.0,"maxSampleRate":750.0,"water":true},"113623":{"s":8.0,"d":"8\" MFL+DEF+XYZ (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":138.0,"wt":351.0,"minBore":7.15,"minBend":"1.5D","runTime":21.0,"current":2.03,"specDoc":"D2274","maxVel":10.0,"maxSampleRate":750.0,"water":true},"122972":{"s":8.0,"d":"8\" DEF + XYZ NH3","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":116.7,"wt":90.0,"minBore":6.5,"minBend":"3D","runTime":null,"current":null,"specDoc":"D2840","maxVel":null,"maxSampleRate":750.0,"water":true},"129297":{"s":8.0,"d":"8\" MDS FLEX DEF+MFL4+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":109.0,"wt":291.0,"minBore":7.15,"minBend":"1.5D","runTime":43.0,"current":null,"specDoc":"D3621","maxVel":10.0,"maxSampleRate":750.0,"water":true},"104863":{"s":8.0,"d":"8\" LGT","t":"LGT","tc":"LGT","len":62.0,"wt":61.0,"minBore":6.0,"minBend":"1.5D","runTime":56.0,"current":0.27,"specDoc":"D1405","maxVel":null,"maxSampleRate":750.0,"water":true},"129296":{"s":8.0,"d":"8\" MDS FLEX DEF+MFL4","t":"MDS FLEX","tc":"MDS FLEX","len":72.0,"wt":208.0,"minBore":7.15,"minBend":"1.5D","runTime":67.0,"current":null,"specDoc":"D3620","maxVel":10.0,"maxSampleRate":750.0,"water":true},"08_650":{"s":8.0,"d":"8\" LGT","t":"LGT","tc":"LGT","len":70.0,"wt":63.0,"minBore":6.0,"minBend":"1.5D","runTime":116.0,"current":0.28,"specDoc":"D1034","maxVel":null,"maxSampleRate":750.0,"water":true},"130603":{"s":8.0,"d":"8\" MDS FLEX DEF7+LFM+MFL6","t":"MDS FLEX","tc":"MDS FLEX","len":69.5,"wt":201.0,"minBore":7.045,"minBend":"1.5D","runTime":54.0,"current":null,"specDoc":"D3721","maxVel":10.0,"maxSampleRate":750.0,"water":true},"123926":{"s":8.0,"d":"8\" MFL4+DEF+SMFL+RES+XYZ","t":"MDS PRO","tc":"MDS PRO","len":128.0,"wt":366.0,"minBore":7.15,"minBend":"3D","runTime":50.0,"current":null,"specDoc":"D2931","maxVel":10.0,"maxSampleRate":750.0,"water":true},"129312":{"s":8.0,"d":"8\" MDS FLEX DEF5+MFL5","t":"MDS FLEX","tc":"MDS FLEX","len":69.0,"wt":203.0,"minBore":7.045,"minBend":"1.5D","runTime":67.0,"current":null,"specDoc":"D3622","maxVel":10.0,"maxSampleRate":750.0,"water":false},"122502":{"s":8.0,"d":"8'' MFL5+DEF5+XYZ+LFM","t":"MDS FLEX","tc":"MDS FLEX","len":104.0,"wt":301.0,"minBore":7.045,"minBend":"1.5D","runTime":52.0,"current":null,"specDoc":"D2751","maxVel":10.0,"maxSampleRate":750.0,"water":false},"130598":{"s":8.0,"d":"8\" MDS FLEX DEF6+MFL6","t":"MDS FLEX","tc":"MDS FLEX","len":72.0,"wt":208.0,"minBore":7.15,"minBend":"3D","runTime":61.0,"current":null,"specDoc":"D3766","maxVel":10.0,"maxSampleRate":750.0,"water":true},"127126":{"s":8.0,"d":"8\" GMFL+DEF+XYZ(xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":132.0,"wt":285.0,"minBore":7.0,"minBend":"1.5D","runTime":null,"current":null,"specDoc":"D3508","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130604":{"s":8.0,"d":"8\" MDS FLEX DEF7+MFL6+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":104.0,"wt":269.0,"minBore":7.045,"minBend":"1.5D","runTime":36.0,"current":null,"specDoc":"D3722","maxVel":10.0,"maxSampleRate":750.0,"water":true},"120561":{"s":10.0,"d":"10\" MFL3+DEF+SMFL+RES","t":"MDS PRO","tc":"MDS PRO","len":106.0,"wt":468.0,"minBore":9.1,"minBend":"1.5D","runTime":36.0,"current":null,"specDoc":"D2648","maxVel":10.0,"maxSampleRate":750.0,"water":true},"120640":{"s":10.0,"d":"10\" MFL3+DEF+SMFL+XYZ+RES (1.5D)","t":"MDS PRO","tc":"MDS PRO","len":148.0,"wt":583.0,"minBore":9.1,"minBend":"1.5D","runTime":20.0,"current":null,"specDoc":"D2647","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130612":{"s":10.0,"d":"10\" MDS FLEX DEF2+MFL4+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":126.0,"wt":437.0,"minBore":9.1,"minBend":"1.5D","runTime":34.0,"current":null,"specDoc":"D3728","maxVel":10.0,"maxSampleRate":750.0,"water":true},"106627":{"s":10.0,"d":"10\" DEF NH3","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":65.0,"wt":140.0,"minBore":8.1,"minBend":"1.5D","runTime":59.0,"current":0.43,"specDoc":"D1036","maxVel":null,"maxSampleRate":750.0,"water":true},"129152":{"s":10.0,"d":"10\" MFL3+DEF+XYZ+RES","t":"MDS FLEX","tc":"MDS FLEX","len":126.0,"wt":465.0,"minBore":9.1,"minBend":"1.5D","runTime":21.0,"current":0.39,"specDoc":"D3614","maxVel":10.0,"maxSampleRate":750.0,"water":true},"101050":{"s":10.0,"d":"10\" MFL (8\" Batt,) NH3","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":109.0,"wt":325.0,"minBore":9.1,"minBend":"1.5D","runTime":119.0,"current":0.67,"specDoc":"D1042","maxVel":10.0,"maxSampleRate":750.0,"water":true},"119600":{"s":10.0,"d":"10\" EMAT2","t":"EMAT","tc":"EMAT","len":145.5,"wt":647.0,"minBore":9.1,"minBend":"1.5D","runTime":67.0,"current":null,"specDoc":"D2576","maxVel":null,"maxSampleRate":316.0,"water":true},"110403":{"s":10.0,"d":"10\" DEF (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":65.0,"wt":140.0,"minBore":8.1,"minBend":"1.5D","runTime":75.0,"current":null,"specDoc":"D3775","maxVel":null,"maxSampleRate":750.0,"water":true},"114362":{"s":10.0,"d":"10\" GMFL+DEF+XYZ (ATEX)","t":"Legacy Combo","tc":"Legacy Combo","len":139.0,"wt":305.0,"minBore":8.1,"minBend":"1.5D","runTime":19.0,"current":null,"specDoc":"D2957","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130611":{"s":10.0,"d":"10\" MDS FLEX DEF2+MFL4","t":"MDS FLEX","tc":"MDS FLEX","len":83.0,"wt":317.0,"minBore":9.1,"minBend":"1.5D","runTime":51.0,"current":null,"specDoc":"D3729","maxVel":10.0,"maxSampleRate":750.0,"water":true},"108558":{"s":10.0,"d":"10\" GMFL+DEF (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":115.0,"wt":267.0,"minBore":8.1,"minBend":"1.5D","runTime":50.0,"current":0.31,"specDoc":"D2219","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130614":{"s":10.0,"d":"10\" MDS PRO DEF2+MFL4+RES+SMFL+XYZ","t":"MDS PRO","tc":"MDS PRO","len":148.0,"wt":534.0,"minBore":9.1,"minBend":"1.5D","runTime":33.0,"current":null,"specDoc":"D3724","maxVel":10.0,"maxSampleRate":750.0,"water":true},"108556":{"s":10.0,"d":"10\" GMFL (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":113.0,"wt":255.0,"minBore":8.1,"minBend":"1.5D","runTime":58.0,"current":0.32,"specDoc":"D1039","maxVel":10.0,"maxSampleRate":750.0,"water":true},"103200":{"s":"10,12","d":"12\"x10\" GMFL DUAL DIAMETER","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":120.0,"wt":330.0,"minBore":9.25,"minBend":"3D","runTime":29.0,"current":0.95,"specDoc":"D1316","maxVel":10.0,"maxSampleRate":750.0,"water":true},"113240":{"s":10.0,"d":"10\" MFL+DEF NH3","t":"Legacy Combo","tc":"Legacy Combo","len":129.0,"wt":384.0,"minBore":9.1,"minBend":"3D","runTime":63.0,"current":1.15,"specDoc":"D2244","maxVel":10.0,"maxSampleRate":750.0,"water":true},"10_650":{"s":10.0,"d":"10\" LGT","t":"LGT","tc":"LGT","len":72.0,"wt":77.0,"minBore":6.5,"minBend":"1.5D","runTime":92.0,"current":0.28,"specDoc":"D1041","maxVel":null,"maxSampleRate":750.0,"water":true},"115144":{"s":10.0,"d":"10\" MFL+XYZ (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":128.0,"wt":370.0,"minBore":9.1,"minBend":"1.5D","runTime":55.0,"current":1.2,"specDoc":"D3668","maxVel":10.0,"maxSampleRate":750.0,"water":true},"110864":{"s":10.0,"d":"10\" MFL (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":108.0,"wt":370.0,"minBore":9.1,"minBend":"1.5D","runTime":55.0,"current":1.29,"specDoc":"D3690","maxVel":10.0,"maxSampleRate":750.0,"water":true},"113407":{"s":10.0,"d":"10\" GMFL+XYZ (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":135.0,"wt":295.0,"minBore":8.1,"minBend":"1.5D","runTime":22.0,"current":null,"specDoc":"D3164","maxVel":10.0,"maxSampleRate":750.0,"water":true},"108300":{"s":10.0,"d":"10\" MFL3+DEF+RES","t":"MDS FLEX","tc":"MDS FLEX","len":83.0,"wt":344.0,"minBore":9.1,"minBend":"1.5D","runTime":90.0,"current":0.39,"specDoc":"D1700","maxVel":10.0,"maxSampleRate":750.0,"water":true},"113580":{"s":10.0,"d":"10\" MFL+DEF+XYZ (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":128.0,"wt":445.0,"minBore":9.1,"minBend":"1.5D","runTime":19.0,"current":1.31,"specDoc":"D2261","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130613":{"s":10.0,"d":"10\" MDS PRO DEF2+MFL4+RES+SMFL","t":"MDS PRO","tc":"MDS PRO","len":106.0,"wt":420.0,"minBore":9.1,"minBend":"1.5D","runTime":33.0,"current":0.63,"specDoc":"D3725","maxVel":10.0,"maxSampleRate":750.0,"water":true},"129298":{"s":10.0,"d":"10\" MDS FLEX DEF+MFL3","t":"MDS FLEX","tc":"MDS FLEX","len":83.0,"wt":318.0,"minBore":9.1,"minBend":"1.5D","runTime":90.0,"current":null,"specDoc":"D3625","maxVel":10.0,"maxSampleRate":750.0,"water":true},"110548":{"s":10.0,"d":"10\" DEF+XYZ (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":89.0,"wt":192.0,"minBore":8.1,"minBend":"1.5D","runTime":17.0,"current":1.32,"specDoc":"D1276","maxVel":null,"maxSampleRate":750.0,"water":true},"108577":{"s":10.0,"d":"10\" MFL+DEF (8\" Batt, xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":106.0,"wt":371.0,"minBore":9.1,"minBend":"1.5D","runTime":50.0,"current":null,"specDoc":"D2247","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130610":{"s":10.0,"d":"10\" MDS FLEX DEF2+MFL4+RES+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":126.0,"wt":450.0,"minBore":9.1,"minBend":"1.5D","runTime":32.0,"current":0.39,"specDoc":"D3726","maxVel":10.0,"maxSampleRate":750.0,"water":true},"129299":{"s":10.0,"d":"10\" MDS FLEX DEF+MFL3+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":126.0,"wt":437.0,"minBore":9.1,"minBend":"1.5D","runTime":21.0,"current":null,"specDoc":"D3624","maxVel":10.0,"maxSampleRate":750.0,"water":true},"122986":{"s":10.0,"d":"10 in. DEF+XYZ NH3","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":88.0,"wt":183.0,"minBore":8.1,"minBend":"1.5D","runTime":null,"current":null,"specDoc":"D2841","maxVel":null,"maxSampleRate":750.0,"water":true},"130609":{"s":10.0,"d":"10\" MDS FLEX DEF2+MFL4+RES","t":"MDS FLEX","tc":"MDS FLEX","len":83.0,"wt":332.0,"minBore":9.1,"minBend":"1.5D","runTime":43.0,"current":0.39,"specDoc":"D3727","maxVel":10.0,"maxSampleRate":750.0,"water":true},"108923":{"s":12.0,"d":"12\" MFL2+DEF2+LFM","t":"MDS FLEX","tc":"MDS FLEX","len":101.0,"wt":542.0,"minBore":11.0,"minBend":"1.5D","runTime":45.0,"current":0.67,"specDoc":"D2490","maxVel":10.0,"maxSampleRate":750.0,"water":true},"114421":{"s":12.0,"d":"12\" DEF3 (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":48.0,"wt":110.0,"minBore":9.56,"minBend":"3D","runTime":86.0,"current":null,"specDoc":"D2572","maxVel":null,"maxSampleRate":750.0,"water":true},"114577":{"s":12.0,"d":"12\" MFL+XYZ (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":94.0,"wt":423.0,"minBore":11.03,"minBend":"1.5D","runTime":72.0,"current":null,"specDoc":"D3842","maxVel":10.0,"maxSampleRate":750.0,"water":true},"120710":{"s":12.0,"d":"12\" DEF+XYZ (xHD) (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":92.0,"wt":250.0,"minBore":9.56,"minBend":"1.5D","runTime":23.0,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"110511":{"s":12.0,"d":"12\u201d MFL2+DEF2+SMFL2+LFM","t":"MDS PRO","tc":"MDS PRO","len":126.0,"wt":785.0,"minBore":11.0,"minBend":"1.5D","runTime":40.0,"current":0.96,"specDoc":"D2039","maxVel":10.0,"maxSampleRate":750.0,"water":true},"115148":{"s":12.0,"d":"12\" DEF+XYZ (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":93.0,"wt":250.0,"minBore":9.56,"minBend":"1.5D","runTime":null,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"108740":{"s":12.0,"d":"12\" GMFL (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":75.0,"wt":280.0,"minBore":9.56,"minBend":"1.5D","runTime":52.0,"current":null,"specDoc":"D3755","maxVel":10.0,"maxSampleRate":750.0,"water":true},"123561-2":{"s":12.0,"d":"12\" EMAT2","t":"EMAT","tc":"EMAT","len":153.5,"wt":765.0,"minBore":11.0,"minBend":"3D","runTime":null,"current":null,"specDoc":"D3061","maxVel":null,"maxSampleRate":750.0,"water":true},"123561-1":{"s":12.0,"d":"12\" EMAT2 (ONE BATTERY)","t":"EMAT","tc":"EMAT","len":127.0,"wt":685.0,"minBore":11.0,"minBend":"3D","runTime":null,"current":null,"specDoc":"D3756","maxVel":null,"maxSampleRate":750.0,"water":true},"112100":{"s":12.0,"d":"12\" DEF (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":49.0,"wt":135.0,"minBore":9.56,"minBend":"1.5D","runTime":75.0,"current":0.21,"specDoc":"D2572","maxVel":null,"maxSampleRate":750.0,"water":true},"108768":{"s":12.0,"d":"12\" MFL+DEF (ATEX)","t":"Legacy Combo","tc":"Legacy Combo","len":76.0,"wt":391.0,"minBore":11.03,"minBend":"1.5D","runTime":34.0,"current":null,"specDoc":"D2240","maxVel":10.0,"maxSampleRate":750.0,"water":true},"129843":{"s":12.0,"d":"12\" MDS FLEX DEF+LFM+MFL3","t":"MDS FLEX","tc":"MDS FLEX","len":99.0,"wt":522.0,"minBore":11.0,"minBend":"1.5D","runTime":51.0,"current":2.13,"specDoc":"D3709","maxVel":10.0,"maxSampleRate":750.0,"water":true},"114371":{"s":12.0,"d":"12\" MFL+DEF+XYZ (ATEX)","t":"Legacy Combo","tc":"Legacy Combo","len":99.0,"wt":430.0,"minBore":11.03,"minBend":"1.5D","runTime":16.0,"current":null,"specDoc":"D2804","maxVel":10.0,"maxSampleRate":750.0,"water":true},"121052":{"s":12.0,"d":"12\" DEF, CHAIN COUPLER","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":51.0,"wt":147.0,"minBore":9.56,"minBend":"1.5D","runTime":74.0,"current":null,"specDoc":"D2661","maxVel":null,"maxSampleRate":750.0,"water":true},"114579":{"s":12.0,"d":"12\" DEF+XYZ (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":73.0,"wt":250.0,"minBore":9.56,"minBend":"1.5D","runTime":0.0,"current":null,"specDoc":"D1277","maxVel":null,"maxSampleRate":750.0,"water":true},"129840":{"s":12.0,"d":"12\" MDS FLEX DEF+MFL3+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":99.0,"wt":460.0,"minBore":11.0,"minBend":"1.5D","runTime":22.0,"current":2.13,"specDoc":"D3710","maxVel":10.0,"maxSampleRate":750.0,"water":true},"108922":{"s":12.0,"d":"12\" MFL2+DEF2+XYZ+LFM","t":"MDS FLEX","tc":"MDS FLEX","len":101.0,"wt":550.0,"minBore":11.0,"minBend":"1.5D","runTime":18.0,"current":0.67,"specDoc":"D2489","maxVel":10.0,"maxSampleRate":750.0,"water":true},"114656":{"s":12.0,"d":"12\" GMFL+XYZ (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":97.0,"wt":320.0,"minBore":9.56,"minBend":"1.5D","runTime":20.0,"current":2.0,"specDoc":"D3792","maxVel":10.0,"maxSampleRate":750.0,"water":true},"113940":{"s":12.0,"d":"12\" MFL (10BAT Drive, xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":74.0,"wt":365.0,"minBore":11.03,"minBend":"1.5D","runTime":52.0,"current":null,"specDoc":"D1046","maxVel":10.0,"maxSampleRate":750.0,"water":true},"109090":{"s":12.0,"d":"12\" GMFL+DEF (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":75.0,"wt":345.0,"minBore":9.6,"minBend":"1.5D","runTime":34.0,"current":1.48,"specDoc":"D2224","maxVel":10.0,"maxSampleRate":750.0,"water":true},"129300":{"s":12.0,"d":"12\" MDS FLEX DEF2+MFL2","t":"MDS FLEX","tc":"MDS FLEX","len":98.0,"wt":447.0,"minBore":11.0,"minBend":"1.5D","runTime":45.0,"current":null,"specDoc":"D3627","maxVel":10.0,"maxSampleRate":750.0,"water":true},"129301":{"s":12.0,"d":"12\" MDS FLEX DEF2+MFL2+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":98.0,"wt":456.0,"minBore":11.0,"minBend":"1.5D","runTime":18.0,"current":null,"specDoc":"D3626","maxVel":10.0,"maxSampleRate":750.0,"water":true},"129841":{"s":12.0,"d":"12\" MDS FLEX DEF+MFL3","t":"MDS FLEX","tc":"MDS FLEX","len":99.0,"wt":451.0,"minBore":11.0,"minBend":"1.5D","runTime":64.0,"current":2.13,"specDoc":"D3711","maxVel":10.0,"maxSampleRate":750.0,"water":true},"129842":{"s":12.0,"d":"12\" MDS PRO DEF+LFM+MFL3+SMFL3","t":"MDS PRO","tc":"MDS PRO","len":125.0,"wt":765.0,"minBore":11.0,"minBend":"1.5D","runTime":38.0,"current":2.13,"specDoc":"D3707","maxVel":10.0,"maxSampleRate":750.0,"water":true},"124963":{"s":12.0,"d":"12\" MFL2+DEF+SMFL3+LFM","t":"MDS PRO","tc":"MDS PRO","len":126.0,"wt":765.0,"minBore":11.0,"minBend":"1.5D","runTime":null,"current":null,"specDoc":"D3141","maxVel":10.0,"maxSampleRate":750.0,"water":true},"120733":{"s":12.0,"d":"12\" MFL2+DEF+SMFL3+XYZ+LFM","t":"MDS PRO","tc":"MDS PRO","len":126.0,"wt":765.0,"minBore":11.0,"minBend":"1.5D","runTime":24.0,"current":2.13,"specDoc":"D2926","maxVel":10.0,"maxSampleRate":750.0,"water":true},"113938":{"s":12.0,"d":"12\" GMFL+DEF+XYZ","t":"Legacy Combo","tc":"Legacy Combo","len":100.0,"wt":340.0,"minBore":9.56,"minBend":"1.5D","runTime":58.0,"current":null,"specDoc":"D3210","maxVel":10.0,"maxSampleRate":750.0,"water":true},"108917":{"s":12.0,"d":"12\u201d MFL2+DEF2+SMFL2+XYZ+LFM","t":"MDS PRO","tc":"MDS PRO","len":126.0,"wt":765.0,"minBore":11.0,"minBend":"1.5D","runTime":24.0,"current":2.13,"specDoc":"D2045","maxVel":10.0,"maxSampleRate":750.0,"water":true},"129844":{"s":12.0,"d":"12\" MDS FLEX DEF+LFM+MFL3+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":99.0,"wt":531.0,"minBore":11.0,"minBend":"1.5D","runTime":21.0,"current":2.13,"specDoc":"D3708","maxVel":10.0,"maxSampleRate":750.0,"water":true},"108841":{"s":12.0,"d":"12\" DEF  (12-14) (8BAT Drive) (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":48.0,"wt":135.0,"minBore":9.56,"minBend":"1.5D","runTime":74.0,"current":0.21,"specDoc":"D1043","maxVel":null,"maxSampleRate":750.0,"water":true},"108847":{"s":12.0,"d":"12\" LGT (12-14) (xHD)","t":"LGT","tc":"LGT","len":68.0,"wt":165.0,"minBore":9.56,"minBend":"1.5D","runTime":77.0,"current":null,"specDoc":"D1047","maxVel":null,"maxSampleRate":750.0,"water":true},"114898":{"s":12.0,"d":"12\" LGT (ATEX)","t":"LGT","tc":"LGT","len":69.0,"wt":127.0,"minBore":9.56,"minBend":"1.5D","runTime":null,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"129647":{"s":12.0,"d":"12\" MDS PRO DEF+LFM+MFL3+SMFL3+XYZ","t":"MDS PRO","tc":"MDS PRO","len":125.0,"wt":765.0,"minBore":11.0,"minBend":"1.5D","runTime":18.0,"current":2.13,"specDoc":"D3706","maxVel":10.0,"maxSampleRate":750.0,"water":true},"110410":{"s":14.0,"d":"14\" DEF (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":68.0,"wt":184.0,"minBore":10.5,"minBend":"1.5D","runTime":75.0,"current":null,"specDoc":"D2248","maxVel":null,"maxSampleRate":750.0,"water":true},"131431":{"s":14.0,"d":"14\" MDS FLEX DEF+MFL3","t":"MDS FLEX","tc":"MDS FLEX","len":100.0,"wt":480.0,"minBore":11.0,"minBend":"1.5D","runTime":64.0,"current":2.13,"specDoc":"D3828","maxVel":10.0,"maxSampleRate":750.0,"water":true},"111456":{"s":14.0,"d":"14\" GMFL (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":87.0,"wt":378.0,"minBore":10.56,"minBend":"1.5D","runTime":45.0,"current":null,"specDoc":null,"maxVel":10.0,"maxSampleRate":750.0,"water":true},"108765":{"s":14.0,"d":"14\" GMFL+DEF (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":89.5,"wt":396.0,"minBore":10.56,"minBend":"1.5D","runTime":29.0,"current":null,"specDoc":"D3229","maxVel":10.0,"maxSampleRate":750.0,"water":true},"114603":{"s":14.0,"d":"14\" GMFL+DEF+XYZ (ATEX)","t":"Legacy Combo","tc":"Legacy Combo","len":108.0,"wt":440.0,"minBore":10.56,"minBend":"1.5D","runTime":14.0,"current":null,"specDoc":"D2237","maxVel":10.0,"maxSampleRate":750.0,"water":true},"121043":{"s":14.0,"d":"14\" MFL+DEF+XYZ","t":"Legacy Combo","tc":"Legacy Combo","len":98.0,"wt":458.0,"minBore":12.15,"minBend":"1.5D","runTime":15.0,"current":null,"specDoc":"D2660","maxVel":10.0,"maxSampleRate":750.0,"water":true},"121049":{"s":14.0,"d":"14\" DEF, CHAIN COUPLER","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":55.0,"wt":157.0,"minBore":10.5,"minBend":"1.5D","runTime":74.0,"current":null,"specDoc":"D2662","maxVel":null,"maxSampleRate":750.0,"water":true},"114587":{"s":14.0,"d":"14\" GMFL+XYZ (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":108.0,"wt":415.0,"minBore":10.56,"minBend":"1.5D","runTime":20.0,"current":null,"specDoc":null,"maxVel":10.0,"maxSampleRate":750.0,"water":true},"120054":{"s":14.0,"d":"14.8\" MFL (377 MM)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":73.0,"wt":387.0,"minBore":null,"minBend":null,"runTime":null,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"108769":{"s":14.0,"d":"14\" MFL+DEF (ATEX)","t":"Legacy Combo","tc":"Legacy Combo","len":77.0,"wt":420.0,"minBore":12.15,"minBend":"1.5D","runTime":29.0,"current":null,"specDoc":"D1049","maxVel":10.0,"maxSampleRate":750.0,"water":true},"108848":{"s":14.0,"d":"14\" LGT (12-14) (xHD)","t":"LGT","tc":"LGT","len":71.0,"wt":180.0,"minBore":9.56,"minBend":"1.5D","runTime":86.0,"current":0.47,"specDoc":"D1194","maxVel":null,"maxSampleRate":750.0,"water":true},"118099":{"s":14.0,"d":"14\" MFL+XYZ (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":96.0,"wt":410.0,"minBore":12.15,"minBend":"1.5D","runTime":20.0,"current":null,"specDoc":"D1280","maxVel":10.0,"maxSampleRate":750.0,"water":true},"120711":{"s":14.0,"d":"14\" DEF+XYZ (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":71.0,"wt":135.0,"minBore":10.5,"minBend":"1.5D","runTime":97.0,"current":null,"specDoc":"D1279","maxVel":null,"maxSampleRate":750.0,"water":true},"110629":{"s":14.0,"d":"14\" MFL (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":76.0,"wt":350.0,"minBore":12.15,"minBend":"1.5D","runTime":45.0,"current":null,"specDoc":"D1050","maxVel":10.0,"maxSampleRate":750.0,"water":true},"108766":{"s":14.0,"d":"14\" GMFL (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":88.0,"wt":380.0,"minBore":10.56,"minBend":"1.5D","runTime":45.0,"current":null,"specDoc":"D1272","maxVel":10.0,"maxSampleRate":750.0,"water":true},"131428":{"s":14.0,"d":"14\" MDS FLEX DEF+LFM+MFL3+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":100.0,"wt":563.0,"minBore":11.0,"minBend":"1.5D","runTime":21.0,"current":2.13,"specDoc":"D3825","maxVel":10.0,"maxSampleRate":750.0,"water":true},"131429":{"s":14.0,"d":"14\" MDS FLEX DEF+LFM+MFL3","t":"MDS FLEX","tc":"MDS FLEX","len":100.0,"wt":554.0,"minBore":11.0,"minBend":"1.5D","runTime":51.0,"current":2.13,"specDoc":"D3826","maxVel":10.0,"maxSampleRate":750.0,"water":true},"131430":{"s":14.0,"d":"14\" MDS FLEX DEF+MFL3+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":100.0,"wt":489.0,"minBore":11.0,"minBend":"1.5D","runTime":22.0,"current":2.13,"specDoc":"D3827","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130183":{"s":16.0,"d":"16\" MDS FLEX DEF2+MFL3","t":"MDS FLEX","tc":"MDS FLEX","len":113.0,"wt":726.0,"minBore":13.6,"minBend":"1.5D","runTime":51.0,"current":null,"specDoc":"D3735","maxVel":10.0,"maxSampleRate":750.0,"water":true},"113514":{"s":16.0,"d":"16\" DEF (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":70.0,"wt":306.0,"minBore":13.5,"minBend":"3D","runTime":69.0,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"16_002":{"s":16.0,"d":"16\" MFL+DEF","t":"Legacy Combo","tc":"Legacy Combo","len":103.0,"wt":740.0,"minBore":13.95,"minBend":"1.5D","runTime":35.0,"current":1.31,"specDoc":"D1053","maxVel":10.0,"maxSampleRate":750.0,"water":true},"109000":{"s":16.0,"d":"16\" MFL2+DEF2+SMFL2+XYZ+LFM","t":"MDS PRO","tc":"MDS PRO","len":144.0,"wt":1383.0,"minBore":13.6,"minBend":"1.5D","runTime":15.0,"current":2.29,"specDoc":"D2043","maxVel":10.0,"maxSampleRate":750.0,"water":true},"120901":{"s":16.0,"d":"16\" MFL2+DEF2+SMFL3+LFM","t":"MDS PRO","tc":"MDS PRO","len":143.0,"wt":1350.0,"minBore":13.6,"minBend":"1.5D","runTime":50.0,"current":13.52,"specDoc":"D2787","maxVel":10.0,"maxSampleRate":750.0,"water":true},"123565-1":{"s":16.0,"d":"16\" EMAT2 (ONE BATTERY)","t":"EMAT","tc":"EMAT","len":136.0,"wt":1105.0,"minBore":14.0,"minBend":"1.5D","runTime":null,"current":null,"specDoc":"D3757","maxVel":null,"maxSampleRate":750.0,"water":true},"130179":{"s":16.0,"d":"16\" MDS PRO DEF2+LFM+MFL3+SMFL3","t":"MDS PRO","tc":"MDS PRO","len":143.0,"wt":1350.0,"minBore":13.6,"minBend":"1.5D","runTime":32.0,"current":13.52,"specDoc":"D3731","maxVel":10.0,"maxSampleRate":750.0,"water":true},"109575":{"s":16.0,"d":"16\" MFL2+DEF2+LFM","t":"MDS FLEX","tc":"MDS FLEX","len":113.0,"wt":885.0,"minBore":13.6,"minBend":"1.5D","runTime":150.0,"current":0.79,"specDoc":"D2492","maxVel":10.0,"maxSampleRate":750.0,"water":true},"112848":{"s":16.0,"d":"16\" GMFL (Short)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":61.0,"wt":443.0,"minBore":12.0,"minBend":"1.5D","runTime":35.0,"current":0.38,"specDoc":"D2179","maxVel":10.0,"maxSampleRate":750.0,"water":true},"109180":{"s":16.0,"d":"16\" DEF (16-18) 3D (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":66.0,"wt":310.0,"minBore":13.5,"minBend":"3D","runTime":58.0,"current":null,"specDoc":"D2170","maxVel":null,"maxSampleRate":750.0,"water":true},"109179":{"s":16.0,"d":"16\" DEF (GCPU xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":64.0,"wt":215.0,"minBore":12.0,"minBend":"1.5D","runTime":47.0,"current":null,"specDoc":"D1051","maxVel":null,"maxSampleRate":750.0,"water":true},"123565-2":{"s":16.0,"d":"16\" EMAT2","t":"EMAT","tc":"EMAT","len":162.5,"wt":1190.0,"minBore":14.0,"minBend":"1.5D","runTime":83.0,"current":null,"specDoc":"D3062","maxVel":null,"maxSampleRate":750.0,"water":true},"114875":{"s":16.0,"d":"16\" DEF+XYZ (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":66.0,"wt":233.0,"minBore":12.0,"minBend":"1.5D","runTime":17.0,"current":null,"specDoc":"D2778","maxVel":null,"maxSampleRate":750.0,"water":true},"122641":{"s":16.0,"d":"16\" MFL2+DEF2+SMFL3+XYZ+LFM","t":"MDS PRO","tc":"MDS PRO","len":142.0,"wt":1400.0,"minBore":13.6,"minBend":"1.5D","runTime":15.0,"current":null,"specDoc":"D2850","maxVel":10.0,"maxSampleRate":750.0,"water":true},"113569":{"s":16.0,"d":"16\" MFL+XYZ (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":70.0,"wt":580.0,"minBore":13.95,"minBend":"1.5D","runTime":59.0,"current":null,"specDoc":null,"maxVel":10.0,"maxSampleRate":750.0,"water":true},"109248":{"s":16.0,"d":"16\" GMFL+DEF (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":95.0,"wt":544.0,"minBore":12.0,"minBend":"1.5D","runTime":35.0,"current":null,"specDoc":"D3525","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130181":{"s":16.0,"d":"16\" MDS FLEX DEF2+LFM+MFL3","t":"MDS FLEX","tc":"MDS FLEX","len":113.0,"wt":885.0,"minBore":13.6,"minBend":"1.5D","runTime":50.0,"current":null,"specDoc":"D3733","maxVel":10.0,"maxSampleRate":750.0,"water":true},"129302":{"s":16.0,"d":"16\" MDS FLEX DEF2+MFL2","t":"MDS FLEX","tc":"MDS FLEX","len":113.0,"wt":726.0,"minBore":13.6,"minBend":"1.5D","runTime":150.0,"current":null,"specDoc":"D3628","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130180":{"s":16.0,"d":"16\" MDS FLEX DEF2+LFM+MFL3+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":113.0,"wt":1050.0,"minBore":13.6,"minBend":"1.5D","runTime":19.0,"current":1.96,"specDoc":"D3732","maxVel":10.0,"maxSampleRate":750.0,"water":true},"109576":{"s":16.0,"d":"16\" MFL2+DEF2+XYZ+LFM","t":"MDS FLEX","tc":"MDS FLEX","len":113.0,"wt":1050.0,"minBore":13.6,"minBend":"1.5D","runTime":60.0,"current":1.96,"specDoc":"D2491","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130178":{"s":16.0,"d":"16\" MDS PRO DEF2+LFM+MFL3+SMFL3+XYZ","t":"MDS PRO","tc":"MDS PRO","len":142.0,"wt":1400.0,"minBore":13.6,"minBend":"1.5D","runTime":16.0,"current":null,"specDoc":"D3730","maxVel":10.0,"maxSampleRate":750.0,"water":true},"108734":{"s":16.0,"d":"16\" MFL (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":70.0,"wt":572.0,"minBore":13.95,"minBend":"1.5D","runTime":144.0,"current":1.1,"specDoc":"D3758","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130182":{"s":16.0,"d":"16\" MDS FLEX DEF2+MFL3+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":113.0,"wt":746.0,"minBore":13.6,"minBend":"1.5D","runTime":23.0,"current":null,"specDoc":"D3734","maxVel":10.0,"maxSampleRate":750.0,"water":true},"129303":{"s":16.0,"d":"16\" MDS FLEX DEF2+MFL2+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":113.0,"wt":746.0,"minBore":13.6,"minBend":"1.5D","runTime":60.0,"current":null,"specDoc":"D3629","maxVel":10.0,"maxSampleRate":750.0,"water":true},"109249":{"s":16.0,"d":"16\" GMFL+DEF+XYZ Integrated CPU (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":95.0,"wt":555.0,"minBore":12.0,"minBend":"1.5D","runTime":103.0,"current":2.24,"specDoc":"D1303","maxVel":10.0,"maxSampleRate":750.0,"water":true},"114530":{"s":16.0,"d":"16\" GMFL+DEF+XYZ (ATEX)","t":"Legacy Combo","tc":"Legacy Combo","len":94.0,"wt":560.0,"minBore":12.0,"minBend":"1.5D","runTime":0.0,"current":null,"specDoc":null,"maxVel":10.0,"maxSampleRate":750.0,"water":true},"114637":{"s":16.0,"d":"16\" MFL+DEF+XYZ (ATEX)","t":"Legacy Combo","tc":"Legacy Combo","len":102.0,"wt":770.0,"minBore":13.95,"minBend":"1.5D","runTime":21.0,"current":null,"specDoc":"D2989","maxVel":10.0,"maxSampleRate":750.0,"water":true},"112882":{"s":18.0,"d":"18\" GMFL (Short)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":62.0,"wt":525.0,"minBore":13.5,"minBend":"1.5D","runTime":293.0,"current":0.4,"specDoc":"D2195","maxVel":10.0,"maxSampleRate":750.0,"water":true},"116900":{"s":18.0,"d":"18\" DEF2+LFM+MFL2 (Hardspot tool)","t":"MDS FLEX","tc":"MDS FLEX","len":116.0,"wt":1050.0,"minBore":15.3,"minBend":"1.5D","runTime":90.0,"current":null,"specDoc":"D2369","maxVel":10.0,"maxSampleRate":750.0,"water":true},"113595":{"s":18.0,"d":"18\" MFL+DEF+XYZ (ATEX)","t":"Legacy Combo","tc":"Legacy Combo","len":103.0,"wt":782.0,"minBore":15.75,"minBend":"1.5D","runTime":62.0,"current":2.32,"specDoc":"D3694","maxVel":10.0,"maxSampleRate":750.0,"water":true},"109168":{"s":18.0,"d":"18\" DEF (16-18) (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":70.0,"wt":350.0,"minBore":13.5,"minBend":"1.5D","runTime":58.0,"current":null,"specDoc":"D1055","maxVel":null,"maxSampleRate":750.0,"water":true},"123309":{"s":18.0,"d":"18\" MFL (16-18) + DEF (16-18)","t":"Legacy Combo","tc":"Legacy Combo","len":103.0,"wt":800.0,"minBore":15.75,"minBend":"1.5D","runTime":79.0,"current":1.32,"specDoc":"D1056","maxVel":10.0,"maxSampleRate":750.0,"water":true},"123115":{"s":18.0,"d":"18\" MFL (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":71.0,"wt":600.0,"minBore":15.75,"minBend":"1.5D","runTime":155.0,"current":1.1,"specDoc":"D1057","maxVel":10.0,"maxSampleRate":750.0,"water":true},"131181":{"s":18.0,"d":"18\" DEF2+LFM+MFL2+XYZ (Hardspot tool)","t":"MDS FLEX","tc":"MDS FLEX","len":116.0,"wt":1050.0,"minBore":15.3,"minBend":"1.5D","runTime":60.0,"current":1.96,"specDoc":"D3781","maxVel":10.0,"maxSampleRate":750.0,"water":true},"114900":{"s":18.0,"d":"18\" MFL+XYZ H2","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":71.0,"wt":815.0,"minBore":16.0,"minBend":"1.5D","runTime":55.0,"current":null,"specDoc":"D2755","maxVel":10.0,"maxSampleRate":750.0,"water":true},"114729":{"s":18.0,"d":"18\" MFL+XYZ (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":71.0,"wt":600.0,"minBore":15.75,"minBend":"1.5D","runTime":0.0,"current":null,"specDoc":null,"maxVel":10.0,"maxSampleRate":750.0,"water":true},"112552":{"s":18.0,"d":"18\" DEF+XYZ (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":65.0,"wt":295.0,"minBore":13.5,"minBend":"1.5D","runTime":35.0,"current":null,"specDoc":"D2236","maxVel":null,"maxSampleRate":750.0,"water":true},"126341":{"s":18.0,"d":"18\" GMFL+DEF (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":96.0,"wt":615.0,"minBore":13.5,"minBend":"1.5D","runTime":76.0,"current":1.45,"specDoc":"D3695","maxVel":10.0,"maxSampleRate":750.0,"water":true},"113589":{"s":18.0,"d":"18\" MFL+XYZ (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":71.0,"wt":600.0,"minBore":15.75,"minBend":"1.5D","runTime":59.0,"current":null,"specDoc":null,"maxVel":10.0,"maxSampleRate":750.0,"water":true},"112076":{"s":18.0,"d":"18\" GMFL Integrated DEF Combo+XYZ","t":"Legacy Combo","tc":"Legacy Combo","len":96.0,"wt":656.0,"minBore":13.5,"minBend":"1.5D","runTime":35.0,"current":1.45,"specDoc":"D2178","maxVel":10.0,"maxSampleRate":750.0,"water":true},"115727":{"s":20.0,"d":"20\" MFL3+DEF+XYZ+LFM","t":"MDS FLEX","tc":"MDS FLEX","len":125.0,"wt":1862.0,"minBore":17.25,"minBend":"1.5D","runTime":54.0,"current":null,"specDoc":"D2321","maxVel":10.0,"maxSampleRate":750.0,"water":true},"114865":{"s":20.0,"d":"20\" GMFL+DEF1(20-24)+XYZ(3D)","t":"Legacy Combo","tc":"Legacy Combo","len":130.0,"wt":1040.0,"minBore":15.4,"minBend":"3D","runTime":15.0,"current":1.92,"specDoc":"D2251","maxVel":10.0,"maxSampleRate":750.0,"water":true},"112114":{"s":20.0,"d":"20\" MFL3+DEF+SMFL+XYZ+LFM","t":"MDS PRO","tc":"MDS PRO","len":165.0,"wt":2550.0,"minBore":17.25,"minBend":"1.5D","runTime":18.0,"current":null,"specDoc":"D2208","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130185":{"s":20.0,"d":"20\" MDS PRO DEF+LFM+MFL4+SMFL","t":"MDS PRO","tc":"MDS PRO","len":165.0,"wt":2540.0,"minBore":17.25,"minBend":"1.5D","runTime":73.0,"current":null,"specDoc":"D3737","maxVel":10.0,"maxSampleRate":750.0,"water":true},"109627":{"s":20.0,"d":"20\" MFL (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":80.0,"wt":1100.0,"minBore":17.55,"minBend":"1.5D","runTime":174.0,"current":null,"specDoc":"D3683","maxVel":10.0,"maxSampleRate":750.0,"water":true},"112115":{"s":20.0,"d":"20\" MFL3+DEF+SpirALL MFL+LFM","t":"MDS PRO","tc":"MDS PRO","len":165.0,"wt":2540.0,"minBore":17.25,"minBend":"1.5D","runTime":97.0,"current":null,"specDoc":"D2196","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130184":{"s":20.0,"d":"20\" MDS PRO DEF+LFM+MFL4+SMFL+XYZ","t":"MDS PRO","tc":"MDS PRO","len":165.0,"wt":2550.0,"minBore":17.25,"minBend":"1.5D","runTime":45.0,"current":null,"specDoc":"D3736","maxVel":10.0,"maxSampleRate":750.0,"water":true},"120312":{"s":20.0,"d":"20\" DEF+XYZ (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":88.0,"wt":468.0,"minBore":15.0,"minBend":"3D","runTime":19.0,"current":null,"specDoc":"D2720","maxVel":null,"maxSampleRate":750.0,"water":true},"109660":{"s":20.0,"d":"20\" GMFL+DEF2 (ATEX)","t":"Legacy Combo","tc":"Legacy Combo","len":125.0,"wt":1100.0,"minBore":15.4,"minBend":"1.5D","runTime":52.0,"current":null,"specDoc":"D2275","maxVel":10.0,"maxSampleRate":750.0,"water":true},"127353":{"s":20.0,"d":"20\" MFL+DEF2+XYZ","t":"Legacy Combo","tc":"Legacy Combo","len":121.0,"wt":1105.0,"minBore":17.55,"minBend":"1.5D","runTime":15.0,"current":null,"specDoc":"D3517","maxVel":10.0,"maxSampleRate":750.0,"water":true},"129304":{"s":20.0,"d":"20\" MDS FLEX DEF+MFL3","t":"MDS FLEX","tc":"MDS FLEX","len":93.0,"wt":1217.0,"minBore":17.25,"minBend":"1.5D","runTime":97.0,"current":null,"specDoc":"D3631","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130187":{"s":20.0,"d":"20\" MDS FLEX DEF+LFM+MFL4","t":"MDS FLEX","tc":"MDS FLEX","len":125.0,"wt":1854.0,"minBore":17.25,"minBend":"1.5D","runTime":103.0,"current":null,"specDoc":"D3739","maxVel":10.0,"maxSampleRate":750.0,"water":true},"125486":{"s":20.0,"d":"20\" DEF+XYZ","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":82.0,"wt":434.0,"minBore":15.0,"minBend":"1.5D","runTime":19.0,"current":null,"specDoc":"D3207","maxVel":null,"maxSampleRate":750.0,"water":true},"109357":{"s":20.0,"d":"20\" MFL+DEF2 (ATEX)","t":"Legacy Combo","tc":"Legacy Combo","len":125.0,"wt":1350.0,"minBore":17.55,"minBend":"1.5D","runTime":null,"current":null,"specDoc":"D2273","maxVel":10.0,"maxSampleRate":750.0,"water":true},"117837":{"s":20.0,"d":"20\" DEF Single Body","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":46.1,"wt":321.0,"minBore":15.0,"minBend":"1.5D","runTime":55.0,"current":null,"specDoc":"D2388","maxVel":null,"maxSampleRate":750.0,"water":true},"130188":{"s":20.0,"d":"20\" MDS FLEX DEF+MFL4+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":93.0,"wt":1226.0,"minBore":17.25,"minBend":"1.5D","runTime":59.0,"current":null,"specDoc":"D3740","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130189":{"s":20.0,"d":"20\" MDS FLEX DEF+MFL4","t":"MDS FLEX","tc":"MDS FLEX","len":93.0,"wt":1217.0,"minBore":17.25,"minBend":"1.5D","runTime":122.0,"current":null,"specDoc":"D3741","maxVel":10.0,"maxSampleRate":750.0,"water":true},"115728":{"s":20.0,"d":"20\" MFL3+DEF+LFM","t":"MDS FLEX","tc":"MDS FLEX","len":125.0,"wt":1854.0,"minBore":17.25,"minBend":"1.5D","runTime":97.0,"current":null,"specDoc":"D2322","maxVel":10.0,"maxSampleRate":750.0,"water":true},"114402":{"s":20.0,"d":"20\" GMFL+XYZ (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":127.0,"wt":1015.0,"minBore":16.8,"minBend":"1.5D","runTime":19.0,"current":null,"specDoc":null,"maxVel":10.0,"maxSampleRate":750.0,"water":true},"109492":{"s":20.0,"d":"20\" GMFL (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":79.0,"wt":1055.0,"minBore":15.4,"minBend":"1.5D","runTime":52.0,"current":null,"specDoc":"D1061","maxVel":10.0,"maxSampleRate":750.0,"water":true},"125459":{"s":20.0,"d":"20\" GMFL+DEF2+XYZ","t":"Legacy Combo","tc":"Legacy Combo","len":124.0,"wt":1003.0,"minBore":15.4,"minBend":"1.5D","runTime":15.0,"current":null,"specDoc":"D3204","maxVel":10.0,"maxSampleRate":750.0,"water":true},"125487":{"s":20.0,"d":"20\" GMFL+DEF+XYZ","t":"Legacy Combo","tc":"Legacy Combo","len":127.0,"wt":1012.0,"minBore":15.4,"minBend":"1.5D","runTime":112.0,"current":null,"specDoc":"D3206","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130186":{"s":20.0,"d":"20\" MDS FLEX DEF+LFM+MFL4+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":125.0,"wt":1862.0,"minBore":17.25,"minBend":"1.5D","runTime":55.0,"current":null,"specDoc":"D3738","maxVel":10.0,"maxSampleRate":750.0,"water":true},"129305":{"s":20.0,"d":"20\" MDS FLEX DEF+MFL3+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":93.0,"wt":1226.0,"minBore":17.25,"minBend":"1.5D","runTime":54.0,"current":null,"specDoc":"D3630","maxVel":10.0,"maxSampleRate":750.0,"water":true},"109628":{"s":20.0,"d":"20\" DEF2 (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":86.0,"wt":470.0,"minBore":15.0,"minBend":"1.5D","runTime":46.0,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"116772":{"s":22.0,"d":"22\" GMFL2+DEF+XYZ","t":"Legacy Combo","tc":"Legacy Combo","len":149.0,"wt":1525.0,"minBore":19.0,"minBend":"1.5D","runTime":null,"current":null,"specDoc":"D2354","maxVel":10.0,"maxSampleRate":750.0,"water":true},"129506":{"s":22.0,"d":"22\" MDS FLEX DEF2+MFL2+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":97.0,"wt":1910.0,"minBore":19.25,"minBend":"1.5D","runTime":137.0,"current":null,"specDoc":"D3674","maxVel":10.0,"maxSampleRate":750.0,"water":true},"129505":{"s":22.0,"d":"22\" MDS FLEX DEF2+LFM+MFL2","t":"MDS FLEX","tc":"MDS FLEX","len":129.0,"wt":2515.0,"minBore":19.25,"minBend":"1.5D","runTime":212.0,"current":null,"specDoc":"D3673","maxVel":10.0,"maxSampleRate":750.0,"water":true},"102451-01":{"s":22.0,"d":"22\" GMFL2","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":93.0,"wt":1155.0,"minBore":19.0,"minBend":"1.5D","runTime":425.0,"current":1.38,"specDoc":"D2536","maxVel":10.0,"maxSampleRate":750.0,"water":true},"120369":{"s":22.0,"d":"22\" MFL+DEF+XYZ (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":134.0,"wt":1251.0,"minBore":19.35,"minBend":null,"runTime":null,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"124936":{"s":22.0,"d":"22\" DEF+XYZ (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":88.0,"wt":514.0,"minBore":16.5,"minBend":"1.5D","runTime":56.3,"current":1.2,"specDoc":"D3166","maxVel":null,"maxSampleRate":750.0,"water":true},"117836":{"s":22.0,"d":"22\" DEF Single Body","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":46.1,"wt":321.0,"minBore":16.5,"minBend":"1.5D","runTime":49.0,"current":null,"specDoc":"D2375","maxVel":null,"maxSampleRate":750.0,"water":true},"129500":{"s":22.0,"d":"22\" MDS PRO DEF2+LFM+MFL2+SMFL+XYZ","t":"MDS PRO","tc":"MDS PRO","len":169.0,"wt":2955.0,"minBore":19.25,"minBend":"1.5D","runTime":119.0,"current":null,"specDoc":"D3663","maxVel":10.0,"maxSampleRate":750.0,"water":true},"129502":{"s":22.0,"d":"22\" MFL2+DEF2+SMFL+XYZ","t":"MDS PRO","tc":"MDS PRO","len":136.0,"wt":2625.0,"minBore":19.25,"minBend":"1.5D","runTime":129.0,"current":null,"specDoc":"D3670","maxVel":10.0,"maxSampleRate":750.0,"water":true},"129501":{"s":22.0,"d":"22\" MDS PRO DEF2+LFM+MFL2+SMFL","t":"MDS PRO","tc":"MDS PRO","len":169.0,"wt":2955.0,"minBore":19.25,"minBend":"1.5D","runTime":187.0,"current":null,"specDoc":"D3669","maxVel":10.0,"maxSampleRate":750.0,"water":true},"129507":{"s":22.0,"d":"22\" MDS FLEX DEF2+MFL2","t":"MDS FLEX","tc":"MDS FLEX","len":97.0,"wt":1910.0,"minBore":19.25,"minBend":"1.5D","runTime":236.0,"current":null,"specDoc":"D3675","maxVel":10.0,"maxSampleRate":750.0,"water":true},"109627-01":{"s":22.0,"d":"22\" MFL (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":80.0,"wt":1150.0,"minBore":null,"minBend":null,"runTime":45.0,"current":null,"specDoc":null,"maxVel":10.0,"maxSampleRate":750.0,"water":true},"109620":{"s":22.0,"d":"22\" MFL (20-22) + DEF (20-24) (ATEX)","t":"Legacy Combo","tc":"Legacy Combo","len":142.0,"wt":1340.0,"minBore":19.35,"minBend":"1.5D","runTime":0.0,"current":null,"specDoc":null,"maxVel":10.0,"maxSampleRate":750.0,"water":true},"129504":{"s":22.0,"d":"22\" MDS FLEX DEF2+LFM+MFL2+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":129.0,"wt":2515.0,"minBore":19.25,"minBend":"1.5D","runTime":129.0,"current":null,"specDoc":"D3672","maxVel":10.0,"maxSampleRate":750.0,"water":true},"129503":{"s":22.0,"d":"22\" MFL2+DEF2+SMFL","t":"MDS PRO","tc":"MDS PRO","len":136.0,"wt":2625.0,"minBore":19.25,"minBend":"1.5D","runTime":212.0,"current":null,"specDoc":"D3671","maxVel":10.0,"maxSampleRate":750.0,"water":true},"110470":{"s":24.0,"d":"24\" MFL3+DEF+XYZ+LFM","t":"MDS FLEX","tc":"MDS FLEX","len":120.0,"wt":2812.0,"minBore":20.4,"minBend":"1.5D","runTime":50.0,"current":null,"specDoc":"D2099","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130192":{"s":24.0,"d":"24\" MDS FLEX DEF+LFM+MFL4+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":120.0,"wt":2812.0,"minBore":20.4,"minBend":"1.5D","runTime":52.0,"current":null,"specDoc":"D3744","maxVel":10.0,"maxSampleRate":750.0,"water":true},"113660":{"s":24.0,"d":"24\" MFL3+DEF+LFM","t":"MDS FLEX","tc":"MDS FLEX","len":120.0,"wt":2804.0,"minBore":20.4,"minBend":"1.5D","runTime":67.0,"current":null,"specDoc":"D2341","maxVel":10.0,"maxSampleRate":750.0,"water":true},"125460":{"s":24.0,"d":"24\" GMFL2+DEF+XYZ","t":"Legacy Combo","tc":"Legacy Combo","len":142.0,"wt":1475.0,"minBore":19.0,"minBend":"1.5D","runTime":18.0,"current":null,"specDoc":"D3205","maxVel":10.0,"maxSampleRate":750.0,"water":true},"109346":{"s":24.0,"d":"24\" GMFL2 (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":93.0,"wt":1170.0,"minBore":19.0,"minBend":"1.5D","runTime":31.0,"current":null,"specDoc":"D3509","maxVel":10.0,"maxSampleRate":750.0,"water":true},"110639":{"s":24.0,"d":"24\" DEF1+XYZ(20-24) (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":95.0,"wt":590.0,"minBore":18.0,"minBend":"1.5D","runTime":0.0,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"114681":{"s":24.0,"d":"24\" DEF+XYZ (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":95.0,"wt":590.0,"minBore":18.0,"minBend":"1.5D","runTime":19.0,"current":null,"specDoc":"D3554","maxVel":null,"maxSampleRate":750.0,"water":true},"113651":{"s":24.0,"d":"24\" MFL3+DEF+SpirALL MFL+LFM","t":"MDS PRO","tc":"MDS PRO","len":165.0,"wt":3900.0,"minBore":20.4,"minBend":"1.5D","runTime":40.0,"current":null,"specDoc":"D2342","maxVel":10.0,"maxSampleRate":750.0,"water":true},"111481":{"s":24.0,"d":"24\" MFL3+DEF+SMFL+XYZ+LFM","t":"MDS PRO","tc":"MDS PRO","len":165.0,"wt":3970.0,"minBore":20.4,"minBend":"1.5D","runTime":15.0,"current":null,"specDoc":"D2100","maxVel":10.0,"maxSampleRate":750.0,"water":true},"109465":{"s":24.0,"d":"24\" GMFL2 (22-24)+DEF (20-24)","t":"Legacy Combo","tc":"Legacy Combo","len":148.0,"wt":1500.0,"minBore":19.0,"minBend":"1.5D","runTime":24.0,"current":2.08,"specDoc":"D3587","maxVel":10.0,"maxSampleRate":750.0,"water":true},"111453":{"s":24.0,"d":"24\" GMFL2 (xHD ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":null,"wt":null,"minBore":null,"minBend":null,"runTime":91.0,"current":null,"specDoc":null,"maxVel":10.0,"maxSampleRate":null,"water":true},"130195":{"s":24.0,"d":"24\" MDS FLEX DEF+MFL4","t":"MDS FLEX","tc":"MDS FLEX","len":120.0,"wt":1831.0,"minBore":20.4,"minBend":"1.5D","runTime":108.0,"current":null,"specDoc":"D3747","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130194":{"s":24.0,"d":"24\" MDS FLEX DEF+MFL4+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":120.0,"wt":1840.0,"minBore":20.4,"minBend":"1.5D","runTime":56.0,"current":null,"specDoc":"D3746","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130190":{"s":24.0,"d":"24\" MDS PRO DEF+LFM+MFL4+SMFL+XYZ","t":"MDS PRO","tc":"MDS PRO","len":165.0,"wt":3970.0,"minBore":20.4,"minBend":"1.5D","runTime":43.0,"current":null,"specDoc":"D3742","maxVel":10.0,"maxSampleRate":750.0,"water":true},"114661":{"s":24.0,"d":"24\" DEF Single Body (Short)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":46.1,"wt":321.0,"minBore":18.0,"minBend":"1.5D","runTime":55.0,"current":null,"specDoc":"D2387","maxVel":null,"maxSampleRate":750.0,"water":true},"114485":{"s":24.0,"d":"24\" GMFL2+DEF+XYZ (ATEX)","t":"Legacy Combo","tc":"Legacy Combo","len":148.0,"wt":1525.0,"minBore":19.0,"minBend":"1.5D","runTime":18.0,"current":null,"specDoc":"D3538","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130191":{"s":24.0,"d":"24\" MDS PRO DEF+LFM+MFL4+SMFL","t":"MDS PRO","tc":"MDS PRO","len":165.0,"wt":3970.0,"minBore":20.4,"minBend":"1.5D","runTime":68.0,"current":null,"specDoc":"D3743","maxVel":10.0,"maxSampleRate":750.0,"water":true},"114495":{"s":24.0,"d":"24\" GMFL2+XYZ","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":143.0,"wt":1500.0,"minBore":19.5,"minBend":"1.5D","runTime":100.0,"current":null,"specDoc":null,"maxVel":10.0,"maxSampleRate":750.0,"water":true},"129307":{"s":24.0,"d":"24\" MDS FLEX DEF+MFL3+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":120.0,"wt":1840.0,"minBore":20.4,"minBend":"1.5D","runTime":40.0,"current":null,"specDoc":"D3633","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130193":{"s":24.0,"d":"24\" MDS FLEX DEF+LFM+MFL4","t":"MDS FLEX","tc":"MDS FLEX","len":120.0,"wt":2804.0,"minBore":20.4,"minBend":"1.5D","runTime":93.0,"current":null,"specDoc":"D3745","maxVel":10.0,"maxSampleRate":750.0,"water":true},"109410":{"s":24.0,"d":"24\" DEF (20-24) (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":96.0,"wt":600.0,"minBore":18.0,"minBend":"1.5D","runTime":45.0,"current":null,"specDoc":"D1066","maxVel":null,"maxSampleRate":750.0,"water":true},"129306":{"s":24.0,"d":"24\" MDS FLEX DEF+MFL3","t":"MDS FLEX","tc":"MDS FLEX","len":120.0,"wt":1831.0,"minBore":20.4,"minBend":"1.5D","runTime":null,"current":null,"specDoc":"D3632","maxVel":10.0,"maxSampleRate":750.0,"water":true},"124832":{"s":26.0,"d":"26\" DEF Single Body (Short)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":52.0,"wt":500.0,"minBore":19.5,"minBend":"1.5D","runTime":50.0,"current":0.72,"specDoc":"D3106","maxVel":null,"maxSampleRate":750.0,"water":true},"122700":{"s":26.0,"d":"26\" MFL+DEF2+SMFL+XYZ+LFM","t":"MDS PRO","tc":"MDS PRO","len":176.0,"wt":3500.0,"minBore":22.1,"minBend":"1.5D","runTime":15.0,"current":null,"specDoc":"D2581","maxVel":10.0,"maxSampleRate":750.0,"water":true},"122703":{"s":26.0,"d":"26\" MFL+DEF2+LFM","t":"MDS FLEX","tc":"MDS FLEX","len":132.0,"wt":2250.0,"minBore":22.1,"minBend":"1.5D","runTime":294.0,"current":null,"specDoc":"D2582","maxVel":10.0,"maxSampleRate":750.0,"water":true},"129308":{"s":26.0,"d":"26\" MDS FLEX DEF2+MFL","t":"MDS FLEX","tc":"MDS FLEX","len":132.0,"wt":1923.0,"minBore":22.1,"minBend":"1.5D","runTime":237.0,"current":null,"specDoc":"D3634","maxVel":10.0,"maxSampleRate":750.0,"water":true},"122701":{"s":26.0,"d":"26\" MFL+DEF2+SMFL+LFM","t":"MDS PRO","tc":"MDS PRO","len":176.0,"wt":3500.0,"minBore":22.1,"minBend":"1.5D","runTime":237.0,"current":null,"specDoc":"D2580","maxVel":10.0,"maxSampleRate":750.0,"water":true},"129309":{"s":26.0,"d":"26\" MDS FLEX DEF2+MFL+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":132.0,"wt":1877.0,"minBore":22.1,"minBend":"1.5D","runTime":15.0,"current":null,"specDoc":"D3635","maxVel":10.0,"maxSampleRate":750.0,"water":true},"110251":{"s":26.0,"d":"26\" GMFL (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":97.0,"wt":1420.0,"minBore":19.5,"minBend":"1.5D","runTime":29.0,"current":1.69,"specDoc":"D3715","maxVel":10.0,"maxSampleRate":750.0,"water":true},"114879":{"s":26.0,"d":"26\" DEF+XYZ (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":98.0,"wt":745.0,"minBore":19.5,"minBend":"1.5D","runTime":25.0,"current":null,"specDoc":"D3714","maxVel":null,"maxSampleRate":750.0,"water":true},"120816":{"s":26.0,"d":"26\" GMFL+DEF (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":157.0,"wt":1980.0,"minBore":19.5,"minBend":"1.5D","runTime":104.0,"current":null,"specDoc":"D1197","maxVel":10.0,"maxSampleRate":750.0,"water":true},"122702":{"s":26.0,"d":"26\" MFL+DEF2+XYZ+LFM","t":"MDS FLEX","tc":"MDS FLEX","len":132.0,"wt":2250.0,"minBore":22.1,"minBend":"1.5D","runTime":16.0,"current":null,"specDoc":"D2583","maxVel":10.0,"maxSampleRate":750.0,"water":true},"114433":{"s":26.0,"d":"26\" GMFL+DEF+XYZ (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":157.0,"wt":2000.0,"minBore":19.5,"minBend":"1.5D","runTime":0.0,"current":null,"specDoc":null,"maxVel":10.0,"maxSampleRate":750.0,"water":true},"110890":{"s":26.0,"d":"26\" DEF (26-30) (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":99.0,"wt":720.0,"minBore":19.5,"minBend":"1.5D","runTime":56.0,"current":null,"specDoc":"D1069","maxVel":null,"maxSampleRate":750.0,"water":true},"113608":{"s":28.0,"d":"28\" GMFL (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":108.0,"wt":1788.0,"minBore":22.5,"minBend":"1.5D","runTime":72.0,"current":1.79,"specDoc":"D3779","maxVel":10.0,"maxSampleRate":750.0,"water":true},"113574":{"s":28.0,"d":"28\" DEF+XYZ (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":100.0,"wt":775.0,"minBore":21.0,"minBend":"1.5D","runTime":56.0,"current":1.72,"specDoc":"D3778","maxVel":null,"maxSampleRate":750.0,"water":true},"114420":{"s":28.0,"d":"28\" GMFL+DEF+XYZ (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":167.0,"wt":2275.0,"minBore":22.5,"minBend":"1.5D","runTime":168.0,"current":1.79,"specDoc":"D3780","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130200":{"s":30.0,"d":"30\" MDS FLEX DEF+MFL2+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":150.0,"wt":3537.0,"minBore":25.5,"minBend":"1.5D","runTime":54.0,"current":null,"specDoc":"D3752","maxVel":10.0,"maxSampleRate":750.0,"water":true},"111694":{"s":30.0,"d":"30\" DEF (26-30) (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":100.0,"wt":960.0,"minBore":22.5,"minBend":"1.5D","runTime":56.0,"current":null,"specDoc":"D1073","maxVel":null,"maxSampleRate":750.0,"water":true},"124764":{"s":30.0,"d":"30\" DEF+XYZ (Single Body)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":52.0,"wt":600.0,"minBore":22.5,"minBend":"1.5D","runTime":57.0,"current":null,"specDoc":"D3081","maxVel":null,"maxSampleRate":750.0,"water":true},"115600-01-00-02-01":{"s":30.0,"d":"30\" MFL+DEF+XYZ+LFM","t":"MDS FLEX","tc":"MDS FLEX","len":150.0,"wt":4350.0,"minBore":25.5,"minBend":"1.5D","runTime":30.0,"current":1.87,"specDoc":"D2424","maxVel":10.0,"maxSampleRate":750.0,"water":false},"115600-01-02-01-01":{"s":30.0,"d":"30\" MFL+DEF+SMFL+LFM","t":"MDS PRO","tc":"MDS PRO","len":200.0,"wt":6400.0,"minBore":25.5,"minBend":"1.5D","runTime":57.0,"current":1.06,"specDoc":"D2345","maxVel":10.0,"maxSampleRate":750.0,"water":false},"114596":{"s":30.0,"d":"30\" DEF+XYZ (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":100.0,"wt":985.0,"minBore":22.5,"minBend":"1.5D","runTime":0.0,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"110486":{"s":30.0,"d":"30\" GMFL (28-30) (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":108.0,"wt":1940.0,"minBore":22.5,"minBend":"1.5D","runTime":145.0,"current":0.067,"specDoc":"D1074","maxVel":10.0,"maxSampleRate":750.0,"water":true},"126498":{"s":30.0,"d":"30\"/31\" MFL+DEF+SMFL+XYZ+LFM","t":"MDS PRO","tc":"MDS PRO","len":201.0,"wt":6900.0,"minBore":26.0,"minBend":"1.5D","runTime":null,"current":null,"specDoc":"D3530","maxVel":10.0,"maxSampleRate":750.0,"water":true},"114533":{"s":30.0,"d":"30\" GMFL ATEX","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":108.0,"wt":1940.0,"minBore":22.5,"minBend":"1.5D","runTime":0.0,"current":null,"specDoc":null,"maxVel":10.0,"maxSampleRate":750.0,"water":true},"129310":{"s":30.0,"d":"30\" MDS FLEX DEF+MFL","t":"MDS FLEX","tc":"MDS FLEX","len":150.0,"wt":3537.0,"minBore":25.5,"minBend":"1.5D","runTime":73.0,"current":null,"specDoc":"D3637","maxVel":10.0,"maxSampleRate":750.0,"water":false},"130201":{"s":30.0,"d":"30\" MDS FLEX DEF+MFL2","t":"MDS FLEX","tc":"MDS FLEX","len":150.0,"wt":3537.0,"minBore":25.5,"minBend":"1.5D","runTime":100.0,"current":null,"specDoc":"D3753","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130199":{"s":30.0,"d":"30\" MDS FLEX DEF+LFM+MFL2","t":"MDS FLEX","tc":"MDS FLEX","len":150.0,"wt":4350.0,"minBore":25.5,"minBend":"1.5D","runTime":82.0,"current":0.87,"specDoc":"D3751","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130196":{"s":30.0,"d":"30\" MDS PRO DEF+LFM+MFL2+SMFL+XYZ","t":"MDS PRO","tc":"MDS PRO","len":201.0,"wt":6400.0,"minBore":25.5,"minBend":"1.5D","runTime":39.0,"current":2.06,"specDoc":"D3748","maxVel":10.0,"maxSampleRate":750.0,"water":true},"130198":{"s":30.0,"d":"30\" MDS FLEX DEF+LFM+MFL2+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":150.0,"wt":4350.0,"minBore":25.5,"minBend":"1.5D","runTime":48.0,"current":1.87,"specDoc":"D3750","maxVel":10.0,"maxSampleRate":750.0,"water":true},"111782":{"s":30.0,"d":"30\" GMFL+DEF (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":166.0,"wt":2350.0,"minBore":22.5,"minBend":"1.5D","runTime":372.0,"current":null,"specDoc":"D1186","maxVel":10.0,"maxSampleRate":750.0,"water":true},"113922":{"s":30.0,"d":"30\" GMFL+DEF+XYZ ( xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":166.0,"wt":2375.0,"minBore":22.5,"minBend":"1.5D","runTime":40.0,"current":3.51,"specDoc":"D3689","maxVel":10.0,"maxSampleRate":750.0,"water":true},"114682":{"s":30.0,"d":"30\" DEF+XYZ (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":100.0,"wt":985.0,"minBore":22.5,"minBend":"1.5D","runTime":77.0,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"130197":{"s":30.0,"d":"30\" MDS PRO DEF+LFM+MFL2+SMFL","t":"MDS PRO","tc":"MDS PRO","len":200.0,"wt":6400.0,"minBore":25.5,"minBend":"1.5D","runTime":59.0,"current":1.06,"specDoc":"D3749","maxVel":10.0,"maxSampleRate":750.0,"water":true},"109938":{"s":30.0,"d":"30\" GMFL2 HW","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":110.0,"wt":1960.0,"minBore":23.4,"minBend":"1.5D","runTime":169.0,"current":null,"specDoc":"D1988","maxVel":10.0,"maxSampleRate":750.0,"water":true},"106421-01":{"s":30.0,"d":"30\" DEF+XYZ (xHD 106421-01)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":100.0,"wt":985.0,"minBore":22.5,"minBend":"1.5D","runTime":null,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"115600-01-02-02-01":{"s":30.0,"d":"30\" MFL+DEF+SMFL+XYZ+LFM","t":"MDS PRO","tc":"MDS PRO","len":201.0,"wt":6400.0,"minBore":25.5,"minBend":"1.5D","runTime":35.0,"current":2.06,"specDoc":"D2344","maxVel":10.0,"maxSampleRate":750.0,"water":false},"129311":{"s":30.0,"d":"30\" MDS FLEX DEF+MFL+XYZ","t":"MDS FLEX","tc":"MDS FLEX","len":150.0,"wt":3537.0,"minBore":25.5,"minBend":"1.5D","runTime":30.0,"current":null,"specDoc":"D3636","maxVel":10.0,"maxSampleRate":750.0,"water":false},"115171":{"s":30.0,"d":"30\" DEF Single Body (Short)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":48.0,"wt":600.0,"minBore":22.5,"minBend":"1.5D","runTime":54.0,"current":0.72,"specDoc":"D2097","maxVel":null,"maxSampleRate":750.0,"water":true},"115600-01-00-01-01":{"s":30.0,"d":"30\" MFL+DEF+LFM","t":"MDS FLEX","tc":"MDS FLEX","len":150.0,"wt":4350.0,"minBore":25.5,"minBend":"1.5D","runTime":73.0,"current":0.87,"specDoc":"D2425","maxVel":10.0,"maxSampleRate":750.0,"water":false},"114409":{"s":32.0,"d":"32\" GMFL+DEF+XYZ (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":186.0,"wt":3655.0,"minBore":27.0,"minBend":"1.5D","runTime":0.0,"current":null,"specDoc":null,"maxVel":10.0,"maxSampleRate":750.0,"water":true},"113946":{"s":32.0,"d":"32\" DEF+XYZ (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":125.0,"wt":1488.0,"minBore":27.0,"minBend":"1.5D","runTime":0.0,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"114724":{"s":32.0,"d":"32\" DEF+XYZ (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":125.0,"wt":1488.0,"minBore":27.0,"minBend":"1.5D","runTime":46.0,"current":1.81,"specDoc":"D3682","maxVel":null,"maxSampleRate":750.0,"water":true},"115475":{"s":32.0,"d":"32\" DEF (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":125.0,"wt":1410.0,"minBore":27.0,"minBend":"1.5D","runTime":34.0,"current":null,"specDoc":"D1322","maxVel":null,"maxSampleRate":750.0,"water":true},"113606":{"s":32.0,"d":"32\" DEF (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":125.0,"wt":1410.0,"minBore":27.0,"minBend":"1.5D","runTime":0.0,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"120839":{"s":34.0,"d":"34\" DEF (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":125.0,"wt":1450.0,"minBore":27.0,"minBend":"1.5D","runTime":34.0,"current":null,"specDoc":"D1076","maxVel":null,"maxSampleRate":750.0,"water":true},"114683":{"s":34.0,"d":"34\" DEF+XYZ (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":126.0,"wt":1620.0,"minBore":27.0,"minBend":"1.5D","runTime":0.0,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"114382":{"s":34.0,"d":"34\" GMFL+DEF+XYZ (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":186.0,"wt":3785.0,"minBore":27.0,"minBend":"1.5D","runTime":0.0,"current":null,"specDoc":null,"maxVel":10.0,"maxSampleRate":750.0,"water":true},"111601":{"s":36.0,"d":"36\" GMFL (32-36) (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":126.0,"wt":2480.0,"minBore":27.0,"minBend":"1.5D","runTime":83.0,"current":0.88,"specDoc":"D1079","maxVel":10.0,"maxSampleRate":750.0,"water":true},"113945":{"s":36.0,"d":"36\" DEF (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":125.0,"wt":1500.0,"minBore":27.0,"minBend":"1.5D","runTime":null,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"107400":{"s":"36,48","d":"48x36\" DEF+XYZ","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":165.0,"wt":2900.0,"minBore":33.0,"minBend":"3D","runTime":168.0,"current":2.08,"specDoc":"D1792","maxVel":null,"maxSampleRate":750.0,"water":true},"113592":{"s":36.0,"d":"36\" DEF+XYZ (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":127.0,"wt":1525.0,"minBore":27.0,"minBend":"1.5D","runTime":46.0,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"112574":{"s":36.0,"d":"36\" DEF (32-36) (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":125.0,"wt":1500.0,"minBore":27.0,"minBend":"1.5D","runTime":80.0,"current":null,"specDoc":"D1078","maxVel":null,"maxSampleRate":750.0,"water":true},"110533":{"s":36.0,"d":"36\" GMFL (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":115.0,"wt":2715.0,"minBore":27.0,"minBend":"1.5D","runTime":82.0,"current":null,"specDoc":null,"maxVel":10.0,"maxSampleRate":750.0,"water":true},"110067":{"s":36.0,"d":"36\" DEF (Short)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":63.0,"wt":924.0,"minBore":27.0,"minBend":"1.5D","runTime":34.0,"current":0.81,"specDoc":"D1986","maxVel":null,"maxSampleRate":750.0,"water":true},"114349":{"s":36.0,"d":"36\" GMFL+DEF+XYZ (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":184.0,"wt":3400.0,"minBore":27.0,"minBend":"1.5D","runTime":50.0,"current":null,"specDoc":"D3235","maxVel":10.0,"maxSampleRate":750.0,"water":true},"112573":{"s":36.0,"d":"36\" GMFL+DEF (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":183.0,"wt":3600.0,"minBore":27.0,"minBend":"1.5D","runTime":70.0,"current":null,"specDoc":"D3791","maxVel":10.0,"maxSampleRate":750.0,"water":true},"114364":{"s":36.0,"d":"36\" DEF+XYZ (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":127.0,"wt":1525.0,"minBore":27.0,"minBend":"1.5D","runTime":0.0,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"126101":{"s":36.0,"d":"36\" DEF+XYZ (Single Body)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":65.0,"wt":925.0,"minBore":27.0,"minBend":"1.5D","runTime":16.0,"current":null,"specDoc":"D3236","maxVel":null,"maxSampleRate":750.0,"water":true},"116950-01":{"s":38.0,"d":"38\" DEF (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":145.0,"wt":2210.0,"minBore":31.5,"minBend":"1.5D","runTime":0.0,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"111884-01":{"s":38.0,"d":"38\" DEF (38-42) (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":144.0,"wt":2400.0,"minBore":31.5,"minBend":"1.5D","runTime":49.0,"current":null,"specDoc":"D1379","maxVel":null,"maxSampleRate":750.0,"water":true},"116950-02":{"s":40.0,"d":"40\" DEF (38-42) (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":146.0,"wt":2350.0,"minBore":31.5,"minBend":"1.5D","runTime":0.0,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"114684":{"s":40.0,"d":"40\" DEF+XYZ (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":147.0,"wt":2325.0,"minBore":31.5,"minBend":"1.5D","runTime":0.0,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"114653":{"s":40.0,"d":"40\" GMFL+DEF+XYZ (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":218.0,"wt":5005.0,"minBore":31.5,"minBend":"1.5D","runTime":49.0,"current":null,"specDoc":null,"maxVel":10.0,"maxSampleRate":750.0,"water":true},"111884-02":{"s":40.0,"d":"40\" DEF (38-42) (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":146.0,"wt":2350.0,"minBore":31.5,"minBend":"1.5D","runTime":49.0,"current":null,"specDoc":"D1755","maxVel":null,"maxSampleRate":750.0,"water":true},"116950-03":{"s":42.0,"d":"42\" DEF (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":147.0,"wt":2400.0,"minBore":31.5,"minBend":"1.5D","runTime":0.0,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"127865":{"s":42.0,"d":"42\" GMFL (38-42) + DEF (38-42)","t":"Legacy Combo","tc":"Legacy Combo","len":218.0,"wt":4915.0,"minBore":31.5,"minBend":"1.5D","runTime":131.0,"current":3.56,"specDoc":"D1199","maxVel":10.0,"maxSampleRate":750.0,"water":true},"116952":{"s":42.0,"d":"42\" GMFL+DEF+XYZ (ATEX)","t":"Legacy Combo","tc":"Legacy Combo","len":218.0,"wt":5425.0,"minBore":31.5,"minBend":"1.5D","runTime":0.0,"current":null,"specDoc":null,"maxVel":10.0,"maxSampleRate":750.0,"water":true},"110179":{"s":42.0,"d":"42\" DEF (Short)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":72.0,"wt":1250.0,"minBore":31.75,"minBend":"1.5D","runTime":157.0,"current":1.05,"specDoc":"D1715","maxVel":null,"maxSampleRate":750.0,"water":true},"113557":{"s":42.0,"d":"42\" (Combo) GMFL+DEF+XYZ (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":218.0,"wt":5425.0,"minBore":31.5,"minBend":"1.5D","runTime":0.0,"current":null,"specDoc":null,"maxVel":10.0,"maxSampleRate":750.0,"water":true},"111884-03":{"s":42.0,"d":"42\" DEF (38-42) (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":147.0,"wt":2250.0,"minBore":31.5,"minBend":"1.5D","runTime":49.0,"current":null,"specDoc":"D1080","maxVel":null,"maxSampleRate":750.0,"water":true},"114655":{"s":42.0,"d":"42\" GMFL+DEF+XYZ (xHD)","t":"Legacy Combo","tc":"Legacy Combo","len":218.0,"wt":5425.0,"minBore":31.5,"minBend":"1.5D","runTime":49.0,"current":null,"specDoc":null,"maxVel":10.0,"maxSampleRate":750.0,"water":true},"113590":{"s":42.0,"d":"42\" DEF+XYZ (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":147.0,"wt":2425.0,"minBore":31.5,"minBend":"1.5D","runTime":71.0,"current":null,"specDoc":null,"maxVel":null,"maxSampleRate":750.0,"water":true},"111622":{"s":42.0,"d":"42\" GMFL (xHD)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":138.0,"wt":3536.0,"minBore":31.5,"minBend":"1.5D","runTime":77.0,"current":null,"specDoc":"D3685","maxVel":10.0,"maxSampleRate":750.0,"water":true},"116951":{"s":42.0,"d":"42\" GMFL (ATEX)","t":"Legacy Stand Alone","tc":"Legacy Stand Alone","len":140.0,"wt":3620.0,"minBore":31.5,"minBend":"1.5D","runTime":816.0,"current":2.51,"specDoc":"D3684","maxVel":10.0,"maxSampleRate":750.0,"water":true}};
@@ -1046,7 +1043,7 @@ function filteredActive(){
   if(szFilt){const sz=parseInt(szFilt);a=a.filter(j=>getJobSize(j)===sz);}
   if(_activeFilter)a=a.filter(j=>j.buildActStart&&!j.buildActEnd);
   if(_partsFilter)a=a.filter(j=>hasPend(j));
-  if(searchStr)a=a.filter(j=>(j.id||"").toLowerCase().includes(searchStr)||(j.customer||"").toLowerCase().includes(searchStr));
+  if(searchStr)a=a.filter(j=>(j.id||"").toLowerCase().includes(searchStr)||(j.customer||"").toLowerCase().includes(searchStr)||(j.desc||"").toLowerCase().includes(searchStr));
   return a;
 }
 
@@ -1079,7 +1076,7 @@ function effBuild(j){
 }
 
 function getJobInfo(j){return TOOL_INFO[j.config]||{s:12,d:j.desc||"",t:"Legacy Stand Alone"};}
-function getJobSize(j){const s=getJobInfo(j).s;return parseInt(s)||parseInt(j.diameter)||8;}
+function getJobSize(j){if(j.diameter&&parseInt(j.diameter))return parseInt(j.diameter);const s=getJobInfo(j).s;return parseInt(s)||8;}
 function getJobTech(j){
   const info=getJobInfo(j);
   if(info.tc)return info.tc; // use full Tech Category from BG Tool Info spreadsheet
@@ -1134,6 +1131,10 @@ function archivedJobs(){return jobs.filter(j=>isArch(j)).sort((a,b)=>parseISO(b.
 
 function getGroups(){
   const fa=filteredActive();
+  if(sortMode==="run"){
+    const sorted=[...fa].sort((a,b)=>(parseISO(a.runExpStart)||new Date(0))-(parseISO(b.runExpStart)||new Date(0)));
+    return [{key:"_run",label:"All Jobs — by Run Date",jobs:sorted}];
+  }
   if(sortMode==="emt"){
     const EMT_ORDER=[...[...SLC_EMTS].sort(),"HOU","TUL","CAN","UNASSIGNED"];
     const _fg={};
@@ -1762,6 +1763,7 @@ function getMdsBodies(sz){return sz<=10?['MFL','DEF','SMFL','RES']:['MFL','DEF',
 let htSearchStr='';
 
 function renderHomeTools(){
+  console.log("[HT] jobs="+jobs.length+" body="+!!document.getElementById('ht-body'));
   const body=document.getElementById('ht-body');
   body.innerHTML='';
   const activeJ=activeJobs();
@@ -2179,6 +2181,7 @@ function renderModal(){
       <div class="m-sec"><div class="m-sec-t">Kitting</div>
         <div style="display:flex;align-items:center;justify-content:space-between;">
           <div class="chk-row" id="kit-row"><div class="chk-box${j.kitted?" on":""}" id="kbox">${j.kitted?`<svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5l2.5 2.5 4.5-5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`:""}</div><span style="font-size:11px;color:var(--t2)">Tool has been kitted</span></div>
+          <label style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t3);flex-shrink:0;">IMU<select id="vci-sel" class="ms" style="font-size:10px;padding:2px 4px;" onchange="modalJob.imuSerial=this.value;saveJob({...modalJob,imuSerial:this.value});if(document.getElementById('imu-pane')?.classList.contains('active'))renderImuTab();"><option value="">—</option>${["424149","427469","441430","443010","443372","445167","445166","Other"].map(v=>{const sel=(j.imuSerial||"")===v?" selected":"";const rs=j.runExpStart?new Date(j.runExpStart+"T00:00:00"):null;const re=j.runExpEnd?new Date(j.runExpEnd+"T00:00:00"):rs;const conflict=v&&v!=="Other"&&rs&&jobs.some(o=>o.id!==j.id&&(o.imuSerial||"")=== v&&(()=>{const os=o.runExpStart?new Date(o.runExpStart+"T00:00:00"):null;const oe=o.runExpEnd?new Date(o.runExpEnd+"T00:00:00"):os;if(!os)return false;const bs=new Date(rs);bs.setDate(bs.getDate()-3);const be=new Date(re);be.setDate(be.getDate()+3);const obs=new Date(os);obs.setDate(obs.getDate()-3);const obe=new Date(oe);obe.setDate(obe.getDate()+3);return bs<=obe&&be>=obs;})());return`<option value="${v}"${sel} style="${conflict?"color:#e84545;font-weight:700":""}">${v}${conflict?" ⚠":""}</option>`;}).join("")}</select></label>
           <a href="file:///C:/Users/bcgar/OneDrive/Desktop/temp/Runsnew/${(j.customer||'x')[0].toUpperCase()}" target="_blank" style="font-size:9px;color:var(--blue);text-decoration:none;border:1px solid rgba(91,142,245,0.3);border-radius:3px;padding:2px 8px;white-space:nowrap;flex-shrink:0;">📁 Job Files</a>
         </div>
       </div>
@@ -2198,7 +2201,7 @@ function renderModal(){
         let _u=0;
         if(_wk&&_we){jobs.filter(x=>x.id!==j.id&&x.buildLoc==="SLC"&&(x.builder===b||x.builder2===b)).forEach(x=>{const bd=effBuild(x);if(!bd.start)return;const s=parseISO(bd.start),e=parseISO(bd.end||bd.start);let d=new Date(Math.max(_wk,s));const de=new Date(Math.min(_we,e));while(d<=de){if(d.getDay()!==0&&d.getDay()!==6)_u++;d=addD(d,1);}});}
         return`<option value="${b}"${j.builder===b?" selected":""}>${b}  (${_u}/5 days)</option>`;
-      }).join("")}</select></label>
+      }).join("")}<option value="FT">FT (Field Tech)</option></select></label>
           <label class="m-lbl">2nd EMT<select id="b2" class="ms"><option value="">— none —</option>${[...new Set(BUILDERS)].map(b=>{
         const _ws2=j.buildExpStart?parseISO(j.buildExpStart):null;
         const _wk2=_ws2?addD(_ws2,-(_ws2.getDay()===0?6:_ws2.getDay()-1)):null;
@@ -2206,7 +2209,7 @@ function renderModal(){
         let _u2=0;
         if(_wk2&&_we2){jobs.filter(x=>x.id!==j.id&&x.buildLoc==="SLC"&&(x.builder===b||x.builder2===b)).forEach(x=>{const bd=effBuild(x);if(!bd.start)return;const s=parseISO(bd.start),e=parseISO(bd.end||bd.start);let d=new Date(Math.max(_wk2,s));const de=new Date(Math.min(_we2,e));while(d<=de){if(d.getDay()!==0&&d.getDay()!==6)_u2++;d=addD(d,1);}});}
         return`<option value="${b}"${j.builder2===b?" selected":""}>${b}  (${_u2}/5 days)</option>`;
-      }).join("")}</select></label>
+      }).join("")}<option value="FT">FT (Field Tech)</option></select></label>
         </div>
       </div>
       <!-- ── Build Schedule ── -->
@@ -2238,7 +2241,7 @@ function renderModal(){
         <div id="nhist" style="margin-top:8px;">${nH}</div>
       </div>
     </div>
-    <div class="m-ftr"><button class="btn-cancel" id="mcanc">Cancel</button><button class="btn-save" id="msave">Save Changes</button></div>`;
+    <div class="m-ftr"><button class="btn-delete" id="mdel" onclick="initDeleteJob()" style="margin-right:auto;background:rgba(232,69,69,0.12);border:1px solid rgba(232,69,69,0.3);border-radius:4px;color:rgba(232,69,69,0.7);cursor:pointer;padding:4px 10px;font-size:9px;font-weight:600;">🗑 Delete Job</button><button class="btn-cancel" id="mcanc">Cancel</button><button class="btn-save" id="msave">Save Changes</button></div>`;
 
   // Assets button
   document.getElementById("open-assets-btn").addEventListener("click",()=>{openAssetsModal(modalJob||j);}); // keep modal open behind assets
@@ -2414,11 +2417,14 @@ function renderModal(){
     const prevState=bState(prevJ);
     const newState=bState({...prevJ,builder:newB1_||prevJ.builder,buildActEnd:newBe_||prevJ.buildActEnd});
     if(prevState!==newState)logHistory(modalJob.id,`Status: ${prevState} → ${newState}`);
-    const _sj=jobs.find(j=>j.id===modalJob?.id);if(_sj)saveJob(_sj);
+    const _vciFinal=document.getElementById("vci-sel")?.value;if(_vciFinal!==undefined)modalJob.imuSerial=_vciFinal;
+    saveJob(modalJob);
     // Save and close in all modes, then refresh cap if it's open
     closeModal();
     updateTabTitle();
     refreshCapIfOpen();
+    // Refresh IMU tab if it's active
+    if(document.getElementById("imu-pane")?.classList.contains("active")) renderImuTab();
   });
   document.getElementById("mc").addEventListener("click",closeModal);
   document.getElementById("mcanc").addEventListener("click",closeModal);
@@ -2446,7 +2452,9 @@ document.querySelectorAll(".tab").forEach(tab=>{
     tab.classList.add("active");
     document.getElementById(tab.dataset.tab+"-pane").classList.add("active");
     if(tab.dataset.tab==="build-exp")renderBuildExp();
-    if(tab.dataset.tab==="home-tools")renderHomeTools();
+    if(tab.dataset.tab==="home-tools")requestAnimationFrame(renderHomeTools);
+    if(tab.dataset.tab==="cancelled")renderCancelledTab();
+    if(tab.dataset.tab==="imu")requestAnimationFrame(renderImuTab);
   });
 });
 
@@ -2537,7 +2545,9 @@ function initScrollSync(){
 // FILL IN YOUR SAS URL BELOW (from Azure Portal → Storage Account → Containers → jobs → Generate SAS)
 const AZURE_SAS_URL = "https://bcgschedulerdata.blob.core.windows.net/scheduler/jobs.json?sp=rcw&st=2026-05-04T02:06:11Z&se=2028-05-04T10:21:11Z&spr=https&sv=2025-11-05&sr=b&sig=%2Bn5xRpRB6rc%2F7eJZuM%2BXJDe0jmOSS5AdMZ02MESAQk8%3D";
 const AZURE_META_URL = "https://bcgschedulerdata.blob.core.windows.net/scheduler/meta.json?sp=rcw&st=2026-05-04T01:53:31Z&se=2028-05-04T10:08:31Z&spr=https&sv=2025-11-05&sr=b&sig=z6pe5cEKTuBC2ZYIYkL4e316Q6HiCPPdGw4ylc8BA7c%3D";
-const USE_AZURE = AZURE_SAS_URL.includes("YOUR_ACCOUNT") === false;
+const AZURE_DAILY_URL = "https://bcgschedulerdata.blob.core.windows.net/scheduler/daily.xlsx?sp=racwd&st=2026-05-07T02:43:32Z&se=2028-05-07T10:58:32Z&spr=https&sv=2025-11-05&sr=b&sig=7khFcwc33DLt9Y70bpOLTVl9h5Uk5oVEdHAeEase%2Bnc%3D";
+const IS_LOCAL = location.protocol === "file:";
+const USE_AZURE = !IS_LOCAL && AZURE_SAS_URL.includes("YOUR_ACCOUNT") === false;
 
 // Status indicator
 function _setStatus(msg, color){
@@ -2685,9 +2695,9 @@ async function loadFromStorage(){
       if(mres.ok){const mm=await mres.json();if(mm.weekPtoAdj)weekPtoAdj=mm.weekPtoAdj;}
       _setStatus("✓ Loaded","#22c98a");
     }catch(e){
-      _setStatus('⚠ Azure load failed: '+e.message,'#e84545');
+      _setStatus(IS_LOCAL?'⚠ Local mode - using built-in data':'⚠ Azure load failed: '+e.message,'#22c98a');
       console.error('Azure load error:',e);
-      _loadFromLocalStorage();
+      if(!IS_LOCAL)_loadFromLocalStorage();
     }
   } else {
     _loadFromLocalStorage();
@@ -2703,9 +2713,9 @@ function _loadFromLocalStorage(){
 }
 // Version gate: clear stale localStorage
 (function(){try{
-  if(localStorage.getItem('ts_version')!=='v37'){
+  if(localStorage.getItem('ts_version')!=='v38'){
     ['ts_jobs','ts_meta','ts_view','toolsched_v1','toolsched_view'].forEach(k=>localStorage.removeItem(k));
-    localStorage.setItem('ts_version','v37');
+    localStorage.setItem('ts_version','v38');
   }
 }catch(e){}})();
 // Startup: load from Azure (async) then render
@@ -2719,6 +2729,13 @@ function _loadFromLocalStorage(){
   requestAnimationFrame(()=>requestAnimationFrame(_renderCaps));
   window.addEventListener("resize",_renderCaps);
   startPolling();
+  // Show last import time from localStorage, or today as placeholder
+  const _storedTs=parseInt(localStorage.getItem(DAILY_TS_KEY)||'0');
+  _updateDailyTsDisplay(_storedTs||Date.now());
+  // Check for new daily Excel file from Azure
+  checkAndProcessDailyExcel();
+  // Also check every 10 minutes in case PowerShell uploaded while app is open
+  setInterval(checkAndProcessDailyExcel, 10*60*1000);
 })();
 
 
@@ -2739,43 +2756,582 @@ function addPmPeRow(){
   tr.innerHTML='<td style="padding:6px 10px;"><input style="background:var(--s1);border:1px solid var(--b2);border-radius:3px;color:var(--t1);padding:2px 6px;font-size:11px;width:80px;" placeholder="PE"></td><td style="padding:6px 10px;"><input style="background:var(--s1);border:1px solid var(--b2);border-radius:3px;color:var(--t1);padding:2px 6px;font-size:11px;width:120px;" placeholder="PM"></td>';
   tb.appendChild(tr);
 }
-function closeCapModal(){const cm=document.getElementById("cap-modal");if(cm)cm.style.display="none";}
-function refreshCapIfOpen(){
-  const cm=document.getElementById("cap-modal");
-  if(!cm||cm.style.display!=="flex")return;
-  // Re-open with the same week that's currently shown in the title
-  const title=document.getElementById("cap-modal-title")?.textContent||"";
-  // Find the weekStart from weekStarts that matches the current title
-  let ws=wkStart(START);
-  const end=addD(START,DAYS);
-  while(ws<=end){
-    const label=ws.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
-    if(title.includes(label)){openCapModal(ws);return;}
-    ws=addD(ws,7);
+// ── Auto-fetch daily Excel from Azure ─────────────────────────────
+const DAILY_TS_KEY = 'ts_daily_processed';
+function _updateDailyTsDisplay(ts){
+  const el=document.getElementById('daily-ts-display');
+  if(!el||!ts)return;
+  const d=new Date(ts);
+  el.textContent=d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+}
+async function checkAndProcessDailyExcel(){
+  if(!USE_AZURE || !AZURE_DAILY_URL)return;
+  try{
+    // HEAD request to get Last-Modified without downloading the file
+    const head = await fetch(AZURE_DAILY_URL + '&v=' + Date.now(), {method:'HEAD'});
+    if(!head.ok)return;
+    const lastMod = head.headers.get('Last-Modified');
+    if(!lastMod)return;
+    const remoteTs = new Date(lastMod).getTime();
+    const localTs  = parseInt(localStorage.getItem(DAILY_TS_KEY)||'0');
+    if(remoteTs <= localTs){
+      console.log('Daily Excel: no update since last processed');
+      return;
+    }
+    // New file — download and process it
+    _setStatus('📥 New schedule detected — importing…','#5b8ef5');
+    const res = await fetch(AZURE_DAILY_URL + '&v=' + Date.now());
+    if(!res.ok)return;
+    const arrayBuf = await res.arrayBuffer();
+    const wb = XLSX.read(new Uint8Array(arrayBuf), {type:'array', cellDates:true});
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(ws, {raw:false, dateNF:'yyyy-mm-dd'});
+    if(!rows.length)return;
+    // Run through the same merge logic as the manual upload handler
+    _processDailyRows(rows, remoteTs);
+  }catch(e){
+    console.warn('Daily Excel check failed:',e);
   }
-  // Fallback: refresh with current week
-  openCapModal(wkStart(START));
 }
 
-function openModalAlongside(job){
-  _alongsideMode=true;
-  modalJob={...job,notes:{...job.notes},parts:JSON.parse(JSON.stringify(job.parts||[]))};
-  noteDay=toISO(TODAY);
-  renderModal();
-  // Keep overlay hidden — don't use it in alongside mode
-  const ov=document.getElementById("modal-overlay");
-  ov.classList.remove("open");
-  ov.style.cssText="display:none;";
-  // Detach modal-box from overlay and append directly to body
-  const mb=document.getElementById("modal-box");
-  if(mb&&mb.parentNode!==document.body){
-    document.body.appendChild(mb);
+function _processDailyRows(rows, remoteTs){
+  const ex={};jobs.forEach(j=>{ex[j.id]=j;ex[String(j.id).trim()]=j;});
+  const nj=[];
+  let newCount=0, updCount=0;
+  for(const row of rows){
+    const bSC=String(row['bSC']||row['BuildSC']||row['Build SC']||'').trim().toUpperCase();
+    const co=String(row['CompanyStructure']||row['RunSC']||'').trim().toUpperCase();
+    if(bSC!=='SLC'&&co!=='SLC')continue;
+    const sd=row['Start Date']||row['StartDate']||'';
+    if(!sd)continue;
+    const rs=new Date(sd);if(isNaN(rs))continue;
+    const re2=new Date(row['EndOn']||row['End Date']||sd);
+    const rsISO=rs.toISOString().slice(0,10);
+    const reISO=(isNaN(re2)?rs:re2).toISOString().slice(0,10);
+    const jnum=String(row['ReferenceNumber']||row['Job']||'').trim();
+    if(!jnum)continue;
+    const sfx=String(row['Suffix']||'').trim()||'R0';
+    const jid=((sfx&&sfx!=='R0')?`${jnum}-${sfx}`:jnum).trim();
+    const cfg=String(row['ToolConfig']||row['Config']||'').trim();
+    const desc=String(row['ToolDescription']||row['Description2']||row['Desc']||'').trim();
+    const tech=String(row['Tech']||'').trim().toUpperCase();
+    const pm=String(row['PM']||'').trim();
+    const diam=parseFloat(row['Diameter']||row['NPS']||'8')||8;
+    const bLoc=bSC||'SLC'; const rLoc=co||'SLC';
+    const estInv=String(row['Estimated Invoice']||'').trim();
+    const _now=Date.now();
+    const cur=ex[jid];
+    if(cur){
+      const _chg=[];
+      if(cur.runExpStart!==rsISO)_chg.push(`Run start: ${cur.runExpStart} → ${rsISO}`);
+      if(cur.runExpEnd!==reISO)_chg.push(`Run end: ${cur.runExpEnd} → ${reISO}`);
+      if(cur.config!==cfg&&cfg)_chg.push(`Config: ${cur.config} → ${cfg}`);
+      if(cur.fieldTech!==tech&&tech)_chg.push(`Field Tech: ${cur.fieldTech} → ${tech}`);
+      const rChg=(cur.runExpStart!==rsISO||cur.buildLoc!==bLoc||cur.runLoc!==rLoc||(cfg&&cur.config!==cfg))&&!cur.runDateAcknowledged;
+      const newHistory=_chg.length?[...(cur.history||[]),{ts:_now,event:`Auto-import: ${_chg.join(', ')}`,user:''}]:(cur.history||[]);
+      nj.push({...cur,config:cfg||cur.config,desc:(desc||cur.desc).slice(0,80),
+        estimatedInvoice:estInv||cur.estimatedInvoice,
+        pm:pm||cur.pm,fieldTech:tech||cur.fieldTech,
+        runExpStart:rsISO,runExpEnd:reISO,
+        buildLoc:bLoc,runLoc:rLoc,diameter:diam,
+        runDateChanged:rChg,
+        prevRunStart:rChg?cur.runExpStart:cur.prevRunStart,
+        _savedAt:_now,history:newHistory});
+      if(_chg.length)updCount++;
+    } else {
+      nj.push({id:jid,config:cfg,desc:(desc||'').slice(0,80),
+        estimatedInvoice:estInv,pm:pm,osr:'',
+        customer:String(row['Company_Name']||'').trim().slice(0,40),
+        refNum:jnum,billCode:String(row['Run type']||'').trim(),
+        diameter:diam,fieldTech:tech,builder:null,builder2:null,
+        runExpStart:rsISO,runExpEnd:reISO,
+        buildExpStart:'',buildExpEnd:'',buildActStart:'',buildActEnd:'',
+        buildLoc:bLoc,runLoc:rLoc,
+        kitted:false,parts:[],notes:{},
+        history:[{ts:_now,event:'Auto-imported from daily Excel',user:''}],
+        trapDate:'',runDateChanged:false,runDateAcknowledged:false,
+        _savedAt:_now});
+      newCount++;
+    }
   }
-  if(mb){
-    mb.style.cssText="position:fixed;right:20px;top:50%;transform:translateY(-50%);margin:0;z-index:1010;max-height:90vh;overflow-y:auto;box-shadow:0 12px 48px rgba(0,0,0,0.6);border-radius:12px;";
-  }
+  if(!nj.length)return;
+  // Detect cancelled jobs
+  const newIds=new Set(nj.map(j=>j.id));
+  jobs.forEach(j=>{if(!newIds.has(j.id)&&!cancelledJobs.find(c=>c.id===j.id)){cancelledJobs.push({...j,cancelledAt:Date.now()});}});
+  localStorage.setItem('ts_cancelled',JSON.stringify(cancelledJobs));
+  jobs=nj;
+  saveToStorage();
+  if(USE_AZURE){_putBlob(AZURE_SAS_URL,jobs).catch(e=>console.warn('Daily save failed:',e));}
+  localStorage.setItem(DAILY_TS_KEY, String(remoteTs));
+  renderAll();updateTabTitle();
+  _setStatus(`✓ Auto-imported: ${updCount} updated, ${newCount} new`,'#22c98a');
+  // Update last import timestamp display
+  _updateDailyTsDisplay(remoteTs);
+  console.log(`Daily Excel processed: ${updCount} updated, ${newCount} new, ${nj.length} total`);
 }
-let cancelledJobs=JSON.parse(localStorage.getItem('ts_cancelled')||'[]');
+
+
+// ── IMU Tab ────────────────────────────────────────────────────────
+const IMU_SERIALS = ["424149","427469","441430","443010","443372","445167","445166","Other"];
+const IMU_COLORS  = {
+  "424149": {bar:"#3266AD", text:"#dbeafe"},
+  "427469": {bar:"#1D9E75", text:"#d1fae5"},
+  "441430": {bar:"#D85A30", text:"#fee2d0"},
+  "443010": {bar:"#7F77DD", text:"#ede9fe"},
+  "443372": {bar:"#BA7517", text:"#fef3c7"},
+  "445167": {bar:"#D4537E", text:"#fce7f0"},
+  "445166": {bar:"#1D7DB5", text:"#e0f2fe"},
+  "Other":  {bar:"#888780", text:"#f1efe8"},
+};
+const IMU_DAY_W = 15;
+const IMU_DAYS  = 60;
+
+
+// IMU Tab bootstrap - ensures imu-pane is a direct child of tab-content
+// and nj-overlay is a direct child of body (fixes browser HTML parser nesting bugs)
+(function(){
+  const tc = document.getElementById("tab-content");
+  const existing = document.getElementById("imu-pane");
+  if(existing && existing.parentElement !== tc) tc.appendChild(existing);
+  if(!document.getElementById("imu-pane")) {
+    const pane = document.createElement("div");
+    pane.className = "tab-pane";
+    pane.id = "imu-pane";
+    pane.innerHTML = '<div id="imu-container" style="display:flex;flex-direction:column;overflow:hidden;flex:1;"><div id="imu-header" style="padding:10px 14px;border-bottom:1px solid rgba(91,142,245,0.2);background:var(--s1);flex-shrink:0;"><div style=\"font-size:13px;font-weight:700;color:var(--t1)\">IMU Schedule</div></div><div id=\"imu-gantt-wrap\" style=\"overflow:auto;flex:1;\"></div></div>';
+    tc.appendChild(pane);
+  }
+  // Build delete-confirm overlay in JS
+  if(!document.getElementById("del-overlay")){
+    const dov=document.createElement("div");
+    dov.id="del-overlay";
+    dov.style.cssText="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:10000;align-items:center;justify-content:center;";
+    dov.innerHTML=`<div style="background:var(--s2);border:1px solid rgba(232,69,69,0.4);border-radius:10px;width:380px;max-width:95vw;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,0.6);">
+      <div style="font-size:14px;font-weight:700;color:#e84545;margin-bottom:8px;">⚠ Delete Job</div>
+      <div id="del-jobname" style="font-size:12px;color:var(--t1);font-family:'IBM Plex Mono',monospace;margin-bottom:16px;"></div>
+      <div style="font-size:11px;color:var(--t2);margin-bottom:12px;">This permanently removes the job from the schedule. Type the password to confirm:</div>
+      <input id="del-pw" type="password" placeholder="Password" autocomplete="off"
+        style="width:100%;background:var(--s3);border:1px solid rgba(232,69,69,0.4);border-radius:5px;color:var(--t1);padding:7px 10px;font-size:12px;outline:none;margin-bottom:8px;"
+        onkeydown="if(event.key==='Enter')confirmDeleteJob()">
+      <div id="del-err" style="display:none;font-size:10px;color:#e84545;margin-bottom:8px;"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;">
+        <button onclick="closeDeleteOverlay()" style="background:transparent;border:1px solid var(--b3);border-radius:5px;color:var(--t2);padding:6px 14px;font-size:10px;font-weight:600;cursor:pointer;">Cancel</button>
+        <button onclick="confirmDeleteJob()" style="background:rgba(232,69,69,0.2);border:1px solid rgba(232,69,69,0.5);border-radius:5px;color:#e84545;padding:6px 14px;font-size:10px;font-weight:700;cursor:pointer;">Delete Job</button>
+      </div>
+    </div>`;
+    document.body.appendChild(dov);
+  }
+
+  // Build new job modal entirely in JS so browser parser can't misparent it
+  if(!document.getElementById("nj-overlay")){
+    const ov = document.createElement("div");
+    ov.id = "nj-overlay";
+    ov.style.cssText = "display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9999;align-items:center;justify-content:center;";
+    ov.onclick = function(e){ if(e.target===ov) closeNewJobModal(); };
+    ov.innerHTML = `<div style="background:var(--s2);border:1px solid var(--b2);border-radius:10px;width:520px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.5);" onclick="event.stopPropagation()">
+      <div style="padding:14px 18px;border-bottom:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-size:13px;font-weight:700;color:var(--t1);">＋ Add New Job</div>
+        <button onclick="closeNewJobModal()" style="background:none;border:none;color:var(--t3);font-size:16px;cursor:pointer;padding:0 4px;">✕</button>
+      </div>
+      <div style="padding:16px 18px;display:flex;flex-direction:column;gap:12px;">
+        <div style="font-size:9px;font-weight:700;color:var(--blue);letter-spacing:.08em;text-transform:uppercase;margin-bottom:-4px;">Required</div>
+
+        <!-- Row 1: Job # + Config -->
+        <div style="display:flex;gap:10px;">
+          <label style="flex:1;display:flex;flex-direction:column;gap:3px;">
+            <span style="font-size:9px;color:var(--t3);font-weight:600;letter-spacing:.05em;">JOB NUMBER <span style="color:var(--red)">*</span></span>
+            <input id="nj-id" placeholder="e.g. 402577" style="background:var(--s3);border:1px solid var(--b3);border-radius:5px;color:var(--t1);padding:5px 8px;font-size:11px;font-family:'IBM Plex Mono',monospace;outline:none;width:100%;">
+          </label>
+          <label style="flex:1;display:flex;flex-direction:column;gap:3px;">
+            <span style="font-size:9px;color:var(--t3);font-weight:600;letter-spacing:.05em;">CONFIG # <span style="color:var(--red)">*</span></span>
+            <input id="nj-config" placeholder="e.g. 130095" style="background:var(--s3);border:1px solid var(--b3);border-radius:5px;color:var(--t1);padding:5px 8px;font-size:11px;font-family:'IBM Plex Mono',monospace;outline:none;width:100%;">
+          </label>
+        </div>
+
+        <!-- Row 2: Tool Description (half width) + Diameter (required) -->
+        <div style="display:flex;gap:10px;">
+          <label style="flex:1;display:flex;flex-direction:column;gap:3px;">
+            <span style="font-size:9px;color:var(--t3);font-weight:600;letter-spacing:.05em;">TOOL DESCRIPTION <span style="color:var(--red)">*</span></span>
+            <input id="nj-desc" placeholder='e.g. 6" MFL4+DEF2+XYZ' style="background:var(--s3);border:1px solid var(--b3);border-radius:5px;color:var(--t1);padding:5px 8px;font-size:11px;outline:none;width:100%;">
+          </label>
+          <label style="flex:1;display:flex;flex-direction:column;gap:3px;">
+            <span style="font-size:9px;color:var(--t3);font-weight:600;letter-spacing:.05em;">DIAMETER (in) <span style="color:var(--red)">*</span></span>
+            <select id="nj-diam" style="background:var(--s3);border:1px solid var(--b3);border-radius:5px;color:var(--t1);padding:5px 8px;font-size:11px;outline:none;width:100%;">
+              <option value="">— Select —</option>
+              <option value="4">4"</option><option value="6">6"</option>
+              <option value="8">8"</option><option value="10">10"</option>
+              <option value="12">12"</option><option value="14">14"</option>
+              <option value="16">16"</option><option value="18">18"</option>
+              <option value="20">20"</option><option value="22">22"</option>
+              <option value="24">24"</option><option value="26">26"</option>
+              <option value="30">30"</option>
+            </select>
+          </label>
+        </div>
+
+        <!-- Row 3: Run Start + Run End -->
+        <div style="display:flex;gap:10px;">
+          <label style="flex:1;display:flex;flex-direction:column;gap:3px;">
+            <span style="font-size:9px;color:var(--t3);font-weight:600;letter-spacing:.05em;">RUN START <span style="color:var(--red)">*</span></span>
+            <input id="nj-rs" type="date" style="background:var(--s3);border:1px solid var(--b3);border-radius:5px;color:var(--t1);padding:5px 8px;font-size:11px;outline:none;width:100%;color-scheme:dark;">
+          </label>
+          <label style="flex:1;display:flex;flex-direction:column;gap:3px;">
+            <span style="font-size:9px;color:var(--t3);font-weight:600;letter-spacing:.05em;">RUN END</span>
+            <input id="nj-re" type="date" style="background:var(--s3);border:1px solid var(--b3);border-radius:5px;color:var(--t1);padding:5px 8px;font-size:11px;outline:none;width:100%;color-scheme:dark;">
+          </label>
+        </div>
+
+        <div style="border-top:1px solid var(--b2);padding-top:10px;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:-4px;">Optional but helpful</div>
+
+        <!-- Row 4: Customer + Field Tech -->
+        <div style="display:flex;gap:10px;">
+          <label style="flex:1;display:flex;flex-direction:column;gap:3px;">
+            <span style="font-size:9px;color:var(--t3);font-weight:600;letter-spacing:.05em;">CUSTOMER</span>
+            <input id="nj-cust" placeholder="Company name" style="background:var(--s3);border:1px solid var(--b3);border-radius:5px;color:var(--t1);padding:5px 8px;font-size:11px;outline:none;width:100%;">
+          </label>
+          <label style="flex:1;display:flex;flex-direction:column;gap:3px;">
+            <span style="font-size:9px;color:var(--t3);font-weight:600;letter-spacing:.05em;">FIELD TECH</span>
+            <input id="nj-ft" placeholder="e.g. EJOHNSON" style="background:var(--s3);border:1px solid var(--b3);border-radius:5px;color:var(--t1);padding:5px 8px;font-size:11px;font-family:'IBM Plex Mono',monospace;outline:none;width:100%;">
+          </label>
+        </div>
+
+        <!-- Row 5: IMU + PM + Build Loc -->
+        <div style="display:flex;gap:10px;">
+          <label style="flex:1;display:flex;flex-direction:column;gap:3px;">
+            <span style="font-size:9px;color:var(--t3);font-weight:600;letter-spacing:.05em;">IMU SERIAL</span>
+            <select id="nj-imu" style="background:var(--s3);border:1px solid var(--b3);border-radius:5px;color:var(--t1);padding:5px 8px;font-size:11px;outline:none;width:100%;">
+              <option value="">— None —</option>
+              <option>424149</option><option>427469</option><option>441430</option>
+              <option>443010</option><option>443372</option><option>445167</option>
+              <option>445166</option><option value="Other">Other</option>
+            </select>
+          </label>
+          <label style="flex:1;display:flex;flex-direction:column;gap:3px;">
+            <span style="font-size:9px;color:var(--t3);font-weight:600;letter-spacing:.05em;">PM</span>
+            <input id="nj-pm" placeholder="Project Manager" style="background:var(--s3);border:1px solid var(--b3);border-radius:5px;color:var(--t1);padding:5px 8px;font-size:11px;outline:none;width:100%;">
+          </label>
+          <label style="flex:0 0 90px;display:flex;flex-direction:column;gap:3px;">
+            <span style="font-size:9px;color:var(--t3);font-weight:600;letter-spacing:.05em;">BUILD LOC</span>
+            <select id="nj-bloc" style="background:var(--s3);border:1px solid var(--b3);border-radius:5px;color:var(--t1);padding:5px 8px;font-size:11px;outline:none;width:100%;">
+              <option value="SLC">SLC</option><option value="HOU">HOU</option><option value="OKC">OKC</option>
+            </select>
+          </label>
+        </div>
+
+        <div id="nj-err" style="display:none;background:rgba(232,69,69,0.15);border:1px solid rgba(232,69,69,0.4);border-radius:5px;padding:6px 10px;font-size:10px;color:#e84545;"></div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px;">
+          <button onclick="closeNewJobModal()" style="background:transparent;border:1px solid var(--b3);border-radius:5px;color:var(--t2);padding:6px 14px;font-size:10px;font-weight:600;cursor:pointer;">Cancel</button>
+          <button onclick="submitNewJob()" style="background:rgba(34,201,138,0.2);border:1px solid rgba(34,201,138,0.5);border-radius:5px;color:#22c98a;padding:6px 14px;font-size:10px;font-weight:700;cursor:pointer;">Add to Schedule</button>
+        </div>
+      </div>
+    </div>`;
+    document.body.appendChild(ov);
+  }
+})();
+
+function openNewJobModal(){
+  const ov=document.getElementById("nj-overlay");
+  ov.style.display="flex";
+  const t=new Date();
+  document.getElementById("nj-rs").value=t.toISOString().slice(0,10);
+  document.getElementById("nj-re").value=t.toISOString().slice(0,10);
+  document.getElementById("nj-err").style.display="none";
+  setTimeout(()=>document.getElementById("nj-id").focus(),50);
+}
+function closeNewJobModal(){
+  document.getElementById("nj-overlay").style.display="none";
+  ["nj-id","nj-config","nj-desc","nj-cust","nj-ft","nj-diam","nj-pm"].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value="";
+  });
+  document.getElementById("nj-imu").value="";
+  document.getElementById("nj-diam").value="";
+  document.getElementById("nj-bloc").value="SLC";
+}
+function submitNewJob(){
+  const err=document.getElementById("nj-err");
+  const jid=(document.getElementById("nj-id").value||"").trim();
+  const cfg=(document.getElementById("nj-config").value||"").trim();
+  const desc=(document.getElementById("nj-desc").value||"").trim();
+  const rs=(document.getElementById("nj-rs").value||"").trim();
+  const re=(document.getElementById("nj-re").value||rs).trim();
+  const diamRaw=document.getElementById("nj-diam").value;
+  const diam=parseInt(diamRaw)||0;
+  const errs=[];
+  if(!jid) errs.push("Job number is required");
+  if(!cfg) errs.push("Config # is required");
+  if(!desc) errs.push("Tool description is required");
+  if(!diam) errs.push("Diameter is required");
+  if(!rs) errs.push("Run start date is required");
+  if(errs.length){err.textContent=errs.join(" · ");err.style.display="block";return;}
+  if(jobs.find(j=>String(j.id).trim()===jid)){err.textContent="Job "+jid+" already exists.";err.style.display="block";return;}
+  const cust=(document.getElementById("nj-cust").value||"").trim();
+  const ft=(document.getElementById("nj-ft").value||"").trim();
+  const imu=(document.getElementById("nj-imu").value||"").trim();
+  const pm=(document.getElementById("nj-pm").value||"").trim();
+  const bloc=document.getElementById("nj-bloc").value||"SLC";
+  const rsD=new Date(rs+"T00:00:00");
+  const beD=_pf(rsD);
+  const bsISO=_swd(beD.toISOString().slice(0,10),_ebd(desc,diam)-1);
+  const beISO=beD.toISOString().slice(0,10);
+  const newJob={
+    id:jid,config:cfg,desc:desc.slice(0,80),segName:"",suffix:"R0",pm:pm,osr:"",
+    customer:cust,refNum:"",billCode:"",city:"",state:"",product:"",
+    fieldTech:ft,builder:null,builder2:null,
+    runExpStart:rs,runExpEnd:re||rs,buildExpStart:bsISO,buildExpEnd:beISO,
+    buildActStart:"",buildActEnd:"",buildLoc:bloc,runLoc:bloc,
+    kitted:false,parts:[],notes:{},
+    history:[{ts:Date.now(),event:"Manually added via New Job",user:""}],
+    trapDate:"",diameter:diam,runDateChanged:false,runDateAcknowledged:false,tentativeDates:false,
+    imuSerial:imu||""
+  };
+  saveJob(newJob);
+  renderAll();
+  if(document.getElementById("imu-pane")?.classList.contains("active")) renderImuTab();
+  closeNewJobModal();
+  const btn=document.getElementById("new-job-btn");
+  if(btn){const orig=btn.textContent;btn.textContent="✓ Added!";setTimeout(()=>{btn.textContent=orig;},1800);}
+}
+
+// ── Delete / Cancel job ──────────────────────────────────────────
+const DELETE_PASSWORD = "tdw";
+let _deleteJobId = null;
+
+function initDeleteJob(){
+  if(!modalJob) return;
+  _deleteJobId = modalJob.id;
+  const dov = document.getElementById("del-overlay");
+  const nameEl = document.getElementById("del-jobname");
+  const pwEl = document.getElementById("del-pw");
+  const errEl = document.getElementById("del-err");
+  if(nameEl) nameEl.textContent = modalJob.id + (modalJob.desc ? "  ·  " + modalJob.desc : "") + (modalJob.customer ? "\n" + modalJob.customer : "");
+  if(errEl) errEl.style.display = "none";
+  if(pwEl) pwEl.value = "";
+  if(dov) dov.style.display = "flex";
+  setTimeout(()=>document.getElementById("del-pw")?.focus(), 50);
+}
+
+function closeDeleteOverlay(){
+  const dov = document.getElementById("del-overlay");
+  if(dov) dov.style.display = "none";
+  _deleteJobId = null;
+}
+
+function confirmDeleteJob(){
+  const pw = (document.getElementById("del-pw")?.value || "").trim();
+  const errEl = document.getElementById("del-err");
+  if(pw !== DELETE_PASSWORD){
+    if(errEl){ errEl.textContent = "Incorrect password."; errEl.style.display = "block"; }
+    document.getElementById("del-pw").value = "";
+    document.getElementById("del-pw").focus();
+    return;
+  }
+  if(!_deleteJobId) return;
+  // Remove from jobs array
+  jobs = jobs.filter(j => j.id !== _deleteJobId);
+  saveToStorage();
+  logHistory(_deleteJobId, "Job deleted manually");
+  closeDeleteOverlay();
+  closeModal();
+  renderAll();
+  if(document.getElementById("imu-pane")?.classList.contains("active")) renderImuTab();
+}
+
+function renderImuTab(){
+  const wrap = document.getElementById("imu-gantt-wrap");
+  if(!wrap) return;
+  wrap.innerHTML = "";
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const dow = today.getDay();
+  const chartStart = new Date(today);
+  chartStart.setDate(today.getDate() - (dow===0?6:dow-1));
+  const todayOff = Math.round((today-chartStart)/86400000);
+  const DW=15, NDAYS=60;
+  const chartEnd = new Date(chartStart); chartEnd.setDate(chartStart.getDate()+NDAYS);
+
+  function aD(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
+  function dDiff(a,b){return Math.round((b-a)/86400000);}
+  function fmtD(iso){if(!iso)return"—";const d=new Date(iso+"T00:00:00");if(isNaN(d))return"—";return(d.getMonth()+1)+"/"+d.getDate();}
+  function parseD(iso){if(!iso)return null;const d=new Date(iso+"T00:00:00");return isNaN(d)?null:d;}
+
+  // ── Day header matching scheduler style ──
+  let hdrHtml='<div style="display:flex;">';
+  for(let i=0;i<NDAYS;i++){
+    const d=aD(chartStart,i),dw=d.getDay();
+    const isSun=dw===0,isSat=dw===6,isTd=i===todayOff;
+    const n=d.getDate();
+    const lbl=(n===1||isSun||i===0)?((n===1?(d.getMonth()+1)+"/":"")+n):"";
+    let bg=isSun||isSat?"rgba(91,142,245,0.05)":"transparent";
+    let cl="rgba(255,255,255,0.75)",fw="600";
+    if(isTd){bg="rgba(255,255,255,0.22)";cl="rgba(255,255,255,0.95)";fw="800";}
+    hdrHtml+=`<div style="width:${DW}px;min-width:${DW}px;flex-shrink:0;font-size:9px;font-family:'IBM Plex Mono',monospace;font-weight:${fw};color:${cl};background:${bg};text-align:center;border-right:1px solid rgba(255,255,255,0.03);padding:2px 0;box-sizing:border-box;">${lbl}</div>`;
+  }
+  hdrHtml+="</div>";
+
+  const tbl=document.createElement("table");
+  tbl.style.cssText="border-collapse:collapse;width:max-content;min-width:100%;";
+  const thead=document.createElement("thead");
+  thead.innerHTML=`<tr style="background:var(--s2);">
+    <th style="width:200px;min-width:200px;padding:5px 8px;font-size:10px;font-weight:700;color:var(--t3);text-align:left;border-bottom:1px solid rgba(91,142,245,0.3);white-space:nowrap;position:sticky;top:0;z-index:4;background:var(--s2);letter-spacing:.05em;">JOB</th>
+    <th style="width:100px;min-width:100px;padding:5px 8px;font-size:10px;font-weight:700;color:var(--t3);text-align:left;border-bottom:1px solid rgba(91,142,245,0.3);white-space:nowrap;position:sticky;top:0;z-index:4;background:var(--s2);letter-spacing:.05em;">RUN DATES</th>
+    <th style="padding:0;border-bottom:1px solid rgba(91,142,245,0.3);position:sticky;top:0;z-index:4;background:var(--s2);">${hdrHtml}</th>
+  </tr>`;
+  tbl.appendChild(thead);
+  const tbody=document.createElement("tbody");
+
+  const COLORS={
+    "424149":{b:"#3266AD",t:"#dbeafe"},"427469":{b:"#1D9E75",t:"#d1fae5"},
+    "441430":{b:"#D85A30",t:"#fee2d0"},"443010":{b:"#7F77DD",t:"#ede9fe"},
+    "443372":{b:"#BA7517",t:"#fef3c7"},"445167":{b:"#D4537E",t:"#fce7f0"},
+    "445166":{b:"#1D7DB5",t:"#e0f2fe"},"Other":{b:"#5a617e",t:"#9299b5"},
+    "Unassigned":{b:"#363d58",t:"#9299b5"}
+  };
+  const ORDER=["424149","427469","441430","443010","443372","445167","445166","Other","Unassigned"];
+
+  // Filter: SLC buildLoc, XYZ in desc, bar overlaps next 60 days
+  const xyzJobs = jobs.filter(j=>{
+    if((j.buildLoc||"SLC")!=="SLC") return false;
+    if(!(j.desc||"").toUpperCase().includes("XYZ")) return false;
+    const rs=parseD(j.runExpStart),re=parseD(j.runExpEnd||j.runExpStart);
+    if(!rs) return false;
+    return aD(rs,-3)<chartEnd && aD(re||rs,3)>=chartStart;
+  });
+
+  // Group & sort soonest first
+  const groups={};
+  ORDER.forEach(s=>groups[s]=[]);
+  xyzJobs.forEach(j=>{
+    const s=(j.imuSerial||"").trim();
+    if(s&&groups[s]!==undefined) groups[s].push(j);
+    else if(s){groups[s]=groups[s]||[];groups[s].push(j);}
+    else groups["Unassigned"].push(j);
+  });
+  ORDER.forEach(s=>{
+    groups[s]&&groups[s].sort((a,b)=>(parseD(a.runExpStart)||new Date(9999,0))-(parseD(b.runExpStart)||new Date(9999,0)));
+  });
+
+  // Build conflict map per IMU serial: list of {id, barS, barE}
+  const imuUsage={};
+  xyzJobs.forEach(j=>{
+    const s=(j.imuSerial||"").trim();
+    if(!s||s==="Other") return;
+    const rs=parseD(j.runExpStart),re=parseD(j.runExpEnd||j.runExpStart);
+    if(!rs) return;
+    if(!imuUsage[s]) imuUsage[s]=[];
+    imuUsage[s].push({id:j.id,barS:aD(rs,-3),barE:aD(re||rs,3)});
+  });
+
+  function jobHasConflict(j){
+    const s=(j.imuSerial||"").trim();
+    if(!s||s==="Other"||s==="Unassigned") return false;
+    const rs=parseD(j.runExpStart),re=parseD(j.runExpEnd||j.runExpStart);
+    if(!rs) return false;
+    const bs=aD(rs,-3),be=aD(re||rs,3);
+    return (imuUsage[s]||[]).some(u=>u.id!==j.id&&bs<=u.barE&&be>=u.barS);
+  }
+
+  let uid=0;
+  function makeSection(label,gjobs){
+    const C=COLORS[label]||{b:"#363d58",t:"#9299b5"};
+    const id="imusec"+(uid++);
+
+    const dr=document.createElement("tr");
+    dr.innerHTML=`<td colspan="3" style="height:1px;background:rgba(91,142,245,0.15);padding:0;"></td>`;
+    tbody.appendChild(dr);
+
+    const sr=document.createElement("tr");
+    const std=document.createElement("td");
+    std.colSpan=3;std.style.padding="0";
+    const shd=document.createElement("div");
+    shd.style.cssText="display:flex;align-items:center;gap:7px;padding:5px 8px;background:var(--s3);cursor:pointer;user-select:none;border-top:1px solid rgba(91,142,245,0.12);";
+    shd.innerHTML=`<span id="${id}chev" style="color:var(--t4);font-size:11px;transition:transform .2s;display:inline-block;">▾</span><span style="width:8px;height:8px;border-radius:2px;background:${C.b};display:inline-block;flex-shrink:0;"></span><span style="font-size:10px;font-weight:700;color:var(--t2);letter-spacing:.06em;">${label}</span><span style="font-size:9px;color:var(--t4);background:rgba(255,255,255,0.05);padding:1px 6px;border-radius:99px;">${gjobs.length} job${gjobs.length!==1?"s":""}</span>`;
+    std.appendChild(shd);sr.appendChild(std);tbody.appendChild(sr);
+
+    const rows=[];
+    if(!gjobs.length){
+      const er=document.createElement("tr");
+      er.innerHTML=`<td colspan="3" style="padding:4px 8px 4px 26px;font-size:10px;color:var(--t4);font-style:italic;">No jobs assigned</td>`;
+      tbody.appendChild(er);rows.push(er);
+    } else {
+      gjobs.forEach(j=>{
+        const conflict=jobHasConflict(j);
+        const tr=document.createElement("tr");
+        tr.style.borderBottom="1px solid rgba(91,142,245,0.06)";
+
+        const tdJ=document.createElement("td");
+        tdJ.style.cssText="padding:4px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;cursor:pointer;";
+        tdJ.innerHTML=`<div style="font-size:11px;font-weight:700;color:var(--t1);font-family:'IBM Plex Mono',monospace;">${j.id}</div><div style="font-size:9px;color:var(--t3);margin-top:1px;overflow:hidden;text-overflow:ellipsis;">${j.desc||""}</div>`;
+        tdJ.title=j.id+" · "+(j.desc||"");
+        tdJ.onclick=()=>openModal(j);
+
+        const tdD=document.createElement("td");
+        tdD.style.cssText="padding:4px 8px;font-size:9px;color:var(--t3);white-space:nowrap;font-family:'IBM Plex Mono',monospace;";
+        tdD.textContent=fmtD(j.runExpStart)+" – "+fmtD(j.runExpEnd);
+
+        const tdC=document.createElement("td");
+        tdC.style.cssText=`padding:0;position:relative;height:36px;min-width:${NDAYS*DW}px;overflow:hidden;`;
+
+        let grid=`<div style="position:absolute;top:0;left:0;display:flex;height:100%;">`;
+        for(let i=0;i<NDAYS;i++){
+          const dd=aD(chartStart,i),dw=dd.getDay();
+          const isWk=dw===0||dw===6,isTd=i===todayOff;
+          const bg=isTd?"rgba(255,255,255,0.08)":isWk?"rgba(91,142,245,0.04)":"transparent";
+          grid+=`<div style="width:${DW}px;min-width:${DW}px;flex-shrink:0;height:36px;background:${bg};border-right:1px solid rgba(255,255,255,0.025);"></div>`;
+        }
+        grid+="</div>";
+
+        let over=`<div style="position:absolute;inset:0;pointer-events:none;">`;
+        if(todayOff>=0&&todayOff<NDAYS)
+          over+=`<div style="position:absolute;top:0;bottom:0;left:${todayOff*DW+7}px;width:2px;background:rgba(255,255,255,0.5);z-index:3;"></div>`;
+
+        if(j.runExpStart){
+          const rs=parseD(j.runExpStart),re=parseD(j.runExpEnd||j.runExpStart);
+          if(rs){
+            const barS=aD(rs,-3),barE=aD(re||rs,3);
+            const s2=dDiff(chartStart,barS),e2=dDiff(chartStart,barE)+1;
+            const cs=Math.max(0,s2),ce=Math.min(NDAYS,e2);
+            if(cs<NDAYS&&ce>0){
+              const lft=cs*DW,wid=Math.max(DW*2,(ce-cs)*DW);
+              const runS=Math.max(0,dDiff(chartStart,rs));
+              const runE=Math.min(NDAYS,dDiff(chartStart,re||rs)+1);
+              const innerL=(runS-cs)*DW,innerW=Math.max(DW,(runE-runS)*DW);
+              const lbl=(ce-cs)>4?j.id:"";
+
+              // Faded buffer zone
+              over+=`<div style="position:absolute;top:50%;transform:translateY(-50%);height:22px;left:${lft}px;width:${wid}px;background:${C.b};opacity:0.3;border-radius:3px;pointer-events:none;"></div>`;
+
+              // Main bar — diagonal yellow/black stripes if conflict, else solid color
+              if(conflict){
+                over+=`<div style="position:absolute;top:50%;transform:translateY(-50%);height:22px;left:${lft+innerL}px;width:${innerW}px;background:repeating-linear-gradient(45deg,rgba(240,180,0,0.85) 0px,rgba(240,180,0,0.85) 5px,rgba(20,20,20,0.75) 5px,rgba(20,20,20,0.75) 10px);border-radius:3px;display:flex;align-items:center;padding:0 5px;font-size:9px;font-weight:700;color:#fff;font-family:'IBM Plex Mono',monospace;white-space:nowrap;overflow:hidden;pointer-events:all;cursor:pointer;border:1px solid rgba(240,180,0,0.6);" title="${j.id} ⚠ IMU conflict · ${fmtD(j.runExpStart)}–${fmtD(j.runExpEnd)}">${lbl}</div>`;
+              } else {
+                over+=`<div style="position:absolute;top:50%;transform:translateY(-50%);height:22px;left:${lft+innerL}px;width:${innerW}px;background:${C.b};border-radius:3px;display:flex;align-items:center;padding:0 5px;font-size:9px;font-weight:700;color:${C.t};font-family:'IBM Plex Mono',monospace;white-space:nowrap;overflow:hidden;pointer-events:all;cursor:pointer;" title="${j.id} · ${fmtD(j.runExpStart)}–${fmtD(j.runExpEnd)}">${lbl}</div>`;
+              }
+            }
+          }
+        }
+        over+="</div>";
+        tdC.innerHTML=grid+over;
+        tdC.querySelectorAll("[title]").forEach(el=>el.addEventListener("click",e=>{e.stopPropagation();openModal(j);}));
+
+        tr.appendChild(tdJ);tr.appendChild(tdD);tr.appendChild(tdC);
+        tbody.appendChild(tr);rows.push(tr);
+      });
+    }
+
+    let collapsed=false;
+    shd.onclick=()=>{
+      collapsed=!collapsed;
+      const chev=document.getElementById(id+"chev");
+      if(chev) chev.style.transform=collapsed?"rotate(-90deg)":"";
+      rows.forEach(r=>r.style.display=collapsed?"none":"");
+    };
+  }
+
+  ORDER.forEach(label=>makeSection(label,groups[label]||[]));
+  tbl.appendChild(tbody);
+  wrap.appendChild(tbl);
+}
+
+
 function renderCancelledTab(){
   const el=document.getElementById('cancelled-list');if(!el)return;
   if(!cancelledJobs.length){el.innerHTML='<div style="color:var(--t3);font-size:11px;">No cancelled jobs.</div>';return;}
@@ -2864,7 +3420,7 @@ function openCapModal(weekStart){
   const emtSec=document.createElement("div");
   emtSec.innerHTML="<div style='font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--t4);margin-bottom:10px;'>EMT Breakdown</div>";
   SLC_EMTS.forEach(emt=>{
-    const emtJobs=weekJobs.filter(j=>j.builder===emt||j.builder2===emt);
+    const emtJobs=weekJobs.filter(j=>(j.builder===emt||j.builder2===emt)&&j.buildLoc==="SLC");
     const pto=(weekPtoAdj[`${toISO(ws)}_${emt}`]||0);
     const avail=Math.max(0,workDays-pto);
     const segs=emtJobs.map(function(jj){
@@ -3070,12 +3626,13 @@ document.addEventListener('DOMContentLoaded',()=>{
         .then(()=>_setStatus(`✓ Upload synced (${nj.length} jobs)`,'#22c98a'))
         .catch(err=>_setStatus('⚠ Upload sync failed: '+err.message,'#e84545'));
     }
-    localStorage.setItem('ts_version','v37');renderAll();
+    localStorage.setItem('ts_version','v38');renderAll();
     alert(`Imported ${nj.length} jobs.`);e.target.value='';
   });
 });
 
 </script>
+
 
 </body>
 </html>
