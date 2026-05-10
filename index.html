@@ -47,7 +47,7 @@ select.fsel option{background:var(--s2);}
 #dh-scroll{overflow:hidden;flex:1;display:flex;flex-direction:column;}
 .dh-inner{display:flex;height:24px;margin:0;padding:0;overflow:hidden;}
 .dh-cell{width:var(--COL);min-width:var(--COL);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;height:26px;font-family:'IBM Plex Mono',monospace;font-weight:600;color:rgba(255,255,255,0.75);border-right:1px solid rgba(255,255,255,0.03);}
-.dh-cell.sun{color:var(--t2);background:rgba(91,142,245,0.05);}
+.dh-cell.sun{color:rgba(255,255,255,0.85);background:rgba(255,255,255,0.13);}
 .dh-cell.tdy{color:rgba(255,255,255,0.95);background:rgba(255,255,255,0.22);font-weight:800;}
 .dh-cell.hol{color:rgba(240,160,32,0.9);background:rgba(240,160,32,0.1);font-weight:700;}
 
@@ -118,7 +118,7 @@ select.fsel option{background:var(--s2);}
 /* GANTT */
 .job-gantt{flex:1;position:relative;overflow:hidden;}
 .col-bg{position:absolute;top:0;height:100%;border-right:1px solid rgba(255,255,255,0.022);pointer-events:none;}
-.col-bg.sun{background:rgba(91,142,245,0.04);border-right-color:rgba(91,142,245,0.09);}
+.col-bg.sun{background:rgba(255,255,255,0.1);border-right-color:rgba(91,142,245,0.09);}
 .col-bg.tdy{background:rgba(255,255,255,0.20);border-right-color:rgba(255,255,255,0.28);}
 .bar-vis{position:absolute;border-radius:4px;overflow:hidden;pointer-events:none;transition:filter .12s,box-shadow .12s;}
 .bar-hit{position:absolute;z-index:5;cursor:pointer;background:transparent;}
@@ -150,7 +150,7 @@ select.fsel option{background:var(--s2);}
 .arch-gantt{flex:1;position:relative;overflow:hidden;background:var(--bg);}
 
 /* WEEKLY CAPS — cascading */
-#weekly-caps{position:relative;background:var(--s1);border-top:1px solid var(--b2);flex-shrink:0;overflow:hidden;}
+#weekly-caps{position:relative;background:var(--s1);border-top:1px solid var(--b2);flex-shrink:0;overflow:hidden;transition:height 0.2s ease;}#weekly-caps.collapsed{height:0!important;border-top:none;}
 .wk-cap-canvas{display:block;}
 
 /* 30-DAY CAP */
@@ -250,7 +250,7 @@ select.ms option{background:var(--s2);}
 .ht-conflict{color:var(--red);font-size:8px;font-weight:700;animation:flash 1.1s infinite;}
 .ht-cal{flex:1;position:relative;overflow:hidden;}
 .ht-col-bg{position:absolute;top:0;height:100%;border-right:1px solid rgba(255,255,255,0.02);pointer-events:none;}
-.ht-col-bg.sun{background:rgba(91,142,245,0.03);}
+.ht-col-bg.sun{background:rgba(255,255,255,0.08);}
 .ht-col-bg.tdy{background:rgba(91,142,245,0.12);}
 .ht-bar{position:absolute;border-radius:3px;font-size:8px;display:flex;align-items:center;padding-left:4px;overflow:hidden;white-space:nowrap;opacity:0.85;cursor:pointer;transition:opacity .12s;}
 .ht-bar:hover{opacity:1;}
@@ -288,6 +288,7 @@ select.ms option{background:var(--s2);}
   <div class="tab" data-tab="build-exp">📋 Reference Tables</div>
   <div class="tab" data-tab="documents">📁 Documents</div>
   <div class="tab" data-tab="imu"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px;flex-shrink:0;"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> IMU</div>
+  <div class="tab" data-tab="efficiency">⚡ Efficiency</div>
 </div>
 
 <div id="tab-content">
@@ -636,7 +637,7 @@ select.ms option{background:var(--s2);}
     <div style="overflow-y:auto;flex:1;padding:16px 20px;display:flex;gap:24px;align-items:flex-start;">
       <div style="flex:1;min-width:0;">
       <table class="be-table" id="be-table">
-        <thead><tr><th>From (in)</th><th>To (in)</th><th>Technology Group</th><th>Days (1 EMT)</th><th></th></tr></thead>
+        <thead><tr><th>From (in)</th><th>To (in)</th><th>Technology Group</th><th>Days (1 EMT)</th><th style="text-align:center;cursor:default;">Count</th><th style="text-align:center;">Avg Actual</th><th></th></tr></thead>
         <tbody id="be-tbody"></tbody>
       </table>
       <div style="display:flex;gap:8px;margin-top:12px;">
@@ -654,7 +655,7 @@ select.ms option{background:var(--s2);}
             </tr>
           </thead>
           <tbody id="pm-pe-body">
-            <tr><td><input class="be-inp" value="Joe Naso"></td><td><input class="be-inp" value="Greg Riddle"></td><td><button class="be-del-btn" onclick="this.closest('tr').remove()" title="Remove">✕</button></td></tr>
+            <tr><td><input class="be-inp" value="Joe Naso"></td><td><input class="be-inp" value="Gregory Riddle"></td><td><button class="be-del-btn" onclick="this.closest('tr').remove()" title="Remove">✕</button></td></tr>
             <tr><td><input class="be-inp" value="Joe Naso"></td><td><input class="be-inp" value="Seng Tang"></td><td><button class="be-del-btn" onclick="this.closest('tr').remove()" title="Remove">✕</button></td></tr>
             <tr><td><input class="be-inp" value="Joe Naso"></td><td><input class="be-inp" value="Jason Scott"></td><td><button class="be-del-btn" onclick="this.closest('tr').remove()" title="Remove">✕</button></td></tr>
             <tr><td><input class="be-inp" value="Doug Diehl"></td><td><input class="be-inp" value="Terry Carter"></td><td><button class="be-del-btn" onclick="this.closest('tr').remove()" title="Remove">✕</button></td></tr>
@@ -716,9 +717,20 @@ select.ms option{background:var(--s2);}
   <div class="tab-pane" id="imu-pane">
     <div id="imu-container" style="display:flex;flex-direction:column;overflow:hidden;flex:1;">
       <div id="imu-header" style="padding:10px 14px;border-bottom:1px solid rgba(91,142,245,0.2);background:var(--s1);flex-shrink:0;display:flex;align-items:center;">
-        <div>
-          <div style="font-size:13px;font-weight:700;color:var(--t1);">IMU Schedule</div>
-          <div style="font-size:10px;color:var(--t3);margin-top:2px;">Grouped by IMU serial · 60-day view from today</div>
+        <div style="display:flex;align-items:center;gap:14px;width:100%;">
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--t1);">IMU Schedule</div>
+            <div style="font-size:10px;color:var(--t3);margin-top:2px;">Grouped by IMU serial · 60-day view · drag bars to assign</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;margin-left:auto;">
+            <span style="font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.06em;">SERVICE CENTER</span>
+            <select id="imu-sc-sel" onchange="window._imuSC=this.value;renderImuTab();"
+              style="background:var(--s3);border:1px solid rgba(91,142,245,0.3);border-radius:5px;color:var(--t1);padding:4px 10px;font-size:11px;font-weight:700;outline:none;cursor:pointer;">
+              <option value="SLC">SLC</option>
+              <option value="HOU">HOU</option>
+              <option value="TUL">TUL</option>
+            </select>
+          </div>
         </div>
       </div>
       <div id="imu-gantt-wrap" style="overflow:auto;flex:1;"></div>
@@ -1224,6 +1236,26 @@ function getEmtOverlapRange(job){
 
 
 function capColor(n, max){return n>max?"#e84545":n>=max*0.8?"#f0a020":"#22c98a";}
+
+function toggleWeeklyCaps(){
+  const wc = document.getElementById("weekly-caps");
+  const chev = document.getElementById("wc-toggle-chev");
+  if(!wc) return;
+  const isCollapsed = wc.classList.contains("collapsed");
+  if(isCollapsed){
+    wc.classList.remove("collapsed");
+    // Restore stored height
+    wc.style.height = (wc._savedH || 93) + "px";
+    if(chev) chev.style.transform = "";
+  } else {
+    // Save current height before collapsing
+    wc._savedH = wc.offsetHeight || 93;
+    wc.classList.add("collapsed");
+    if(chev) chev.style.transform = "rotate(-90deg)";
+  }
+  // Persist state
+  try{ localStorage.setItem("ts_wc_collapsed", isCollapsed ? "0" : "1"); } catch(e){}
+}
 
 function renderWeeklyCaps(){
   const container=document.getElementById("weekly-caps");
@@ -2100,6 +2132,15 @@ function openModal(job){
   ov.classList.add("open");
   ov.style.cssText="background:none;";
 }
+function openModalAlongside(job){
+  // Keep cap-modal open behind the job modal
+  _alongsideMode=true;
+  // Lower cap-modal z-index so job modal appears on top
+  const cm=document.getElementById("cap-modal");
+  if(cm) cm.style.zIndex="990";
+  openModal(job);
+}
+
 function closeModal(){
   const ov=document.getElementById("modal-overlay");
   ov.classList.remove("open");
@@ -2110,6 +2151,9 @@ function closeModal(){
     // Move modal-box back inside overlay if it was detached
     if(mb.parentNode!==ov) ov.appendChild(mb);
   }
+  // Restore cap-modal z-index if it was lowered
+  const _cm=document.getElementById("cap-modal");
+  if(_cm) _cm.style.zIndex="1002";
   _alongsideMode=false;
   modalJob=null;renderScrollArea();requestAnimationFrame(()=>{renderWeeklyCaps();renderCapacity30();syncHeaders();});}
 
@@ -2181,7 +2225,7 @@ function renderModal(){
       <div class="m-sec"><div class="m-sec-t">Kitting</div>
         <div style="display:flex;align-items:center;justify-content:space-between;">
           <div class="chk-row" id="kit-row"><div class="chk-box${j.kitted?" on":""}" id="kbox">${j.kitted?`<svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5l2.5 2.5 4.5-5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`:""}</div><span style="font-size:11px;color:var(--t2)">Tool has been kitted</span></div>
-          <label style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t3);flex-shrink:0;">IMU<select id="vci-sel" class="ms" style="font-size:10px;padding:2px 4px;" onchange="modalJob.imuSerial=this.value;saveJob({...modalJob,imuSerial:this.value});if(document.getElementById('imu-pane')?.classList.contains('active'))renderImuTab();"><option value="">—</option>${["424149","427469","441430","443010","443372","445167","445166","Other"].map(v=>{const sel=(j.imuSerial||"")===v?" selected":"";const rs=j.runExpStart?new Date(j.runExpStart+"T00:00:00"):null;const re=j.runExpEnd?new Date(j.runExpEnd+"T00:00:00"):rs;const conflict=v&&v!=="Other"&&rs&&jobs.some(o=>o.id!==j.id&&(o.imuSerial||"")=== v&&(()=>{const os=o.runExpStart?new Date(o.runExpStart+"T00:00:00"):null;const oe=o.runExpEnd?new Date(o.runExpEnd+"T00:00:00"):os;if(!os)return false;const bs=new Date(rs);bs.setDate(bs.getDate()-3);const be=new Date(re);be.setDate(be.getDate()+3);const obs=new Date(os);obs.setDate(obs.getDate()-3);const obe=new Date(oe);obe.setDate(obe.getDate()+3);return bs<=obe&&be>=obs;})());return`<option value="${v}"${sel} style="${conflict?"color:#e84545;font-weight:700":""}">${v}${conflict?" ⚠":""}</option>`;}).join("")}</select></label>
+          <label style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t3);flex-shrink:0;">IMU<select id="vci-sel" class="ms" style="font-size:10px;padding:2px 4px;" onchange="modalJob.imuSerial=this.value;saveJob({...modalJob,imuSerial:this.value});if(document.getElementById('imu-pane')?.classList.contains('active'))renderImuTab();"><option value="">—</option>${(()=>{const SC=window._imuSC||"SLC";const SLC=["424149","427469","441430","443010","443372","445167","445166"];const HOU=["512841","527364","531092","548271","556830","563417","574928","581034","592761","503847","519283","536104","547392","558016","571843","584920"];const TUL=["521738","534092","547831","556204","568310","579142","583027","596481"];return[...(SC==="HOU"?HOU:SC==="TUL"?TUL:SLC),"Other"];})().map(v=>{const sel=(j.imuSerial||"")===v?" selected":"";const rs=j.runExpStart?new Date(j.runExpStart+"T00:00:00"):null;const re=j.runExpEnd?new Date(j.runExpEnd+"T00:00:00"):rs;const conflict=v&&v!=="Other"&&rs&&jobs.some(o=>o.id!==j.id&&(o.imuSerial||"")=== v&&(()=>{const os=o.runExpStart?new Date(o.runExpStart+"T00:00:00"):null;const oe=o.runExpEnd?new Date(o.runExpEnd+"T00:00:00"):os;if(!os)return false;const bs=new Date(rs);bs.setDate(bs.getDate()-3);const be=new Date(re);be.setDate(be.getDate()+3);const obs=new Date(os);obs.setDate(obs.getDate()-3);const obe=new Date(oe);obe.setDate(obe.getDate()+3);return bs<=obe&&be>=obs;})());return`<option value="${v}"${sel} style="${conflict?"color:#e84545;font-weight:700":""}">${v}${conflict?" ⚠":""}</option>`;}).join("")}</select></label>
           <a href="file:///C:/Users/bcgar/OneDrive/Desktop/temp/Runsnew/${(j.customer||'x')[0].toUpperCase()}" target="_blank" style="font-size:9px;color:var(--blue);text-decoration:none;border:1px solid rgba(91,142,245,0.3);border-radius:3px;padding:2px 8px;white-space:nowrap;flex-shrink:0;">📁 Job Files</a>
         </div>
       </div>
@@ -2417,8 +2461,11 @@ function renderModal(){
     const prevState=bState(prevJ);
     const newState=bState({...prevJ,builder:newB1_||prevJ.builder,buildActEnd:newBe_||prevJ.buildActEnd});
     if(prevState!==newState)logHistory(modalJob.id,`Status: ${prevState} → ${newState}`);
-    const _vciFinal=document.getElementById("vci-sel")?.value;if(_vciFinal!==undefined)modalJob.imuSerial=_vciFinal;
-    saveJob(modalJob);
+    const _vciFinal=document.getElementById("vci-sel")?.value;
+    // Get the freshly-updated job from the jobs array (not stale modalJob)
+    const _updatedJob = jobs.find(j=>j.id===modalJob.id) || modalJob;
+    if(_vciFinal!==undefined) _updatedJob.imuSerial=_vciFinal;
+    saveJob(_updatedJob);
     // Save and close in all modes, then refresh cap if it's open
     closeModal();
     updateTabTitle();
@@ -2432,11 +2479,87 @@ function renderModal(){
 }
 
 // ─── Build Expectations Tab ───────────────────────────────────────
+function getBEMatches(row){
+  // Find completed jobs matching this size range + tech group
+  return jobs.filter(j=>{
+    if(!j.buildActStart||!j.buildActEnd) return false;
+    const sz=getJobSize(j),tech=getJobTech(j);
+    if(sz<row.from||sz>row.to) return false;
+    // Match tech group loosely
+    const rt=row.tech.toUpperCase();
+    const jt=tech.toUpperCase();
+    if(rt.includes("MDS PRO")&&!jt.includes("MDS PRO")) return false;
+    if(rt.includes("MDS FLEX")&&!jt.includes("MDS FLEX")) return false;
+    if(rt.includes("LEGACY STAND")&&jt.includes("COMBO")) return false;
+    if(rt.includes("LEGACY COMBO")&&!jt.includes("COMBO")) return false;
+    return true;
+  });
+}
+function calcActualDays(j){
+  // Count calendar days inclusive (start day = day 1, e.g. 5/4 to 5/6 = 3 days)
+  const s=parseISO(j.buildActStart),e=parseISO(j.buildActEnd);
+  if(!s||!e) return null;
+  let days=Math.round((e-s)/86400000)+1;
+  if(j.builder&&j.builder2) days=Math.round(days/2*10)/10;
+  return days||1;
+}
+function openBEDetailModal(row){
+  const matches=getBEMatches(row);
+  const existing=document.getElementById("be-detail-overlay");
+  if(existing) existing.remove();
+  const ov=document.createElement("div");
+  ov.id="be-detail-overlay";
+  ov.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9500;display:flex;align-items:center;justify-content:center;";
+  ov.onclick=e=>{if(e.target===ov)ov.remove();};
+  const box=document.createElement("div");
+  box.style.cssText="background:var(--s2);border:1px solid var(--b2);border-radius:10px;width:560px;max-width:95vw;max-height:80vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.5);";
+  box.onclick=e=>e.stopPropagation();
+  const hdr=document.createElement("div");
+  hdr.style.cssText="padding:12px 16px;border-bottom:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;";
+  hdr.innerHTML=`<div><div style="font-size:12px;font-weight:700;color:var(--t1);">${row.tech} · ${row.from}"–${row.to}"</div><div style="font-size:10px;color:var(--t3);margin-top:2px;">${matches.length} completed build${matches.length!==1?"s":""} with actuals</div></div><button onclick="document.getElementById('be-detail-overlay').remove()" style="background:none;border:none;color:var(--t3);font-size:16px;cursor:pointer;">✕</button>`;
+  box.appendChild(hdr);
+  const body=document.createElement("div");
+  body.style.cssText="overflow-y:auto;flex:1;padding:12px 0;";
+  if(!matches.length){
+    body.innerHTML=`<div style="padding:16px;font-size:11px;color:var(--t4);font-style:italic;">No completed builds with actual dates recorded yet.</div>`;
+  } else {
+    const tbl=document.createElement("table");
+    tbl.style.cssText="width:100%;border-collapse:collapse;font-size:11px;";
+    tbl.innerHTML=`<thead><tr style="background:var(--s3);">
+      <th style="padding:5px 10px;text-align:left;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.05em;border-bottom:1px solid var(--b2);">JOB</th>
+      <th style="padding:5px 10px;text-align:left;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.05em;border-bottom:1px solid var(--b2);">DESCRIPTION</th>
+      <th style="padding:5px 10px;text-align:center;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.05em;border-bottom:1px solid var(--b2);">PRIMARY EMT</th>
+      <th style="padding:5px 10px;text-align:center;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.05em;border-bottom:1px solid var(--b2);">ACTUAL DAYS</th>
+    </tr></thead>`;
+    const tbody2=document.createElement("tbody");
+    matches.forEach(j=>{
+      const days=calcActualDays(j);
+      const exp=row.days;
+      const diff=days!==null?days-exp:null;
+      const cl=diff===null?"var(--t3)":diff<=0?"#22c98a":diff<=1?"#f0a020":"#e84545";
+      const tr=document.createElement("tr");
+      tr.style.cssText="border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer;";
+      tr.innerHTML=`<td style="padding:5px 10px;font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--t1);">${j.id}</td><td style="padding:5px 10px;color:var(--t2);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${j.desc||""}</td><td style="padding:5px 10px;text-align:center;color:var(--t2);">${j.builder||"—"}</td><td style="padding:5px 10px;text-align:center;font-family:'IBM Plex Mono',monospace;font-weight:700;color:${cl};">${days!==null?days+"d":"—"}</td>`;
+      tr.onclick=()=>{ov.remove();openModal(j);};
+      tbody2.appendChild(tr);
+    });
+    tbl.appendChild(tbody2);
+    body.appendChild(tbl);
+  }
+  box.appendChild(body);
+  ov.appendChild(box);
+  document.body.appendChild(ov);
+}
 function renderBuildExp(){
   const tbody=document.getElementById("be-tbody");tbody.innerHTML="";
   buildExp.forEach((row,i)=>{
+    const matches=getBEMatches(row);
+    const actDays=matches.map(j=>calcActualDays(j)).filter(d=>d!==null);
+    const avg=actDays.length?Math.round(actDays.reduce((a,b)=>a+b,0)/actDays.length*10)/10:null;
+    const countCl=matches.length>0?"var(--blue)":"var(--t4)";
+    const avgCl=avg===null?"var(--t4)":avg<=row.days?"#22c98a":avg<=row.days+1?"#f0a020":"#e84545";
     const tr=document.createElement("tr");
-    tr.innerHTML=`<td><input type="number" value="${row.from}" data-i="${i}" data-f="from"></td><td><input type="number" value="${row.to}" data-i="${i}" data-f="to"></td><td><input type="text" value="${row.tech}" data-i="${i}" data-f="tech" style="width:180px"></td><td><input type="number" value="${row.days}" data-i="${i}" data-f="days" style="width:70px"></td><td><button class="be-del-btn" data-del="${i}">✕</button></td>`;
+    tr.innerHTML=`<td><input type="number" value="${row.from}" data-i="${i}" data-f="from" style="width:58px"></td><td><input type="number" value="${row.to}" data-i="${i}" data-f="to" style="width:58px"></td><td><input type="text" value="${row.tech}" data-i="${i}" data-f="tech" style="width:180px"></td><td><input type="number" value="${row.days}" data-i="${i}" data-f="days" style="width:70px"></td><td style="text-align:center;padding:5px 8px;"><button onclick="openBEDetailModal(buildExp[${i}])" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:4px;color:#ffffff;cursor:pointer;padding:2px 10px;font-size:10px;font-weight:700;font-family:'IBM Plex Mono',monospace;">${matches.length}</button></td><td style="text-align:center;padding:5px 8px;font-size:11px;font-family:'IBM Plex Mono',monospace;font-weight:700;color:${avgCl};">${avg!==null?avg+"d":"—"}</td><td><button class="be-del-btn" data-del="${i}">✕</button></td>`;
     tbody.appendChild(tr);
   });
   tbody.querySelectorAll("input").forEach(el=>el.addEventListener("change",e=>{const i=+e.target.dataset.i,f=e.target.dataset.f;buildExp[i]={...buildExp[i],[f]:f==="tech"?e.target.value:Number(e.target.value)};}));
@@ -2455,6 +2578,7 @@ document.querySelectorAll(".tab").forEach(tab=>{
     if(tab.dataset.tab==="home-tools")requestAnimationFrame(renderHomeTools);
     if(tab.dataset.tab==="cancelled")renderCancelledTab();
     if(tab.dataset.tab==="imu")requestAnimationFrame(renderImuTab);
+    if(tab.dataset.tab==="efficiency")requestAnimationFrame(renderEfficiencyTab);
   });
 });
 
@@ -2466,7 +2590,16 @@ function populateFilters(){
   tf.innerHTML='<option value="">All</option>';
   szf.innerHTML='<option value="">All</option>';
   [...new Set(BUILDERS)].forEach(b=>{const o=document.createElement("option");o.value=b;o.textContent=b;bf.appendChild(o);});
-  ["CLEMENTS","EJOHNSON","ROGERS","STERLING","HOU","TUL","CAN"].forEach(t=>{const o=document.createElement("option");o.value=t;o.textContent=t;tf.appendChild(o);});
+  // SLC field techs individually, then group HOU/TUL/CAN
+  [
+    {v:"BCLEMENTS", l:"Clements"},
+    {v:"EJOHNSON",  l:"Johnson"},
+    {v:"ZROGERS",   l:"Rogers"},
+    {v:"JSTERLING", l:"Sterling"},
+    {v:"HOU",       l:"HOU"},
+    {v:"TUL",       l:"TUL"},
+    {v:"CAN",       l:"CAN"},
+  ].forEach(t=>{const o=document.createElement("option");o.value=t.v;o.textContent=t.l;tf.appendChild(o);});
   [...new Set(DIAM_ORDER)].filter(d=>d!=null&&d!==0).sort((a,b)=>a-b).forEach(d=>{const o=document.createElement("option");o.value=d;o.textContent=d+'"';szf.appendChild(o);});
   bf.onchange=()=>{bFilt=bf.value;renderAll();};
   tf.onchange=()=>{tFilt=tf.value;renderAll();};
@@ -2872,7 +3005,7 @@ function _processDailyRows(rows, remoteTs){
 
 
 // ── IMU Tab ────────────────────────────────────────────────────────
-const IMU_SERIALS = ["424149","427469","441430","443010","443372","445167","445166","Other"];
+const IMU_SERIALS = (()=>{const SC=window._imuSC||"SLC";const SLC=["424149","427469","441430","443010","443372","445167","445166"];const HOU=["512841","527364","531092","548271","556830","563417","574928","581034","592761","503847","519283","536104","547392","558016","571843","584920"];const TUL=["521738","534092","547831","556204","568310","579142","583027","596481"];return[...(SC==="HOU"?HOU:SC==="TUL"?TUL:SLC),"Other"];})();
 const IMU_COLORS  = {
   "424149": {bar:"#3266AD", text:"#dbeafe"},
   "427469": {bar:"#1D9E75", text:"#d1fae5"},
@@ -2885,6 +3018,132 @@ const IMU_COLORS  = {
 };
 const IMU_DAY_W = 15;
 const IMU_DAYS  = 60;
+
+
+// ── Efficiency Tab ────────────────────────────────────────────────
+function renderEfficiencyTab(){
+  const pane = document.getElementById("efficiency-pane");
+  if(!pane) return;
+  pane.innerHTML = "";
+
+  // Header
+  const hdr = document.createElement("div");
+  hdr.style.cssText = "padding:14px 20px;border-bottom:1px solid rgba(91,142,245,0.2);background:var(--s1);flex-shrink:0;display:flex;align-items:center;gap:16px;";
+  hdr.innerHTML = `<div><div style="font-size:14px;font-weight:700;color:var(--t1);">EMT Build Efficiency</div><div style="font-size:10px;color:var(--t3);margin-top:2px;">Actual ÷ Expected calendar days · 100% = on target · under 100% = faster · over 100% = slower · includes primary and secondary roles</div></div>`;
+  pane.appendChild(hdr);
+
+  const body = document.createElement("div");
+  body.style.cssText = "padding:20px;display:flex;flex-direction:column;gap:20px;overflow-y:auto;";
+
+  const allEmts = [...SLC_EMTS];
+
+  // Compute stats per EMT
+  const stats = allEmts.map(emt => {
+    const emtJobs = jobs.filter(j => {
+      if(!j.buildActStart || !j.buildActEnd) return false;
+      return j.builder === emt || j.builder2 === emt;
+    });
+
+    let totalExpected = 0, totalActual = 0;
+    const details = emtJobs.map(j => {
+      // Expected days: use the job's own buildExpStart/buildExpEnd (manually editable per-job)
+      // This respects any manual overrides, not just the reference table lookup
+      let expDays = null;
+      if(j.buildExpStart && j.buildExpEnd){
+        const es = parseISO(j.buildExpStart), ee = parseISO(j.buildExpEnd);
+        // Count calendar days inclusive (start day counts as day 1)
+        expDays = Math.round((ee - es) / 86400000) + 1;
+        // Adjust for 2-EMT split
+        if(j.builder && j.builder2) expDays = Math.round(expDays / 2 * 10) / 10;
+      }
+
+      // Actual days: count calendar days inclusive (5/4 to 5/6 = 3 days, not 2)
+      const s = parseISO(j.buildActStart), e = parseISO(j.buildActEnd);
+      let actDays = Math.round((e - s) / 86400000) + 1;
+      if(j.builder && j.builder2) actDays = Math.round(actDays / 2 * 10) / 10;
+
+      if(expDays !== null) totalExpected += expDays;
+      totalActual += actDays;
+
+      return { j, expDays, actDays, isPrimary: j.builder === emt };
+    });
+
+    // Efficiency = actual/expected as a percentage (90 actual / 100 expected = 90%)
+    const effPct = totalExpected > 0 ? Math.round(totalActual / totalExpected * 100) : null;
+    return { emt, count: emtJobs.length, totalExpected, totalActual, effPct, details };
+  }).filter(s => s.count > 0).sort((a,b) => (a.effPct||999) - (b.effPct||999));
+
+  if(!stats.length) {
+    body.innerHTML = `<div style="padding:20px;font-size:12px;color:var(--t4);font-style:italic;">No completed builds with actual dates found. Record actual build start/end dates in job modals to see efficiency data.</div>`;
+    pane.appendChild(body);
+    return;
+  }
+
+  // Summary cards row
+  const cards = document.createElement("div");
+  cards.style.cssText = "display:flex;gap:12px;flex-wrap:wrap;";
+  stats.forEach(s => {
+    const pctColor = s.effPct === null ? "var(--t3)" : s.effPct <= 100 ? "#22c98a" : s.effPct <= 120 ? "#f0a020" : "#e84545";
+    const pctLabel = s.effPct === null ? "N/A" : `${s.effPct}% efficiency`;
+    const card = document.createElement("div");
+    card.style.cssText = "background:var(--s2);border:1px solid var(--b2);border-radius:8px;padding:14px 18px;min-width:160px;flex:1;cursor:pointer;transition:border-color 0.15s;";
+    card.innerHTML = `
+      <div style="font-size:13px;font-weight:700;color:var(--t1);margin-bottom:6px;">${s.emt}</div>
+      <div style="font-size:22px;font-weight:800;color:${pctColor};font-family:'IBM Plex Mono',monospace;margin-bottom:4px;">${pctLabel}</div>
+      <div style="font-size:10px;color:var(--t3);">${s.count} build${s.count!==1?"s":""} · ${Math.round(s.totalActual*10)/10}d actual vs ${Math.round(s.totalExpected*10)/10}d expected</div>`;
+    card.onmouseenter = () => card.style.borderColor = "rgba(91,142,245,0.5)";
+    card.onmouseleave = () => card.style.borderColor = "var(--b2)";
+    card.onclick = () => {
+      document.getElementById("eff-detail-"+s.emt)?.scrollIntoView({behavior:"smooth",block:"start"});
+    };
+    cards.appendChild(card);
+  });
+  body.appendChild(cards);
+
+  // Detailed breakdown per EMT
+  stats.forEach(s => {
+    const section = document.createElement("div");
+    section.id = "eff-detail-"+s.emt;
+    section.style.cssText = "background:var(--s2);border:1px solid var(--b2);border-radius:8px;overflow:hidden;";
+
+    const pctColor = s.effPct === null ? "var(--t3)" : s.effPct <= 100 ? "#22c98a" : s.effPct <= 120 ? "#f0a020" : "#e84545";
+    const pctLabel = s.effPct === null ? "" : `${s.effPct}% efficiency`;
+
+    const sh = document.createElement("div");
+    sh.style.cssText = "padding:10px 16px;background:var(--s3);border-bottom:1px solid var(--b2);display:flex;align-items:center;gap:12px;";
+    sh.innerHTML = `<span style="font-size:13px;font-weight:700;color:var(--t1);">${s.emt}</span><span style="font-size:11px;font-weight:700;color:${pctColor};font-family:'IBM Plex Mono',monospace;">${pctLabel}</span><span style="font-size:10px;color:var(--t3);margin-left:auto;">${s.count} builds · ${Math.round(s.totalActual*10)/10}d actual / ${Math.round(s.totalExpected*10)/10}d expected</span>`;
+    section.appendChild(sh);
+
+    const tbl = document.createElement("table");
+    tbl.style.cssText = "width:100%;border-collapse:collapse;font-size:11px;";
+    tbl.innerHTML = `<thead><tr style="background:var(--s3);">
+      <th style="padding:5px 10px;text-align:left;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.05em;border-bottom:1px solid var(--b2);">JOB</th>
+      <th style="padding:5px 10px;text-align:left;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.05em;border-bottom:1px solid var(--b2);">TOOL</th>
+      <th style="padding:5px 10px;text-align:center;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.05em;border-bottom:1px solid var(--b2);">ROLE</th>
+      <th style="padding:5px 10px;text-align:center;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.05em;border-bottom:1px solid var(--b2);">EXPECTED</th>
+      <th style="padding:5px 10px;text-align:center;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.05em;border-bottom:1px solid var(--b2);">ACTUAL</th>
+      <th style="padding:5px 10px;text-align:center;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.05em;border-bottom:1px solid var(--b2);">DIFF</th>
+    </tr></thead>`;
+    const tb2 = document.createElement("tbody");
+    s.details.forEach(({j, expDays, actDays, isPrimary}) => {
+      const diff = expDays !== null ? Math.round((actDays - expDays)*10)/10 : null;
+      const diffCl = diff === null ? "var(--t3)" : diff <= 0 ? "#22c98a" : diff <= 1 ? "#f0a020" : "#e84545";
+      const diffLbl = diff === null ? "—" : (diff > 0 ? "+" : "") + diff + "d";
+      const tr2 = document.createElement("tr");
+      tr2.style.cssText = "border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer;";
+      tr2.innerHTML = `<td style="padding:5px 10px;font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--t1);">${j.id}</td><td style="padding:5px 10px;color:var(--t2);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${j.desc||""}</td><td style="padding:5px 10px;text-align:center;font-size:9px;font-weight:700;color:${isPrimary?"var(--blue)":"var(--t3)"};">${isPrimary?"PRIMARY":"2ND"}</td><td style="padding:5px 10px;text-align:center;font-family:'IBM Plex Mono',monospace;color:var(--t3);">${expDays!==null?expDays+"d":"—"}</td><td style="padding:5px 10px;text-align:center;font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--t2);">${actDays}d</td><td style="padding:5px 10px;text-align:center;font-family:'IBM Plex Mono',monospace;font-weight:700;color:${diffCl};">${diffLbl}</td>`;
+      tr2.onmouseenter = () => tr2.style.background = "rgba(255,255,255,0.03)";
+      tr2.onmouseleave = () => tr2.style.background = "";
+      tr2.onclick = () => openModal(j);
+      tb2.appendChild(tr2);
+    });
+    tbl.appendChild(tb2);
+    section.appendChild(tbl);
+    body.appendChild(section);
+  });
+
+  pane.appendChild(body);
+}
 
 
 // IMU Tab bootstrap - ensures imu-pane is a direct child of tab-content
@@ -2900,6 +3159,8 @@ const IMU_DAYS  = 60;
     pane.innerHTML = '<div id="imu-container" style="display:flex;flex-direction:column;overflow:hidden;flex:1;"><div id="imu-header" style="padding:10px 14px;border-bottom:1px solid rgba(91,142,245,0.2);background:var(--s1);flex-shrink:0;"><div style=\"font-size:13px;font-weight:700;color:var(--t1)\">IMU Schedule</div></div><div id=\"imu-gantt-wrap\" style=\"overflow:auto;flex:1;\"></div></div>';
     tc.appendChild(pane);
   }
+  // (wc-toggle created in DOMContentLoaded below)
+
   // Build delete-confirm overlay in JS
   if(!document.getElementById("del-overlay")){
     const dov=document.createElement("div");
@@ -3140,6 +3401,16 @@ function renderImuTab(){
   if(!wrap) return;
   wrap.innerHTML = "";
 
+  // ── Service center config ────────────────────────────────────
+  const SC = window._imuSC || "SLC";
+  const SLC_SERIALS = ["424149","427469","441430","443010","443372","445167","445166"];
+  // 16 HOU serials, 8 TUL serials, all starting with 5
+  const HOU_SERIALS = ["512841","527364","531092","548271","556830","563417","574928","581034",
+                        "592761","503847","519283","536104","547392","558016","571843","584920"];
+  const TUL_SERIALS = ["521738","534092","547831","556204","568310","579142","583027","596481"];
+  const SERIALS = SC==="HOU" ? HOU_SERIALS : SC==="TUL" ? TUL_SERIALS : SLC_SERIALS;
+  const LOC = SC; // buildLoc to filter by
+
   const today = new Date(); today.setHours(0,0,0,0);
   const dow = today.getDay();
   const chartStart = new Date(today);
@@ -3153,67 +3424,107 @@ function renderImuTab(){
   function fmtD(iso){if(!iso)return"—";const d=new Date(iso+"T00:00:00");if(isNaN(d))return"—";return(d.getMonth()+1)+"/"+d.getDate();}
   function parseD(iso){if(!iso)return null;const d=new Date(iso+"T00:00:00");return isNaN(d)?null:d;}
 
-  // ── Day header matching scheduler style ──
-  let hdrHtml='<div style="display:flex;">';
-  for(let i=0;i<NDAYS;i++){
-    const d=aD(chartStart,i),dw=d.getDay();
-    const isSun=dw===0,isSat=dw===6,isTd=i===todayOff;
-    const n=d.getDate();
-    const lbl=(n===1||isSun||i===0)?((n===1?(d.getMonth()+1)+"/":"")+n):"";
-    let bg=isSun||isSat?"rgba(91,142,245,0.05)":"transparent";
-    let cl="rgba(255,255,255,0.75)",fw="600";
-    if(isTd){bg="rgba(255,255,255,0.22)";cl="rgba(255,255,255,0.95)";fw="800";}
-    hdrHtml+=`<div style="width:${DW}px;min-width:${DW}px;flex-shrink:0;font-size:9px;font-family:'IBM Plex Mono',monospace;font-weight:${fw};color:${cl};background:${bg};text-align:center;border-right:1px solid rgba(255,255,255,0.03);padding:2px 0;box-sizing:border-box;">${lbl}</div>`;
-  }
-  hdrHtml+="</div>";
-
-  const tbl=document.createElement("table");
-  tbl.style.cssText="border-collapse:collapse;width:max-content;min-width:100%;";
-  const thead=document.createElement("thead");
-  thead.innerHTML=`<tr style="background:var(--s2);">
-    <th style="width:200px;min-width:200px;padding:5px 8px;font-size:10px;font-weight:700;color:var(--t3);text-align:left;border-bottom:1px solid rgba(91,142,245,0.3);white-space:nowrap;position:sticky;top:0;z-index:4;background:var(--s2);letter-spacing:.05em;">JOB</th>
-    <th style="width:100px;min-width:100px;padding:5px 8px;font-size:10px;font-weight:700;color:var(--t3);text-align:left;border-bottom:1px solid rgba(91,142,245,0.3);white-space:nowrap;position:sticky;top:0;z-index:4;background:var(--s2);letter-spacing:.05em;">RUN DATES</th>
-    <th style="padding:0;border-bottom:1px solid rgba(91,142,245,0.3);position:sticky;top:0;z-index:4;background:var(--s2);">${hdrHtml}</th>
-  </tr>`;
-  tbl.appendChild(thead);
-  const tbody=document.createElement("tbody");
-
-  const COLORS={
-    "424149":{b:"#3266AD",t:"#dbeafe"},"427469":{b:"#1D9E75",t:"#d1fae5"},
-    "441430":{b:"#D85A30",t:"#fee2d0"},"443010":{b:"#7F77DD",t:"#ede9fe"},
-    "443372":{b:"#BA7517",t:"#fef3c7"},"445167":{b:"#D4537E",t:"#fce7f0"},
-    "445166":{b:"#1D7DB5",t:"#e0f2fe"},"Other":{b:"#5a617e",t:"#9299b5"},
-    "Unassigned":{b:"#363d58",t:"#9299b5"}
-  };
-  const ORDER=["424149","427469","441430","443010","443372","445167","445166","Other","Unassigned"];
-
-  // Filter: SLC buildLoc, XYZ in desc, bar overlaps next 60 days
+  // ── Filter jobs: matching SC buildLoc, XYZ in desc, overlaps chart ──
   const xyzJobs = jobs.filter(j=>{
-    if((j.buildLoc||"SLC")!=="SLC") return false;
+    if((j.buildLoc||"SLC")!==LOC) return false;
     if(!(j.desc||"").toUpperCase().includes("XYZ")) return false;
     const rs=parseD(j.runExpStart),re=parseD(j.runExpEnd||j.runExpStart);
     if(!rs) return false;
     return aD(rs,-3)<chartEnd && aD(re||rs,3)>=chartStart;
   });
 
-  // Group & sort soonest first
+  // ── Weekly counts — any job whose run bar (±3 days) overlaps any day in the week ──
+  const weekCounts = new Array(Math.ceil(NDAYS/7)).fill(0);
+  xyzJobs.forEach(j=>{
+    const rs=parseD(j.runExpStart),re=parseD(j.runExpEnd||j.runExpStart);
+    if(!rs) return;
+    const barS=aD(rs,-3), barE=aD(re||rs,3);
+    for(let w=0;w<weekCounts.length;w++){
+      const wkStart=aD(chartStart,w*7);
+      const wkEnd=aD(chartStart,Math.min((w+1)*7,NDAYS));
+      if(barS<wkEnd && barE>=wkStart) weekCounts[w]++;
+    }
+  });
+
+  // ── Week count header row ────────────────────────────────────
+  let weekHtml='<div style="display:flex;">';
+  for(let w=0;w<Math.ceil(NDAYS/7);w++){
+    const cnt=weekCounts[w];
+    const daysInWk=Math.min(7,NDAYS-w*7);
+    const wkW=daysInWk*DW;
+    const bg=cnt>0?"rgba(34,201,138,0.12)":"transparent";
+    const cl=cnt>0?"#22c98a":"rgba(255,255,255,0.2)";
+    weekHtml+=`<div style="width:${wkW}px;min-width:${wkW}px;flex-shrink:0;font-size:9px;font-family:'IBM Plex Mono',monospace;font-weight:700;color:${cl};background:${bg};text-align:center;border-right:1px solid rgba(255,255,255,0.06);padding:2px 0;box-sizing:border-box;">${cnt>0?cnt+" run"+(cnt>1?"s":""):""}</div>`;
+  }
+  weekHtml+="</div>";
+
+  // ── Day header row ───────────────────────────────────────────
+  let hdrHtml='<div style="display:flex;">';
+  for(let i=0;i<NDAYS;i++){
+    const d=aD(chartStart,i),dw=d.getDay();
+    const isSun=dw===0,isSat=dw===6,isTd=i===todayOff;
+    const n=d.getDate();
+    const lbl=(n===1||isSun||i===0)?((n===1?(d.getMonth()+1)+"/":"")+n):"";
+    let bg=isSun?"rgba(255,255,255,0.11)":isSat?"rgba(255,255,255,0.035)":"transparent";
+    let cl="rgba(255,255,255,0.75)",fw="600";
+    if(isTd){bg="rgba(255,255,255,0.22)";cl="rgba(255,255,255,0.95)";fw="800";}
+    hdrHtml+=`<div style="width:${DW}px;min-width:${DW}px;flex-shrink:0;font-size:9px;font-family:'IBM Plex Mono',monospace;font-weight:${fw};color:${cl};background:${bg};text-align:center;border-right:1px solid rgba(255,255,255,0.03);padding:2px 0;box-sizing:border-box;">${lbl}</div>`;
+  }
+  hdrHtml+="</div>";
+
+  // ── Table ────────────────────────────────────────────────────
+  const tbl=document.createElement("table");
+  tbl.style.cssText="border-collapse:collapse;width:max-content;min-width:100%;";
+  const thead=document.createElement("thead");
+  thead.innerHTML=`
+    <tr style="background:var(--s2);">
+      <th colspan="2" style="padding:0;border-bottom:0;position:sticky;top:0;z-index:4;background:var(--s2);"></th>
+      <th style="padding:0;border-bottom:0;position:sticky;top:0;z-index:4;background:rgba(20,24,36,0.97);">${weekHtml}</th>
+    </tr>
+    <tr style="background:var(--s2);">
+      <th style="width:200px;min-width:200px;padding:5px 8px;font-size:10px;font-weight:700;color:var(--t3);text-align:left;border-bottom:1px solid rgba(91,142,245,0.3);white-space:nowrap;position:sticky;top:18px;z-index:4;background:var(--s2);letter-spacing:.05em;">JOB</th>
+      <th style="width:100px;min-width:100px;padding:5px 8px;font-size:10px;font-weight:700;color:var(--t3);text-align:left;border-bottom:1px solid rgba(91,142,245,0.3);white-space:nowrap;position:sticky;top:18px;z-index:4;background:var(--s2);letter-spacing:.05em;">RUN DATES</th>
+      <th style="padding:0;border-bottom:1px solid rgba(91,142,245,0.3);position:sticky;top:18px;z-index:4;background:var(--s2);">${hdrHtml}</th>
+    </tr>`;
+  tbl.appendChild(thead);
+  const tbody=document.createElement("tbody");
+
+  // ── Colors — generate palette for any serial list ────────────
+  const PALETTE=[
+    {b:"#3266AD",t:"#dbeafe"},{b:"#1D9E75",t:"#d1fae5"},{b:"#D85A30",t:"#fee2d0"},
+    {b:"#7F77DD",t:"#ede9fe"},{b:"#BA7517",t:"#fef3c7"},{b:"#D4537E",t:"#fce7f0"},
+    {b:"#1D7DB5",t:"#e0f2fe"},{b:"#4d9e6e",t:"#d1fae5"},{b:"#9e4d8a",t:"#fce7f8"},
+    {b:"#6b7e4d",t:"#ecf5d1"},{b:"#4d6b9e",t:"#dbeafe"},{b:"#9e7a4d",t:"#fef3c7"},
+    {b:"#4d9e9e",t:"#d1fafa"},{b:"#7a4d9e",t:"#ede9fe"},{b:"#9e4d4d",t:"#fee2d0"},
+    {b:"#4d7a9e",t:"#dbeafe"},{b:"#9e9e4d",t:"#fefcd1"},{b:"#4d9e7a",t:"#d1fae5"},
+    {b:"#7a9e4d",t:"#ecf5d1"},{b:"#9e4d7a",t:"#fce7f8"},{b:"#4d4d9e",t:"#ede9fe"},
+    {b:"#9e7a7a",t:"#fee2e2"},{b:"#7a7a9e",t:"#e8e8fe"},{b:"#7a9e9e",t:"#d1fafa"},
+  ];
+  const COLORS={};
+  SERIALS.forEach((s,i)=>{ COLORS[s]=PALETTE[i%PALETTE.length]; });
+  COLORS["Other"]={b:"#5a617e",t:"#9299b5"};
+  COLORS["Unassigned"]={b:"#363d58",t:"#9299b5"};
+  const ORDER=[...SERIALS,"Other","Unassigned"];
+
+  // ── Group & sort ─────────────────────────────────────────────
   const groups={};
   ORDER.forEach(s=>groups[s]=[]);
   xyzJobs.forEach(j=>{
     const s=(j.imuSerial||"").trim();
     if(s&&groups[s]!==undefined) groups[s].push(j);
-    else if(s){groups[s]=groups[s]||[];groups[s].push(j);}
+    else if(s&&s!=="Unassigned"&&s!=="Other"){groups[s]=groups[s]||[];groups[s].push(j);}
     else groups["Unassigned"].push(j);
   });
   ORDER.forEach(s=>{
     groups[s]&&groups[s].sort((a,b)=>(parseD(a.runExpStart)||new Date(9999,0))-(parseD(b.runExpStart)||new Date(9999,0)));
   });
 
-  // Build conflict map per IMU serial: list of {id, barS, barE}
+  // ── Conflict map ─────────────────────────────────────────────
   const imuUsage={};
   xyzJobs.forEach(j=>{
     const s=(j.imuSerial||"").trim();
-    if(!s||s==="Other") return;
+    // Skip blank, "Other", and "Unassigned" — those are not real serial assignments
+    if(!s||s==="Other"||s==="Unassigned") return;
     const rs=parseD(j.runExpStart),re=parseD(j.runExpEnd||j.runExpStart);
     if(!rs) return;
     if(!imuUsage[s]) imuUsage[s]=[];
@@ -3229,6 +3540,63 @@ function renderImuTab(){
     return (imuUsage[s]||[]).some(u=>u.id!==j.id&&bs<=u.barE&&be>=u.barS);
   }
 
+  // ── Drag state ───────────────────────────────────────────────
+  let _drag=null; // {jobId, barEl, ghostEl, startY, startRow}
+  const _rowEls=[]; // [{serial, trEl}] in DOM order — built as sections are created
+
+  function startDrag(e,j,barEl,trEl,serial){
+    e.preventDefault();
+    const ghost=barEl.cloneNode(true);
+    ghost.style.cssText+=";position:fixed;pointer-events:none;z-index:9999;opacity:0.85;transform:translateY(-50%);transition:none;box-shadow:0 4px 20px rgba(0,0,0,0.5);";
+    document.body.appendChild(ghost);
+    _drag={jobId:j.id,job:j,barEl,ghost,startY:e.clientY,lastSerial:serial};
+    barEl.style.opacity="0.35";
+    document.addEventListener("mousemove",onDragMove);
+    document.addEventListener("mouseup",onDragEnd);
+  }
+
+  function onDragMove(e){
+    if(!_drag) return;
+    const {ghost}=_drag;
+    ghost.style.left=(e.clientX-40)+"px";
+    ghost.style.top=e.clientY+"px";
+    // Find which row we're hovering
+    let closest=null,closestDist=Infinity;
+    _rowEls.forEach(({serial,trEl})=>{
+      const r=trEl.getBoundingClientRect();
+      const mid=r.top+r.height/2;
+      const dist=Math.abs(e.clientY-mid);
+      if(dist<closestDist){closestDist=dist;closest={serial,trEl};}
+    });
+    if(closest){
+      _rowEls.forEach(({trEl})=>trEl.style.outline="");
+      closest.trEl.style.outline="2px solid rgba(34,201,138,0.6)";
+      _drag.lastSerial=closest.serial;
+    }
+  }
+
+  function onDragEnd(e){
+    if(!_drag) return;
+    document.removeEventListener("mousemove",onDragMove);
+    document.removeEventListener("mouseup",onDragEnd);
+    _rowEls.forEach(({trEl})=>trEl.style.outline="");
+    _drag.ghost.remove();
+    _drag.barEl.style.opacity="";
+    const {job,lastSerial}=_drag;
+    _drag=null;
+    // Assign the new serial and save ("Unassigned" → store as empty string)
+    const j=jobs.find(jj=>jj.id===job.id);
+    if(j&&lastSerial!==undefined){
+      const newSerial=(lastSerial==="Unassigned"||lastSerial==="Other")?"":lastSerial;
+      if(j.imuSerial!==newSerial){
+        j.imuSerial=newSerial;
+        saveJob(j);
+      }
+      renderImuTab();
+    }
+  }
+
+  // ── Section builder ──────────────────────────────────────────
   let uid=0;
   function makeSection(label,gjobs){
     const C=COLORS[label]||{b:"#363d58",t:"#9299b5"};
@@ -3249,13 +3617,17 @@ function renderImuTab(){
     const rows=[];
     if(!gjobs.length){
       const er=document.createElement("tr");
-      er.innerHTML=`<td colspan="3" style="padding:4px 8px 4px 26px;font-size:10px;color:var(--t4);font-style:italic;">No jobs assigned</td>`;
+      er.setAttribute("data-serial",label);
+      er.innerHTML=`<td colspan="3" style="padding:4px 8px 4px 26px;font-size:10px;color:var(--t4);font-style:italic;">No jobs assigned — drag a bar here</td>`;
       tbody.appendChild(er);rows.push(er);
+      _rowEls.push({serial:label,trEl:er});
     } else {
       gjobs.forEach(j=>{
         const conflict=jobHasConflict(j);
         const tr=document.createElement("tr");
         tr.style.borderBottom="1px solid rgba(91,142,245,0.06)";
+        tr.setAttribute("data-serial",label);
+        tr.setAttribute("data-jobid",j.id);
 
         const tdJ=document.createElement("td");
         tdJ.style.cssText="padding:4px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;cursor:pointer;";
@@ -3283,6 +3655,7 @@ function renderImuTab(){
         if(todayOff>=0&&todayOff<NDAYS)
           over+=`<div style="position:absolute;top:0;bottom:0;left:${todayOff*DW+7}px;width:2px;background:rgba(255,255,255,0.5);z-index:3;"></div>`;
 
+        let barEl=null;
         if(j.runExpStart){
           const rs=parseD(j.runExpStart),re=parseD(j.runExpEnd||j.runExpStart);
           if(rs){
@@ -3295,25 +3668,44 @@ function renderImuTab(){
               const runE=Math.min(NDAYS,dDiff(chartStart,re||rs)+1);
               const innerL=(runS-cs)*DW,innerW=Math.max(DW,(runE-runS)*DW);
               const lbl=(ce-cs)>4?j.id:"";
-
-              // Faded buffer zone
               over+=`<div style="position:absolute;top:50%;transform:translateY(-50%);height:22px;left:${lft}px;width:${wid}px;background:${C.b};opacity:0.3;border-radius:3px;pointer-events:none;"></div>`;
-
-              // Main bar — diagonal yellow/black stripes if conflict, else solid color
-              if(conflict){
-                over+=`<div style="position:absolute;top:50%;transform:translateY(-50%);height:22px;left:${lft+innerL}px;width:${innerW}px;background:repeating-linear-gradient(45deg,rgba(240,180,0,0.85) 0px,rgba(240,180,0,0.85) 5px,rgba(20,20,20,0.75) 5px,rgba(20,20,20,0.75) 10px);border-radius:3px;display:flex;align-items:center;padding:0 5px;font-size:9px;font-weight:700;color:#fff;font-family:'IBM Plex Mono',monospace;white-space:nowrap;overflow:hidden;pointer-events:all;cursor:pointer;border:1px solid rgba(240,180,0,0.6);" title="${j.id} ⚠ IMU conflict · ${fmtD(j.runExpStart)}–${fmtD(j.runExpEnd)}">${lbl}</div>`;
-              } else {
-                over+=`<div style="position:absolute;top:50%;transform:translateY(-50%);height:22px;left:${lft+innerL}px;width:${innerW}px;background:${C.b};border-radius:3px;display:flex;align-items:center;padding:0 5px;font-size:9px;font-weight:700;color:${C.t};font-family:'IBM Plex Mono',monospace;white-space:nowrap;overflow:hidden;pointer-events:all;cursor:pointer;" title="${j.id} · ${fmtD(j.runExpStart)}–${fmtD(j.runExpEnd)}">${lbl}</div>`;
-              }
+              const barStyle=conflict
+                ?`position:absolute;top:50%;transform:translateY(-50%);height:22px;left:${lft+innerL}px;width:${innerW}px;background:repeating-linear-gradient(45deg,rgba(240,180,0,0.85) 0px,rgba(240,180,0,0.85) 5px,rgba(20,20,20,0.75) 5px,rgba(20,20,20,0.75) 10px);border-radius:3px;display:flex;align-items:center;padding:0 5px;font-size:9px;font-weight:700;color:#fff;font-family:'IBM Plex Mono',monospace;white-space:nowrap;overflow:hidden;pointer-events:all;cursor:grab;border:1px solid rgba(240,180,0,0.6);`
+                :`position:absolute;top:50%;transform:translateY(-50%);height:22px;left:${lft+innerL}px;width:${innerW}px;background:${C.b};border-radius:3px;display:flex;align-items:center;padding:0 5px;font-size:9px;font-weight:700;color:${C.t};font-family:'IBM Plex Mono',monospace;white-space:nowrap;overflow:hidden;pointer-events:all;cursor:grab;`;
+              over+=`<div class="imu-bar" data-jobid="${j.id}" style="${barStyle}" title="${j.id} · ${fmtD(j.runExpStart)}–${fmtD(j.runExpEnd)}">${lbl}</div>`;
             }
           }
         }
         over+="</div>";
         tdC.innerHTML=grid+over;
-        tdC.querySelectorAll("[title]").forEach(el=>el.addEventListener("click",e=>{e.stopPropagation();openModal(j);}));
+
+        // Wire up click (not drag) on bar
+        const bar=tdC.querySelector(".imu-bar");
+        if(bar){
+          bar.addEventListener("mousedown",e=>{
+            if(e.button!==0) return;
+            // defer to distinguish click vs drag
+            const ox=e.clientX,oy=e.clientY;
+            const onUp=()=>{
+              document.removeEventListener("mouseup",onUp);
+              document.removeEventListener("mousemove",onMove);
+            };
+            const onMove=ev=>{
+              if(Math.abs(ev.clientX-ox)>4||Math.abs(ev.clientY-oy)>6){
+                document.removeEventListener("mouseup",onUp);
+                document.removeEventListener("mousemove",onMove);
+                startDrag(ev,j,bar,tr,label);
+              }
+            };
+            document.addEventListener("mousemove",onMove);
+            document.addEventListener("mouseup",onUp);
+          });
+          bar.addEventListener("click",e=>{e.stopPropagation();if(!_drag)openModal(j);});
+        }
 
         tr.appendChild(tdJ);tr.appendChild(tdD);tr.appendChild(tdC);
         tbody.appendChild(tr);rows.push(tr);
+        _rowEls.push({serial:label,trEl:tr});
       });
     }
 
@@ -3522,6 +3914,37 @@ function _swd(d,n){let c=new Date(d),k=0;const H=new Set(["2026-01-01","2026-05-
 function _ebd(pm,diam){const c=(pm||'').toUpperCase();if(c.includes('EMAT'))return 6;if(c.includes('MDS')||c.includes('FLEX'))return({8:4,10:4,12:5,16:5,20:6,24:7}[diam]||5);return({6:3,8:3,10:4,12:4,16:5,20:5,24:6}[diam]||4);}
 const _ER=['Mark','Cliff','Dylan','Matt','Zach'];let _EI=0;
 document.addEventListener('DOMContentLoaded',()=>{
+  // Create efficiency-pane as direct child of tab-content
+  (function(){
+    const tc = document.getElementById("tab-content");
+    if(tc && !document.getElementById("efficiency-pane")){
+      const ep = document.createElement("div");
+      ep.id = "efficiency-pane";
+      ep.className = "tab-pane";
+      ep.style.cssText = "overflow:auto;flex-direction:column;";
+      tc.appendChild(ep);
+    }
+  })();
+
+  // Build weekly-caps toggle button and restore state
+  const _lb = document.getElementById("legend-bar");
+  if(_lb && !document.getElementById("wc-toggle")){
+    const _btn = document.createElement("button");
+    _btn.id = "wc-toggle";
+    _btn.title = "Toggle weekly capacity rows";
+    _btn.style.cssText = "margin-left:auto;background:none;border:none;color:var(--t4);cursor:pointer;font-size:11px;padding:2px 6px;display:flex;align-items:center;gap:4px;flex-shrink:0;";
+    _btn.innerHTML = "<span id='wc-toggle-chev' style='display:inline-block;transition:transform 0.2s;'>▾</span><span style='font-size:9px;letter-spacing:.05em;font-weight:700;color:#ffffff;'>WEEKLY</span>";
+    _btn.onclick = toggleWeeklyCaps;
+    _lb.appendChild(_btn);
+  }
+  try{
+    if(localStorage.getItem('ts_wc_collapsed')==='1'){
+      const _wc=document.getElementById('weekly-caps');
+      const _chev=document.getElementById('wc-toggle-chev');
+      if(_wc){_wc._savedH=_wc.offsetHeight||93;_wc.classList.add('collapsed');}
+      if(_chev) _chev.style.transform='rotate(-90deg)';
+    }
+  }catch(e){}
   const inp=document.getElementById('xls-in');if(!inp)return;
   inp.addEventListener('change',async e=>{
     const f=e.target.files[0];if(!f)return;
@@ -3531,11 +3954,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     const ex={};jobs.forEach(j=>{ex[j.id]=j;ex[String(j.id).trim()]=j;});
     const nj=[];
     for(const row of raw){
-      const bSC=String(row['Build SC']||'').trim().toUpperCase();
-      const co=String(row['CompanyStructure_OrganizationalUnitID (groups)']||'').trim().toUpperCase();
-      if(bSC!=='SLC'&&co!=='SLC')continue;
+      const bSC=String(row['Build_Location__c']||row['Build SC']||'').trim().toUpperCase();
+      if(!bSC)continue; // skip rows with no build location
       const sd=row['Start Date'];if(!sd)continue;
-      const rs=new Date(sd);if(isNaN(rs))continue; // accept all dates
+      const rs=new Date(sd);if(isNaN(rs))continue;
       const ed=row['EndOn'];const re=ed?new Date(ed):rs;
       const jnum=String(row['Job Number']||'').trim();
       const sfx=String(row['Suffix']||'').trim();
@@ -3543,8 +3965,13 @@ document.addEventListener('DOMContentLoaded',()=>{
       const pm=String(row['Primary_Method__c']||'').trim();
       const ci=pm.indexOf(',');const cfg=ci>0?pm.slice(0,ci).trim():pm;const desc=ci>0?pm.slice(ci+1).trim():pm;
       const diam=parseInt(String(row['Diameter']||'8'))||8;
-      const tech=String(row['Tech']||'').trim().toUpperCase();
-      const bLoc=bSC||'SLC';const rLoc=co||'SLC';
+      // Use Salesforce Tech Name (col W) — fall back to old Tech column
+      const sfTech=String(row['Salesforce Tech Name']||row['Tech']||'').trim();
+      // Store as LASTNAME only: "Johnson, Eric" → "JOHNSON", else uppercase
+      const tech=(sfTech.includes(',')
+        ? sfTech.split(',')[0].trim().toUpperCase()
+        : sfTech.toUpperCase());
+      const bLoc=bSC||'SLC';const rLoc=bSC||'SLC';
       const rsISO=rs.toISOString().slice(0,10);const reISO=re.toISOString().slice(0,10);
       const beD=_pf(rs);const bsISO=_swd(beD.toISOString().slice(0,10),_ebd(pm,diam)-1);
       const beISO=beD.toISOString().slice(0,10);
@@ -3618,7 +4045,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       }
     });
     localStorage.setItem('ts_cancelled',JSON.stringify(cancelledJobs));
-    if(!nj.length){alert('No matching SLC jobs found in the 60-day window.');e.target.value='';return;}
+    if(!nj.length){alert('No jobs found in the upload file.');e.target.value='';return;}
     jobs=nj;
     saveToStorage();
     if(USE_AZURE){
