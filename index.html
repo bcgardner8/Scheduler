@@ -1380,6 +1380,21 @@ function renderLegendInto(el){
     {c:"rgba(255,255,255,0.88)",l:"CAN Run",brd:"3px solid #e84545"},
   ];
   el.innerHTML=items.map(({c,l,brd,dark})=>`<div class="leg-chip"><div class="leg-sw" style="background:${c};${brd?"border:"+brd:""}"></div><span style="color:${dark?"#1a1f30":"var(--t3)"}">${l}</span></div>`).join("");
+  // Re-attach the weekly caps toggle button after every legend re-render
+  if(el.id==="legend-bar" && !el.querySelector("#wc-toggle")){
+    const _b=document.createElement("button");
+    _b.id="wc-toggle";
+    _b.title="Toggle weekly capacity rows";
+    _b.style.cssText="margin-left:auto;background:none;border:none;color:var(--t4);cursor:pointer;font-size:11px;padding:2px 6px;display:flex;align-items:center;gap:4px;flex-shrink:0;";
+    _b.innerHTML="<span id='wc-toggle-chev' style='display:inline-block;transition:transform 0.2s;'>▾</span><span style='font-size:9px;letter-spacing:.05em;font-weight:700;color:#ffffff;'>WEEKLY</span>";
+    _b.onclick=toggleWeeklyCaps;
+    el.appendChild(_b);
+    // Restore chevron state if currently collapsed
+    const _wc=document.getElementById("weekly-caps");
+    if(_wc&&_wc.classList.contains("collapsed")){
+      _b.querySelector("span").style.transform="rotate(-90deg)";
+    }
+  }
 }
 function renderLegend(){
   const lb=document.getElementById("legend-bar");
