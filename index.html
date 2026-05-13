@@ -7,12 +7,12 @@
 :root{
   --bg:#090b11;--s1:#10131d;--s2:#161a28;--s3:#1c2234;
   --b1:rgba(255,255,255,0.04);--b2:rgba(255,255,255,0.09);--b3:rgba(255,255,255,0.16);
-  --t1:#eceef6;--t2:#9299b5;--t3:#5a617e;--t4:#363d58;
+  --t1:#ffffff;--t2:#c8cde0;--t3:#9299b5;--t4:#5a617e;
   --blue:#5b8ef5;--green:#22c98a;--amber:#f0a020;--red:#e84545;
   --CARD:292px;--ROW:110px;--GRP:28px;--COL:36px;
 }
 html,body{height:100%;overflow:hidden;}body{display:flex;flex-direction:column;}
-body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--t1);display:flex;flex-direction:column;}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--t1);display:flex;flex-direction:column;font-size:13px;}
 
 /* TABS */
 #tabs{display:flex;align-items:stretch;height:34px;background:var(--bg);border-bottom:2px solid rgba(91,142,245,0.28);flex-shrink:0;}
@@ -37,7 +37,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--t1)
 select.fsel{background:var(--s3);border:1px solid var(--b3);border-radius:4px;color:var(--t1);padding:3px 6px;font-size:10px;font-family:'IBM Plex Mono',monospace;outline:none;cursor:pointer;}
 select.fsel option{background:var(--s2);}
 #sort-wrap{display:flex;align-items:center;border:1px solid var(--b3);border-radius:5px;overflow:hidden;flex-shrink:1;max-width:100%;}
-.sort-btn{padding:3px 0;font-size:9px;font-weight:600;color:var(--t3);cursor:pointer;white-space:nowrap;transition:all .15s;text-align:center;flex:1;}
+.sort-btn{padding:0;font-size:9px;font-weight:600;color:var(--t3);cursor:pointer;white-space:nowrap;transition:all .15s;text-align:center;flex:1;display:flex;align-items:center;justify-content:center;align-self:stretch;}
 .sort-btn.active{background:var(--blue);color:#fff;}
 
 /* DATE HEADER */
@@ -315,6 +315,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
   <div class="tab" data-tab="documents">📁 Documents</div>
   <div class="tab" data-tab="imu"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px;flex-shrink:0;"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> IMU</div>
   <div class="tab" data-tab="efficiency">⚡ Efficiency</div>
+  <div class="tab" data-tab="cancelled">🚫 Cancelled</div>
 </div>
 
 <div id="tab-content">
@@ -368,7 +369,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
       <div id="card-spacer">
         <div style="display:flex;align-items:center;width:100%;height:100%;">
           <div id="sort-wrap" style="width:194px;min-width:194px;display:flex;align-items:center;height:100%;padding:0 4px;box-sizing:border-box;flex-shrink:0;">
-            <div class="sort-btn active" id="sort-diam" onclick="sortMode='diam';['sort-tech-btn','sort-emt-btn','sort-run-btn'].forEach(x=>document.getElementById(x).classList.remove('active'));this.classList.add('active');renderAll();">Diam</div>
+            <div class="sort-btn" id="sort-diam" onclick="sortMode='diam';['sort-tech-btn','sort-emt-btn','sort-run-btn'].forEach(x=>document.getElementById(x).classList.remove('active'));this.classList.add('active');renderAll();">Diam</div>
             <div class="sort-btn" id="sort-tech-btn" onclick="sortMode='tech';['sort-diam','sort-emt-btn','sort-run-btn'].forEach(x=>document.getElementById(x).classList.remove('active'));this.classList.add('active');renderAll();">FT</div>
             <div class="sort-btn" id="sort-emt-btn" onclick="sortMode='emt';['sort-diam','sort-tech-btn','sort-run-btn'].forEach(x=>document.getElementById(x).classList.remove('active'));this.classList.add('active');renderAll();">EMT</div>
             <div class="sort-btn" id="sort-run-btn" onclick="sortMode='run';['sort-diam','sort-tech-btn','sort-emt-btn'].forEach(x=>document.getElementById(x).classList.remove('active'));this.classList.add('active');renderAll();">Date</div>
@@ -698,8 +699,6 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 
   <!-- HOME TOOLS PANE (hidden, kept as stub so tab switcher doesn't error) -->
   <div class="tab-pane" id="home-tools-pane"></div>
-  <!-- CANCELLED PANE (stub) -->
-  <div class="tab-pane" id="cancelled-pane"></div>
   <!-- DOCUMENTS PANE -->
   <div class="tab-pane" id="documents-pane">
     <div style="padding:20px;display:flex;flex-direction:column;gap:16px;overflow-y:auto;max-height:100%;">
@@ -1217,8 +1216,7 @@ function slcLaborDaysInRange(from, to){
   jobs.filter(j=>!isArch(j)&&j.buildLoc==="SLC").forEach(j=>{
     const bd=effBuild(j);if(!bd.start)return;
     const bStart=parseISO(bd.start), bEnd=parseISO(bd.end||bd.start);
-    const eMTs=(j.builder&&j.builder2)?2:j.builder?1:0;
-    if(eMTs===0)return;
+    const eMTs=(j.builder&&j.builder2)?2:j.builder?1:1; // unassigned counts as 1 EMT
     // Count work days that overlap between [from,to] and [bStart,bEnd]
     let d=new Date(Math.max(from,bStart));
     const end=new Date(Math.min(to,bEnd));
@@ -1702,7 +1700,7 @@ function buildJobRow(job){
         <div style="font-size:12px;color:#3a3f55;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${job.customer}</div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;justify-content:flex-start;">
-        <span class="c-status" style="font-size:16px;background:${state==='in-progress'?sc:state==='overdue'?'var(--red)':state==='complete'?sc:state==='unassigned'?'rgba(80,90,120,0.4)':sc+'28'};color:${['in-progress','overdue','assigned'].includes(state)?'#000':state==='unassigned'?'#ffffff':sc};border-color:${sc}55;font-weight:700;white-space:nowrap;">${state==="cancelled"?"CANCELLED":state.replace("-"," ")}</span>
+        <span class="c-status" style="font-size:16px;background:${state==='in-progress'?sc:state==='overdue'?'var(--red)':state==='complete'?'#1e7a42':state==='unassigned'?'rgba(80,90,120,0.4)':sc+'28'};color:${state==='complete'?'#fff':['in-progress','overdue','assigned'].includes(state)?'#000':state==='unassigned'?'#ffffff':sc};border-color:${sc}55;font-weight:700;white-space:nowrap;">${state==="cancelled"?"CANCELLED":state.replace("-"," ")}</span>
         <span style="font-size:12px;color:#3a3f55;white-space:nowrap;">EMT: ${emtDisplay}${b2Display?" + "+b2Display:""}</span>
         <span style="font-size:12px;color:#3a3f55;white-space:nowrap;">FT: ${ftDisplay}</span>
         <span style="font-size:12px;color:#5a5f75;white-space:nowrap;">${rRange||"Run TBD"}</span>
@@ -2630,6 +2628,7 @@ document.querySelectorAll(".tab").forEach(tab=>{
     if(tab.dataset.tab==="cancelled")renderCancelledTab();
     if(tab.dataset.tab==="imu")requestAnimationFrame(renderImuTab);
     if(tab.dataset.tab==="efficiency")requestAnimationFrame(renderEfficiencyTab);
+    if(tab.dataset.tab==="cancelled")requestAnimationFrame(renderCancelledTab);
   });
 });
 
@@ -2914,9 +2913,21 @@ function _loadFromLocalStorage(){
 }catch(e){}})();
 // Startup: load from Azure (async) then render
 (async()=>{
+  // Load persistent cancelled jobs list from localStorage
+  try{
+    const _storedCancelled = localStorage.getItem('ts_cancelled');
+    window.cancelledJobs = _storedCancelled ? JSON.parse(_storedCancelled) : [];
+  } catch(e){ window.cancelledJobs = []; }
   await loadFromStorage();
   loadBrowserPrefs();
   _startOffset=isNaN(_startOffset)?0:_startOffset;
+  // Sync sort button active state to sortMode
+  (function(){
+    const map={diam:'sort-diam',tech:'sort-tech-btn',emt:'sort-emt-btn',run:'sort-run-btn'};
+    Object.values(map).forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('active');});
+    const active=document.getElementById(map[sortMode]||map.diam);
+    if(active) active.classList.add('active');
+  })();
   recomputeDays();
   populateFilters();initScrollSync();renderAll();
   const _renderCaps=()=>{renderWeeklyCaps();renderCapacity30();};
@@ -3207,6 +3218,133 @@ function renderEfficiencyTab(){
 }
 
 
+// ── Cancelled Jobs Tab ────────────────────────────────────────────
+function renderCancelledTab(){
+  const pane = document.getElementById("cancelled-pane");
+  if(!pane) return;
+  pane.innerHTML = "";
+  pane.style.cssText = "flex-direction:column;overflow:hidden;";
+
+  // Build the full persistent cancelled list:
+  // window.cancelledJobs = loaded from ts_cancelled localStorage, grows over time
+  // Jobs only appear here if they were removed from an upload.
+  // They stay here even if they come back — only manual deletion removes them.
+  if(!window.cancelledJobs) window.cancelledJobs = [];
+
+  // Merge in any _cancelled-flagged jobs not yet in the persistent list
+  const activeIds = new Set(jobs.filter(j=>!j._cancelled).map(j=>j.id));
+  jobs.filter(j=>j._cancelled).forEach(j=>{
+    if(!window.cancelledJobs.find(c=>c.id===j.id)){
+      window.cancelledJobs.push({...j, cancelledAt: j._cancelledAt||Date.now()});
+    }
+  });
+
+  // Sort: most recently cancelled first
+  const allCancelled = [...window.cancelledJobs]
+    .sort((a,b)=>(b.cancelledAt||0)-(a.cancelledAt||0));
+
+  // ── Header with search ──────────────────────────────────────────
+  const hdr = document.createElement("div");
+  hdr.style.cssText = "padding:10px 16px;border-bottom:1px solid rgba(91,142,245,0.2);background:var(--s1);flex-shrink:0;display:flex;align-items:center;gap:12px;flex-wrap:wrap;";
+  hdr.innerHTML = `
+    <div>
+      <div style="font-size:14px;font-weight:700;color:var(--t1);">Cancelled / Removed Jobs</div>
+      <div style="font-size:10px;color:var(--t3);margin-top:2px;">Persistent list — jobs stay here until they return to the schedule</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;margin-left:auto;">
+      <div style="position:relative;display:flex;align-items:center;">
+        <span style="position:absolute;left:8px;font-size:10px;color:var(--t4);">🔍</span>
+        <input id="cxl-search" placeholder="Search job, customer, desc…"
+          style="background:var(--s3);border:1px solid var(--b3);border-radius:5px;color:var(--t1);
+                 padding:4px 8px 4px 26px;font-size:10px;outline:none;width:220px;"
+          oninput="filterCancelledTable(this.value)">
+        <button id="cxl-clear" onclick="document.getElementById('cxl-search').value='';filterCancelledTable('');"
+          style="display:none;position:absolute;right:6px;background:none;border:none;color:var(--t4);cursor:pointer;font-size:12px;padding:0;">✕</button>
+      </div>
+      <span id="cxl-count" style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--t3);white-space:nowrap;">${allCancelled.length} job${allCancelled.length!==1?"s":""}</span>
+    </div>`;
+  pane.appendChild(hdr);
+
+  if(!allCancelled.length){
+    const empty = document.createElement("div");
+    empty.style.cssText = "padding:40px;text-align:center;font-size:12px;color:var(--t4);font-style:italic;";
+    empty.textContent = "No cancelled jobs yet. Upload a new Excel file to detect removed jobs.";
+    pane.appendChild(empty);
+    return;
+  }
+
+  // ── Table ───────────────────────────────────────────────────────
+  const wrap = document.createElement("div");
+  wrap.id = "cxl-wrap";
+  wrap.style.cssText = "overflow-y:auto;flex:1;";
+  const tbl = document.createElement("table");
+  tbl.id = "cxl-table";
+  tbl.style.cssText = "width:100%;border-collapse:collapse;font-size:11px;";
+  tbl.innerHTML = `<thead><tr style="background:var(--s2);position:sticky;top:0;z-index:2;">
+    <th style="padding:6px 12px;text-align:left;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.06em;border-bottom:1px solid rgba(91,142,245,0.25);white-space:nowrap;">JOB #</th>
+    <th style="padding:6px 12px;text-align:left;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.06em;border-bottom:1px solid rgba(91,142,245,0.25);">TOOL DESCRIPTION</th>
+    <th style="padding:6px 12px;text-align:left;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.06em;border-bottom:1px solid rgba(91,142,245,0.25);">CUSTOMER</th>
+    <th style="padding:6px 12px;text-align:left;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.06em;border-bottom:1px solid rgba(91,142,245,0.25);">BUILD</th>
+    <th style="padding:6px 12px;text-align:center;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.06em;border-bottom:1px solid rgba(91,142,245,0.25);">RUN DATE</th>
+    <th style="padding:6px 12px;text-align:center;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.06em;border-bottom:1px solid rgba(91,142,245,0.25);">EMT</th>
+    <th style="padding:6px 12px;text-align:right;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.06em;border-bottom:1px solid rgba(91,142,245,0.25);">CANCELLED</th>
+    <th style="padding:6px 12px;text-align:center;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.06em;border-bottom:1px solid rgba(91,142,245,0.25);">STATUS</th>
+  </tr></thead>`;
+  const tbody = document.createElement("tbody");
+  tbody.id = "cxl-tbody";
+
+  allCancelled.forEach((j,idx) => {
+    const isBack = activeIds.has(j.id); // returned to schedule
+    const tr = document.createElement("tr");
+    tr.setAttribute("data-cxl-idx", idx);
+    tr.setAttribute("data-search", [j.id,j.desc,j.customer,j.buildLoc,j.fieldTech,j.pm,j.refNum,j.runExpStart].join(" ").toLowerCase());
+    tr.style.cssText = "border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer;" + (isBack?"opacity:0.5;":"");
+    tr.onmouseenter = () => tr.style.background = "rgba(232,69,69,0.05)";
+    tr.onmouseleave = () => tr.style.background = "";
+    tr.onclick = () => { if(isBack){ const lj=jobs.find(jj=>jj.id===j.id); if(lj) openModal(lj); } else openModal(j); };
+    const cancelledStr = j.cancelledAt
+      ? new Date(j.cancelledAt).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"2-digit"})
+      : "—";
+    const runStr = j.runExpStart
+      ? ((d=>((d.getMonth()+1)+"/"+d.getDate()))(new Date(j.runExpStart+"T00:00:00")))
+      : "—";
+    const statusPill = isBack
+      ? `<span style="font-size:9px;font-weight:700;color:#22c98a;background:rgba(34,201,138,0.15);border:1px solid rgba(34,201,138,0.3);border-radius:99px;padding:1px 7px;">RESTORED</span>`
+      : `<span style="font-size:9px;font-weight:700;color:#e84545;background:rgba(232,69,69,0.12);border:1px solid rgba(232,69,69,0.25);border-radius:99px;padding:1px 7px;">CANCELLED</span>`;
+    tr.innerHTML = `
+      <td style="padding:7px 12px;font-family:'IBM Plex Mono',monospace;font-weight:700;color:${isBack?"var(--t2)":"rgba(232,69,69,0.85)"};white-space:nowrap;">${j.id}</td>
+      <td style="padding:7px 12px;color:var(--t2);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${j.desc||"—"}</td>
+      <td style="padding:7px 12px;color:var(--t3);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${j.customer||"—"}</td>
+      <td style="padding:7px 12px;color:var(--t3);white-space:nowrap;">${j.buildLoc||"—"}</td>
+      <td style="padding:7px 12px;text-align:center;font-family:'IBM Plex Mono',monospace;color:var(--t3);white-space:nowrap;">${runStr}</td>
+      <td style="padding:7px 12px;text-align:center;color:var(--t3);">${j.builder||"—"}</td>
+      <td style="padding:7px 12px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--t1);">${cancelledStr}</td>
+      <td style="padding:7px 12px;text-align:center;">${statusPill}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  tbl.appendChild(tbody);
+  wrap.appendChild(tbl);
+  pane.appendChild(wrap);
+}
+
+function filterCancelledTable(q){
+  const s = q.toLowerCase().trim();
+  const tbody = document.getElementById("cxl-tbody");
+  const clearBtn = document.getElementById("cxl-clear");
+  const count = document.getElementById("cxl-count");
+  if(!tbody) return;
+  if(clearBtn) clearBtn.style.display = s ? "block" : "none";
+  let visible = 0;
+  [...tbody.querySelectorAll("tr")].forEach(tr=>{
+    const match = !s || tr.getAttribute("data-search")?.includes(s);
+    tr.style.display = match ? "" : "none";
+    if(match) visible++;
+  });
+  if(count) count.textContent = visible + " job" + (visible!==1?"s":"");
+}
+
+
 // IMU Tab bootstrap - ensures imu-pane is a direct child of tab-content
 // and nj-overlay is a direct child of body (fixes browser HTML parser nesting bugs)
 (function(){
@@ -3348,6 +3486,20 @@ function renderEfficiencyTab(){
     </div>`;
     document.body.appendChild(ov);
   }
+  // Create efficiency-pane and cancelled-pane as direct children of tab-content
+  (function(){
+    const _tc2 = document.getElementById("tab-content");
+    if(_tc2){
+      // efficiency-pane
+      let _ep = document.getElementById("efficiency-pane");
+      if(!_ep){ _ep = document.createElement("div"); _ep.id="efficiency-pane"; _ep.className="tab-pane"; _ep.style.cssText="overflow:auto;flex-direction:column;"; }
+      if(_ep.parentElement !== _tc2) _tc2.appendChild(_ep);
+      // cancelled-pane
+      let _cp = document.getElementById("cancelled-pane");
+      if(!_cp){ _cp = document.createElement("div"); _cp.id="cancelled-pane"; _cp.className="tab-pane"; _cp.style.cssText="overflow:hidden;flex-direction:column;"; }
+      if(_cp.parentElement !== _tc2) _tc2.appendChild(_cp);
+    }
+  })();
 })();
 
 function openNewJobModal(){
@@ -3785,19 +3937,7 @@ function renderImuTab(){
 }
 
 
-function renderCancelledTab(){
-  const el=document.getElementById('cancelled-list');if(!el)return;
-  if(!cancelledJobs.length){el.innerHTML='<div style="color:var(--t3);font-size:11px;">No cancelled jobs.</div>';return;}
-  el.innerHTML=cancelledJobs.sort((a,b)=>b.cancelledAt-a.cancelledAt).map(j=>`
-    <div style="background:rgba(232,69,69,0.08);border:1px solid rgba(232,69,69,0.25);border-radius:6px;padding:8px 12px;cursor:pointer;" onclick="openModal(${JSON.stringify(j).replace(/"/g,'&quot;')})">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;">
-        <span style="font-size:12px;font-weight:700;color:var(--t1);">${j.id}</span>
-        <span style="font-size:9px;color:var(--t3);">Cancelled ${new Date(j.cancelledAt).toLocaleDateString()}</span>
-      </div>
-      <div style="font-size:10px;color:var(--t2);margin-top:2px;">${j.config} · ${j.customer}</div>
-      <div style="font-size:9px;color:var(--t3);margin-top:1px;">Run: ${j.runExpStart} · FT: ${j.fieldTech}</div>
-    </div>`).join('');
-}
+
 
 function navWeek(dir){_startOffset+=dir;recomputeDays();renderAll();saveBrowserPrefs();}
 function saveBrowserPrefs(){try{localStorage.setItem('ts_view',JSON.stringify({sortMode,_startOffset}));}catch(e){}}
@@ -3873,7 +4013,7 @@ function openCapModal(weekStart){
   const emtSec=document.createElement("div");
   emtSec.innerHTML="<div style='font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--t4);margin-bottom:10px;'>EMT Breakdown</div>";
   SLC_EMTS.forEach(emt=>{
-    const emtJobs=weekJobs.filter(j=>(j.builder===emt||j.builder2===emt)&&j.buildLoc==="SLC");
+    const emtJobs=weekJobs.filter(j=>(j.builder===emt||j.builder2===emt)&&j.buildLoc==="SLC"&&!j._cancelled);
     const pto=(weekPtoAdj[`${toISO(ws)}_${emt}`]||0);
     const avail=Math.max(0,workDays-pto);
     const segs=emtJobs.map(function(jj){
@@ -3911,6 +4051,8 @@ function openCapModal(weekStart){
     emtSec.appendChild(row);
   });
   body.appendChild(emtSec);
+
+  // Top unassigned section removed — days still counted in slcLaborDaysInRange
   const unassigned=weekJobs.filter(j=>!j.builder);
   if(unassigned.length){
     const uSec=document.createElement("div");uSec.style.cssText="margin-top:14px;border-top:1px solid var(--b2);padding-top:10px;";
@@ -3976,7 +4118,7 @@ function _ebd(pm,diam){const c=(pm||'').toUpperCase();if(c.includes('EMAT'))retu
 const _ER=['Mark','Cliff','Dylan','Matt','Zach'];let _EI=0;
 // DOM is ready (script is at end of body) — run directly
 (()=>{
-  // Create efficiency-pane as direct child of tab-content
+  // Create efficiency-pane and cancelled-pane as direct children of tab-content
   (function(){
     const tc = document.getElementById("tab-content");
     if(tc && !document.getElementById("efficiency-pane")){
@@ -3985,6 +4127,17 @@ const _ER=['Mark','Cliff','Dylan','Matt','Zach'];let _EI=0;
       ep.className = "tab-pane";
       ep.style.cssText = "overflow:auto;flex-direction:column;";
       tc.appendChild(ep);
+    }
+    if(tc){
+      // Always ensure cancelled-pane is a direct child of tab-content
+      let cp = document.getElementById("cancelled-pane");
+      if(!cp){
+        cp = document.createElement("div");
+        cp.id = "cancelled-pane";
+        cp.className = "tab-pane";
+        cp.style.cssText = "overflow:hidden;flex-direction:column;";
+      }
+      if(cp.parentElement !== tc) tc.appendChild(cp);
     }
   })();
 
@@ -4065,6 +4218,11 @@ async function _handleXlsUpload(e){
       const estInv=String(row['Estimated Invoice']||'').trim();
       const cur=ex[jid];
       if(cur){
+        // If this job was previously cancelled, restore it
+        if(cur._cancelled && window.cancelledJobs){
+          const cIdx = window.cancelledJobs.findIndex(c=>c.id===jid);
+          if(cIdx>=0) window.cancelledJobs[cIdx]._restored = true;
+        }
         // EXISTING JOB — merge, preserving manual edits
         const rChg=cur.runExpStart!==rsISO; // only track start date change
         const _now=Date.now();
