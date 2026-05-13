@@ -1707,7 +1707,7 @@ function buildJobRow(job){
         <div class="kit-check" style="margin-top:auto;padding-top:2px;justify-content:flex-end;" data-kit="${job.id}"><div class="kit-box${job.kitted?" on":""}">${job.kitted?`<svg width="7" height="5" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`:""}</div><span style="font-size:12px;color:#3a3f55;">Kitted</span></div>
       </div>
     </div>`;
-  card.addEventListener("click",e=>{if(e.target.closest(".kit-check"))return;openModal(job);});
+  card.addEventListener("click",e=>{if(e.target.closest(".kit-check"))return;const _liveJob=jobs.find(j=>j.id===job.id)||job;openModal(_liveJob);});
   card.addEventListener("mouseenter",e=>showTT(e,job,"build"));
   card.addEventListener("mousemove",moveTT);card.addEventListener("mouseleave",hideTT);
   card.querySelector(".kit-check").addEventListener("click",e=>{e.stopPropagation();const newKit=!job.kitted;jobs=jobs.map(j=>j.id===job.id?{...j,kitted:newKit}:j);if(newKit)logHistory(job.id,'Marked kitted');renderAll();refreshCapIfOpen();});
@@ -2189,6 +2189,14 @@ function openModalAlongside(job){
   if(cm) cm.style.zIndex="990";
   openModal(job);
 }
+
+function refreshCapIfOpen(){
+  const cm = document.getElementById("cap-modal");
+  if(cm && getComputedStyle(cm).display !== "none" && _lastCapWeek){
+    openCapModal(_lastCapWeek);
+  }
+}
+let _lastCapWeek = null;
 
 function closeModal(){
   const ov=document.getElementById("modal-overlay");
@@ -3997,6 +4005,7 @@ function updateTabTitle(){
 const SLC_EMTS=["Mark","Cliff","Dylan","Matt","Zach"];
 
 function openCapModal(weekStart){
+  _lastCapWeek = weekStart;
   const ws=weekStart,we=addD(ws,6);
   const modal=document.getElementById("cap-modal");
   document.getElementById("cap-modal-title").textContent=`Week of ${ws.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}`;
